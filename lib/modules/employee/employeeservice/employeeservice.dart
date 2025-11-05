@@ -1,0 +1,157 @@
+import 'package:flutter_application_10/data/models/employeemodel.dart';
+import 'package:flutter_application_10/data/models/employeeupdatemodel.dart';
+import 'package:flutter_application_10/data/providers/api_provider.dart';
+import 'package:flutter_application_10/shared/widgets/snackbar.dart';
+
+class Employeeservice {
+  final ApiProvider apiProvider = ApiProvider();
+  Future<List<Data>> getemployee({
+    int? branchid,
+    int? roleid,
+    int? isActive,
+    String? name,
+    int? shiftid,
+  }) async {
+    try {
+      final params = <String, dynamic>{};
+      if (branchid != null) params['branch_id'] = branchid;
+      if (roleid != null) params['role_id'] = roleid;
+      if (isActive != null) params['is_active'] = isActive;
+      if (name != null && name.isNotEmpty) params['name'] = name;
+      if (shiftid != null) params['shift_id'] = shiftid;
+      final response = await apiProvider.get(
+        'viewemployee',
+        queryParameters: params.isNotEmpty ? params : null,
+      );
+      if (response.statusCode == 200) {
+        final json = response.data;
+        final model = EmployeeModel.fromJson(json);
+        return model.data ?? [];
+      } else {
+        throw Exception("faild ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Fiald ${e.toString()}");
+    }
+  }
+
+  Future<bool> updateemployee(Employeeupdatemodel employee) async {
+    try {
+      final response = await apiProvider.put(
+        'editemployee/${employee.ID}',
+        employee.toJson(),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        CustomSnackbar.error(title: "បរាជ័យ", message: "កែប្រែមិនបានទេ");
+        return false;
+      }
+    } catch (e) {
+      CustomSnackbar.error(
+        title: "កំហុស",
+        message: "មានបញ្ហា: ${e.toString()}",
+      );
+      return false;
+    }
+  }
+
+  Future<bool> changestatusemployee(int? id) async {
+    try {
+      final response = await apiProvider.put('changestatusemployee/${id}', id);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        CustomSnackbar.error(title: "បរាជ័យ", message: "កែប្រែមិនបានទេ");
+        return false;
+      }
+    } catch (e) {
+      CustomSnackbar.error(
+        title: "កំហុស",
+        message: "មានបញ្ហា: ${e.toString()}",
+      );
+      return false;
+    }
+  }
+
+  Future<bool> changeshift({
+    int? EmployeeID,
+    int? ShiftID,
+    int? AssignBranchID,
+    int? employeeshiftid,
+  }) async {
+    try {
+      final body = {
+        'employee_id': EmployeeID,
+        'shift_id': ShiftID,
+        'assign_branch_id': AssignBranchID,
+      };
+
+      final response = await apiProvider.put(
+        'editemployeeshift/$employeeshiftid',
+        body,
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        CustomSnackbar.error(title: "បរាជ័យ", message: "កែប្រែមិនបានទេ");
+        return false;
+      }
+    } catch (e) {
+      CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> editsalary({
+    required int baseSalary,
+    required int workday,
+    required int salaryID,
+  }) async {
+    try {
+      final body = {'base_salary': baseSalary, 'worked_day': workday};
+      final response = await apiProvider.put("editsalary/${salaryID}", body);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        CustomSnackbar.error(title: "បរាជ័យ", message: "កែប្រែមិនបានទេ");
+        return false;
+      }
+    } catch (e) {
+      CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> creteEmployeeShift({
+    required int employeeid,
+    required int shiftid,
+    required int baseSalary,
+    required int workday,
+    required int salaryid,
+    required int employeeshiftid,
+  }) async {
+    try {
+      final body = {
+        'employee_id': employeeid,
+        'shift_id': shiftid,
+        'base_salary': baseSalary,
+        'worked_day': workday,
+      };
+      final response = await apiProvider.post(
+        "employee-shift/${employeeshiftid}/salary/${salaryid}",
+        body,
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        CustomSnackbar.error(title: "បរាជ័យ", message: "កែប្រែមិនបានទេ");
+        return false;
+      }
+    } catch (e) {
+      CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+      return false;
+    }
+  }
+}

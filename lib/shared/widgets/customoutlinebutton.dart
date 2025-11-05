@@ -1,0 +1,63 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class CustomOutlinedButton extends StatelessWidget {
+  final String text;
+  final VoidCallback? onPressed;
+  final Color? borderColor;
+  final Color? textColor;
+  final double borderRadius;
+  final double fontSize;
+  final double width;
+  final double height;
+  final IconData? icon;
+
+  const CustomOutlinedButton({
+    Key? key,
+    required this.text,
+    this.onPressed,
+    this.borderColor = TheColors.orange,
+    this.textColor = TheColors.orange,
+    this.borderRadius = 12,
+    this.fontSize = 13.0,
+    this.width = double.infinity,
+    this.height = 50.0,
+    this.icon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: TheColors.orange, width: 0.5),
+          foregroundColor: textColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+        ),
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, color: textColor, size: 20),
+              const SizedBox(width: 8),
+            ],
+            Text(
+              text,
+              style: GoogleFonts.siemreap(
+                fontSize: fontSize,
+                color: textColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

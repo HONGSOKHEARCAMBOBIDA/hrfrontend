@@ -1,0 +1,295 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
+import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
+import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
+import 'package:flutter_application_10/modules/shift/shiftcontroller/shiftcontroller.dart';
+import 'package:flutter_application_10/shared/widgets/app_bar.dart';
+import 'package:flutter_application_10/shared/widgets/dropdown.dart';
+import 'package:flutter_application_10/shared/widgets/loading.dart';
+import 'package:flutter_application_10/shared/widgets/shiftcard.dart';
+import 'package:flutter_application_10/shared/widgets/textfield.dart';
+import 'package:get/get.dart';
+
+class Shiftview extends StatefulWidget {
+  const Shiftview({super.key});
+
+  @override
+  State<Shiftview> createState() => _ShiftviewState();
+}
+
+class _ShiftviewState extends State<Shiftview> {
+  final shiftcontroller = Get.find<Shiftcontroller>();
+  final branchcontroller = Get.find<Branchcontroller>();
+
+  // Rxn<int> allows null and reactive change tracking
+  final selectbranchid = Rxn<int>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: TheColors.bgColor,
+      appBar: CustomAppBar(title: "វេនធ្វើការ"),
+      body: RefreshIndicator(
+        onRefresh: ()async{
+          await shiftcontroller.fetchshift(selectbranchid.value);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              // ✅ Branch selector dropdown
+              Padding(
+                padding: const EdgeInsets.only(left: 16,right: 16),
+                child: CustomDropdown(
+                  selectedValue: selectbranchid,
+                  items: branchcontroller.branch,
+                  hintText: "ជ្រើសសាខា",
+                  onChanged: (value) {
+                    selectbranchid.value = value;
+                    shiftcontroller.fetchshift(selectbranchid.value);
+                  },
+                ),
+              ),
+        
+              const SizedBox(height: 15),
+        
+              // ✅ Shifts list or loading state
+              Expanded(
+                child: Obx(() {
+                  if (shiftcontroller.isLoading.value) {
+                    return const Center(child: CustomLoading());
+                  }
+        
+                  if (shiftcontroller.shift.isEmpty) {
+                    return Center(
+                      child: Text(
+                        selectbranchid.value == null
+                            ? "សូមជ្រើសសាខា"
+                            : "សាខានេះមិនទាន់មានវេនទេ",
+                        style: TextStyles.siemreap(context, fontSize: 12),
+                      ),
+                    );
+                  }
+        
+                  // ✅ Display list of shifts
+                  return ListView.builder(
+                    itemCount: shiftcontroller.shift.length,
+                    itemBuilder: (context, index) {
+                      final shift = shiftcontroller.shift[index];
+                      return Center(
+                        child: Column(
+                          children: [
+                            Shiftcard(
+                              isActive: shift.isActive,
+                              startTime: shift.startTime ?? "",
+                              endTime: shift.endTime ?? "",
+                              name: shift.name ?? "មិនទាន់មានឈ្មោះ",
+                              onEdit: () {
+                                // TODO: open edit bottom sheet
+                              },
+                              onToggleStatus: () {
+                                // TODO: implement delete shift logic
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 75),
+                              child: Divider(
+                                color: TheColors.gray,
+                                thickness: 0.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+  backgroundColor: TheColors.errorColor,
+  onPressed: () {
+    showCreateShiftBottomSheet();
+  },
+  child: const Icon(Icons.add, color: Colors.white),
+),
+
+    );
+  }void showCreateShiftBottomSheet() {
+  final nameController = TextEditingController();
+  final selectedStartTime = Rxn<TimeOfDay>();
+  final selectedEndTime = Rxn<TimeOfDay>();
+
+  Get.bottomSheet(
+    SingleChildScrollView(
+      child: Container(
+        height: Get.height * 0.6,
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: TheColors.bgColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 50,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[400],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Center(
+              child: Text(
+                "បង្កើតវេនថ្មី",
+                style: TextStyles.siemreap(
+                  context,
+                  fontSize: 18,
+                  fontweight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text("ឈ្មោះវេន", style: TextStyles.siemreap(context, fontSize: 12)),
+            const SizedBox(height: 8),
+
+            CustomTextField(
+              controller: nameController, 
+              hintText: "ឧទាហរណ៍: វេនព្រឹក", 
+              prefixIcon: Icons.access_time),
+            const SizedBox(height: 15),
+
+            // Start time picker
+            Row(
+              children: [
+                Expanded(
+                  child: Obx(() {
+                    final start = selectedStartTime.value;
+                    return Text(
+                      start != null
+                          ? "ម៉ោងចូល: ${start.format(context)}"
+                          : "ជ្រើសម៉ោងចូល",
+                      style: TextStyles.siemreap(
+                        context,
+                        fontSize: 12,
+                        color: TheColors.gray,
+                      ),
+                    );
+                  }),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.schedule, color: TheColors.secondaryColor),
+                  onPressed: () async {
+                    final picked = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    if (picked != null) {
+                      selectedStartTime.value = picked;
+                    }
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // End time picker
+            Row(
+              children: [
+                Expanded(
+                  child: Obx(() {
+                    final end = selectedEndTime.value;
+                    return Text(
+                      end != null
+                          ? "ម៉ោងចេញ: ${end.format(context)}"
+                          : "ជ្រើសម៉ោងចេញ",
+                      style: TextStyles.siemreap(
+                        context,
+                        fontSize: 12,
+                        color: TheColors.gray,
+                      ),
+                    );
+                  }),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.schedule_outlined,
+                      color: TheColors.secondaryColor),
+                  onPressed: () async {
+                    final picked = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    if (picked != null) {
+                      selectedEndTime.value = picked;
+                    }
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 25),
+
+            // Save button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: TheColors.errorColor,
+                minimumSize: const Size(double.infinity, 45),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () async {
+                if (selectbranchid.value == null) {
+                  Get.snackbar("កំហុស", "សូមជ្រើសសាខាមុន");
+                  return;
+                }
+
+                if (nameController.text.isEmpty) {
+                  Get.snackbar("កំហុស", "សូមបញ្ចូលឈ្មោះវេន");
+                  return;
+                }
+
+                if (selectedStartTime.value == null ||
+                    selectedEndTime.value == null) {
+                  Get.snackbar("កំហុស", "សូមជ្រើសម៉ោងចូលនិងចេញ");
+                  return;
+                }
+
+                // Convert time to 24-hour format string (e.g. "13:00")
+                String formatTime(TimeOfDay time) {
+                  final hour = time.hour.toString().padLeft(2, '0');
+                  final minute = time.minute.toString().padLeft(2, '0');
+                  return "$hour:$minute";
+                }
+
+                await shiftcontroller.createshift(
+                  name: nameController.text.trim(),
+                  start_time: formatTime(selectedStartTime.value!),
+                  end_time: formatTime(selectedEndTime.value!),
+                  branchid: selectbranchid.value!,
+                );
+              },
+              child: Text(
+                "រក្សាទុក",
+                style: TextStyles.siemreap(
+                  context,
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+    isScrollControlled: true,
+  );
+}
+
+}

@@ -1,0 +1,307 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/helper/show_branch_buttonsheet.dart';
+import 'package:flutter_application_10/core/helper/show_isactive_buttonsheet.dart';
+import 'package:flutter_application_10/core/helper/show_role_buttonsheet.dart';
+import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
+import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
+import 'package:flutter_application_10/data/models/usermodel.dart' as mymodel;
+import 'package:flutter_application_10/modules/auth/binding/authbinding.dart';
+import 'package:flutter_application_10/modules/auth/binding/updateuserbinding.dart';
+import 'package:flutter_application_10/modules/auth/controller/authcontroller.dart';
+import 'package:flutter_application_10/modules/auth/view/updateuserview.dart';
+import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
+import 'package:flutter_application_10/modules/role/rolecontroller/rolecontroller.dart';
+import 'package:flutter_application_10/shared/widgets/app_bar.dart';
+import 'package:flutter_application_10/shared/widgets/loading.dart';
+import 'package:flutter_application_10/shared/widgets/textfield.dart';
+import 'package:flutter_application_10/shared/widgets/usercard.dart';
+import 'package:flutter_application_10/shared/widgets/userdetailbuttonsheet.dart';
+import 'package:get/get.dart';
+
+class Userview extends StatefulWidget {
+  Userview({super.key});
+
+  @override
+  State<Userview> createState() => _UserviewState();
+}
+
+class _UserviewState extends State<Userview> {
+  final authcontroller = Get.find<Authcontroller>();
+  final rolecontroller = Get.find<Rolecontroller>();
+  final branchcontroller = Get.find<Branchcontroller>();
+  final TextEditingController searchController = TextEditingController();
+  final selectroleid = Rxn<int>();
+  final selectbranchid = Rxn<int>();
+  final selectisactive = Rxn<bool>();
+  final currentstate = Rxn<int>();
+  void _handleViewUser(mymodel.Data user) {
+    Get.bottomSheet(
+      UserDetailBottomSheet(user: user),
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+    );
+  }
+
+  Widget _buildlabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min, // so it wraps tightly
+        children: [
+          Text(label, style: TextStyles.siemreap(context, fontSize: 10)),
+          const SizedBox(width: 4),
+          const Icon(
+            color: TheColors.errorColor,
+            Icons.arrow_drop_down,
+            size: 18, // smaller size to match text
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(title: "អ្នកប្រេីប្រាស់"),
+        backgroundColor: TheColors.bgColor,
+
+        body: RefreshIndicator(
+          onRefresh: () async {
+            searchController.clear();
+            authcontroller.searchQuery.value = '';
+            selectbranchid.value = null;
+            selectroleid.value = null;
+            currentstate.value = null;
+            await authcontroller.fetchUser();
+            await rolecontroller.fetchrole();
+            await branchcontroller.fetchbranch();
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8,right: 8),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                      
+                          left: 10,
+                          right: 10,
+                        ),
+                        child: SizedBox(
+                          height: 40,
+                          child: CustomTextField(
+                            controller: searchController,
+                            hintText: "ស្វែងរក".tr,
+                            prefixIcon: Icons.search,
+                            onChanged: (value) =>
+                                authcontroller.searchQuery.value = value,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 11, right: 11),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 3,
+                                  ), // very tight
+                                  minimumSize: Size(
+                                    0,
+                                    0,
+                                  ), // remove default min size
+                                  tapTargetSize: MaterialTapTargetSize
+                                      .shrinkWrap, // remove extra tap padding
+                                  side: BorderSide(
+                                    color: TheColors.errorColor,
+                                    width: 0.5,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  showBranchSelectorSheet(
+                                    context: context,
+                                    branch: branchcontroller.branch,
+                                    selectedBranchId: selectbranchid.value,
+                                    onSelected: (id) {
+                                     setState(() {
+                                        selectbranchid.value = id;
+                                      authcontroller.fetchUser(
+                                        branchID: selectbranchid.value,
+                                      );
+                                     });
+                                    },
+                                  );
+                                },
+                                child: _buildlabel("សាខា"),
+                              ),
+                            ),
+                            SizedBox(width: 3),
+                            Expanded(
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 3,
+                                  ), // very tight
+                                  minimumSize: Size(
+                                    0,
+                                    0,
+                                  ), // remove default min size
+                                  tapTargetSize: MaterialTapTargetSize
+                                      .shrinkWrap, // remove extra tap padding
+                                  side: BorderSide(
+                                    color: TheColors.errorColor,
+                                    width: 0.5,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  showRoleSelectorsheet(
+                                    context: context,
+                                    role: rolecontroller.role,
+                                    selectedSelectId: selectroleid.value,
+                                    onSelected: (id) {
+                                      setState(() {
+                                        selectroleid.value = id;
+                                      authcontroller.fetchUser(
+                                        roleId: selectroleid.value,
+                                      );
+                                      });
+                                    },
+                                  );
+                                },
+                                child: _buildlabel("តួនាទី"),
+                              ),
+                            ),
+                            SizedBox(width: 3),
+                            Expanded(
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 3,
+                                  ), // very tight
+                                  minimumSize: Size(
+                                    0,
+                                    0,
+                                  ), // remove default min size
+                                  tapTargetSize: MaterialTapTargetSize
+                                      .shrinkWrap, // remove extra tap padding
+                                  side: BorderSide(
+                                    color: TheColors.errorColor,
+                                    width: 0.5,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  showIsActiveSelectorSheet(
+                                    context: context,
+                                    selectedValue:
+                                        currentstate.value, // e.g. 1 or 0
+                                    onSelected: (value) {
+                                      setState(() {
+                                        currentstate.value = value;
+                                        authcontroller.fetchUser(
+                                          is_active: currentstate.value!,
+                                        );
+                                      });
+                                    },
+                                  );
+                                },
+                                child: _buildlabel("ស្ថានភាព"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Obx(() {
+                    if (authcontroller.isLoading.value) {
+                      return const CustomLoading();
+                    }
+
+                    if (authcontroller.users.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'អត់ទាន់មានអ្នកប្រេីប្រាស់',
+                          style: TextStyles.siemreap(context,fontSize: 12),
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: authcontroller.users.length,
+                      itemBuilder: (context, index) {
+                        final user = authcontroller.users[index];
+                        return Center(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8, right: 8),
+                                child: CustomUserCard(
+                                  
+                                  namekh: user.name ?? "អត់មាន",
+                                  role: user.roleName ?? "អត់មាន".tr,
+                                  nameenglish: user.nameEn ?? "",
+                                  isActive: user.isActive,
+                                  onEdit: () {
+                                    Get.to(()=>Updateuserview(userModel: user),
+                                    transition: Transition.rightToLeft,
+                                    
+                                    binding: UpdateUserBindings()
+                                    );
+                                  },
+                                  onDelete: () {authcontroller.changestatususer(user.id);},
+                                  onTap: () => _handleViewUser(user),
+                                ),
+                              ),
+                                                          Padding(
+                              padding: const EdgeInsets.only(
+                                left: 82,
+                             
+                              ),
+                              child: Divider(
+                                color: TheColors.gray,
+                                thickness: 0.3,
+                              ),
+                            ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

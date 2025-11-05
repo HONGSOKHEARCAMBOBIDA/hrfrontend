@@ -1,0 +1,301 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
+import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
+import 'package:flutter_application_10/shared/widgets/employeeshifteditview.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
+class CustomEmployeeCard extends StatelessWidget {
+  final String namekh;
+  final String nameenglish;
+  final String role;
+  final String start_time;
+  final String end_time;
+  final String basesalary;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  final VoidCallback onTap;
+  final VoidCallback onchangeshift;
+  final VoidCallback chnagesalary;
+  final VoidCallback increasesalry;
+  final bool? isActive;
+  final String? shiftname;
+  final String? branchname;
+
+  const CustomEmployeeCard({
+    Key? key,
+    required this.increasesalry,
+    required this.onchangeshift,
+    required this.basesalary,
+    required this.start_time,
+    required this.end_time,
+    required this.namekh,
+    required this.nameenglish,
+    required this.role,
+    required this.onEdit,
+    required this.onDelete,
+    required this.onTap,
+    this.shiftname,
+    this.isActive,
+    this.branchname,
+    required this.chnagesalary
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(18.0),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18,),
+          border: Border.all(color: TheColors.orange,width: 0.5)
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Avatar with online/offline dot
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://cdn-icons-png.flaticon.com/128/3177/3177440.png",
+                      width: 55,
+                      height: 55,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 2,
+                    right: 2,
+                    child: Container(
+                      width: 14,
+                      height: 14,
+                      decoration: BoxDecoration(
+                        color: isActive == true
+                            ? TheColors.successColor
+                            : TheColors.errorColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color:
+                              isDarkMode ? Colors.grey[850]! : Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 16),
+              // Employee info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Name row
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          Text(
+                            namekh,
+                            style: TextStyles.siemreap(
+                              context,
+                              fontSize: 13,
+                              fontweight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            "(${nameenglish})",
+                            style: GoogleFonts.siemreap(
+                              fontSize: 11,
+                              color: TheColors.black.withOpacity(0.8),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                         
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    // Role
+                    Row(
+                      children: [
+                        const Icon(Icons.security_outlined,
+                            size: 14, color: TheColors.orange),
+                        const SizedBox(width: 4),
+                        Text(
+                          role,
+                          style: GoogleFonts.siemreap(
+                            fontSize: 11,
+                            color: TheColors.orange,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    // Shift time
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+   
+                          Text(
+                            "$start_time - $end_time",
+                            style: TextStyles.siemreap(context,color: TheColors.secondaryColor,fontSize: 11)
+                          ),
+                          SizedBox(width: 3,),
+                          Text("("),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 2,left: 2),
+                            child: Text("${shiftname}",style: TextStyles.siemreap(context,color: TheColors.secondaryColor,fontSize: 11),),
+                          ),
+                          Text(")")
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    // Base salary
+                    Row(
+                      children: [
+                        const Icon(Icons.attach_money,
+                            size: 14, color: TheColors.errorColor),
+                      
+                        Text(
+                          "$basesalary",
+                          style: GoogleFonts.siemreap(
+                            fontSize: 12,
+                            color: TheColors.errorColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 1,),
+                        Text("~"),
+                        SizedBox(width: 2,),
+                                                  Text("${branchname}",style: TextStyles.siemreap(context,fontSize: 9,color: TheColors.secondaryColor),)
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              _buildActionMenu(context),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+Widget _buildActionMenu(BuildContext context) {
+  final theme = Theme.of(context);
+
+  return PopupMenuButton<String>(
+    icon: Icon(
+      Icons.more_vert,
+      color: theme.iconTheme.color?.withOpacity(0.7),
+    ),
+    
+    color: TheColors.bgColor,
+    elevation: 3,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    onSelected: (value) {
+      if (value == 'edit') {
+        onEdit();
+      } else if (value == 'delete') {
+        onDelete();
+      }else if (value == 'changeshift') {
+          onchangeshift();
+  } else if (value == 'changesalary'){
+          chnagesalary();
+
+  } else if (value == 'increasesalary'){
+    increasesalry();
+  }
+    },
+    itemBuilder: (context) => [
+      PopupMenuItem(
+        
+        value: 'edit',
+        child: Row(
+          children: [
+            const Icon(Icons.edit, color: TheColors.orange, size: 20),
+            const SizedBox(width: 8),
+            Text('កែប្រែ', style: TextStyles.siemreap(context, fontSize: 12)),
+          ],
+        ),
+      ),
+      PopupMenuItem(
+        
+        value: 'delete',
+        child: Row(
+          children: [
+            Icon(
+              isActive == true ? Icons.block : Icons.check_circle,
+              color: isActive == true
+                  ? TheColors.errorColor
+                  : TheColors.successColor,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              isActive == true ? 'បិទ' : 'បើក',
+              style: TextStyles.siemreap(context, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+      PopupMenuItem(
+      
+        value: 'changeshift',
+        child: Row(
+          children: [
+            const Icon(Icons.lock_clock, color: TheColors.orange, size: 20),
+            const SizedBox(width: 8),
+            Text('ដូម៉ោងធ្វេីការ',
+                style: TextStyles.siemreap(context, fontSize: 12)),
+          ],
+        ),
+      ),
+            PopupMenuItem(
+      
+        value: 'changesalary',
+        child: Row(
+          children: [
+            const Icon(Icons.money_off, color: TheColors.secondaryColor, size: 20),
+            const SizedBox(width: 8),
+            Text('កែប្រាក់ខែ',
+                style: TextStyles.siemreap(context, fontSize: 12)),
+          ],
+        ),
+      ),
+                  PopupMenuItem(
+      
+        value: 'increasesalary',
+        child: Row(
+          children: [
+            const Icon(Icons.money_off, color: TheColors.secondaryColor, size: 20),
+            const SizedBox(width: 8),
+            Text('ដំឡេីងប្រាក់ខែ',
+                style: TextStyles.siemreap(context, fontSize: 12)),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+}
