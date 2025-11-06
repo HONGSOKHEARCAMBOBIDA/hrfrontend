@@ -15,6 +15,7 @@ import 'package:flutter_application_10/modules/employee/employeebinding/employee
 import 'package:flutter_application_10/modules/employee/employeeview/employeeview.dart';
 import 'package:flutter_application_10/modules/leave/leavebinding/leavebinding.dart';
 import 'package:flutter_application_10/modules/leave/leaveview/createleaveview.dart';
+import 'package:flutter_application_10/modules/leave/leaveview/leaveview.dart';
 import 'package:flutter_application_10/modules/loan/loanbinding/loanbinding.dart';
 import 'package:flutter_application_10/modules/loan/view/loanview.dart';
 import 'package:flutter_application_10/modules/main/binding/mainbinding.dart';
@@ -22,6 +23,8 @@ import 'package:flutter_application_10/modules/main/mainmiddleware/mainmiddlewar
 import 'package:flutter_application_10/modules/main/mainview/mainview.dart';
 import 'package:flutter_application_10/modules/main/mainview/splacescreen.dart';
 import 'package:flutter_application_10/modules/main/mainview/test.dart';
+import 'package:flutter_application_10/modules/payroll/payrollbinding/payrollbinding.dart';
+import 'package:flutter_application_10/modules/payroll/payrollview/summarypayrollview.dart';
 import 'package:flutter_application_10/modules/province/provincebinding/provincebinding.dart';
 import 'package:flutter_application_10/modules/role/rolebinding/rolebinding.dart';
 import 'package:flutter_application_10/modules/shift/shiftbinding/shiftbinding.dart';
@@ -124,12 +127,23 @@ GetPage(
       ),
     GetPage(
       name: '/leave', 
-      page: ()=>CreateLeaveView(),
+      page: ()=>Leaveview(),
       bindings: [
         Leavebinding(),
-        Authbinding()
+        Authbinding(),
+        Branchbinding(),
+        Employeebinding()
       ]
-      )
+      ),
+        GetPage(
+      name: '/payroll', 
+      page: ()=>Summarypayrollview(),
+      bindings: [
+        Payrollbinding(),
+        Branchbinding(),
+
+      ]
+      ),
 
 
 

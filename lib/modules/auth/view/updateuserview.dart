@@ -78,7 +78,7 @@ class _UpdateuserviewState extends State<Updateuserview> {
 
   void _initializeData() {
     // Initialize controllers with existing data
-    namekhcontroller.text = widget.userModel.nameKh ?? "";
+    namekhcontroller.text = widget.userModel.name ?? "";
     nameencontroller.text = widget.userModel.nameEn ?? "";
     usernamecontroller.text = widget.userModel.username ?? "";
     emailcontroller.text = widget.userModel.email ?? "";
@@ -162,7 +162,7 @@ class _UpdateuserviewState extends State<Updateuserview> {
         ID: widget.userModel.id, // Make sure to include the user ID
         branchID: selectbranchid.value!,
         nameEn: nameencontroller.text.trim(),
-        nameKh: namekhcontroller.text.trim(),
+        name: namekhcontroller.text.trim(),
         username: usernamecontroller.text.trim(),
         email: emailcontroller.text.trim(),
         gender: selectgender.value!,

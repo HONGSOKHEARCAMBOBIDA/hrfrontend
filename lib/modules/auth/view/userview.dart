@@ -132,7 +132,7 @@ class _UserviewState extends State<Userview> {
                                     width: 0.5,
                                   ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 onPressed: () {
@@ -172,7 +172,7 @@ class _UserviewState extends State<Userview> {
                                     width: 0.5,
                                   ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 onPressed: () {
@@ -212,7 +212,7 @@ class _UserviewState extends State<Userview> {
                                     width: 0.5,
                                   ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 onPressed: () {
@@ -268,6 +268,7 @@ class _UserviewState extends State<Userview> {
                                   namekh: user.name ?? "អត់មាន",
                                   role: user.roleName ?? "អត់មាន".tr,
                                   nameenglish: user.nameEn ?? "",
+                                  
                                   isActive: user.isActive,
                                   onEdit: () {
                                     Get.to(()=>Updateuserview(userModel: user),

@@ -82,7 +82,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
 
   void _initializeData() {
     // Initialize controllers with existing data
-    namekhcontroller.text = widget.employeemodel.nameKh ?? "";
+    namekhcontroller.text = widget.employeemodel.name ?? "";
     nameencontroller.text = widget.employeemodel.nameEn ?? "";
     contactcontroller.text = widget.employeemodel.contact ?? "";
     nationalidnumbercontroller.text =

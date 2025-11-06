@@ -121,6 +121,21 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
                 Get.toNamed('/leave'); // Navigate to Register page
               },
             ),
+            Divider(),
+            ListTile(
+              leading: const Icon(
+                Icons.monetization_on_sharp,
+                color: TheColors.errorColor,
+              ),
+              title: Text(
+                'បេីកប្រាក់ខែ',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
+              onTap: () {
+                Get.toNamed('/payroll'); // Navigate to Register page
+              },
+            ),
+            Divider(),
           ],
         ),
       ),

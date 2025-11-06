@@ -255,7 +255,7 @@ class _AttendanceviewState extends State<Attendanceview> {
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       side: const BorderSide(color: TheColors.errorColor, width: 0.5),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(10),
       ),
     );
   }

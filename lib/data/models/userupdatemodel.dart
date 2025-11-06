@@ -2,7 +2,7 @@ class Userupdatemodel {
   final int ID;
   final int branchID;
   final String nameEn;
-  final String nameKh;
+  final String name;
   final String username;
   final String email;
   final int gender;
@@ -16,7 +16,7 @@ class Userupdatemodel {
     required this.ID,
     required this.branchID,
     required this.nameEn,
-    required this.nameKh,
+    required this.name,
     required this.username,
     required this.email,
     required this.gender,
@@ -33,7 +33,7 @@ class Userupdatemodel {
       'id':ID,
       'branch_id': branchID,
       'name_en': nameEn,
-      'name_kh': nameKh,
+      'name_kh': name,
       'username': username,
       'email': email,
       'gender': gender,

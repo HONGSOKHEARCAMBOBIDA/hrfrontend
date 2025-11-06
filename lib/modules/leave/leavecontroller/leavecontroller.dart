@@ -42,6 +42,7 @@ class Leavecontroller extends GetxController {
         status: status,
       );
       leave.assignAll(result);
+    
     } catch (e) {
       CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
     } finally {
@@ -119,10 +120,7 @@ class Leavecontroller extends GetxController {
       if (isupdated) {
         await fetchleave();
         Get.back();
-        CustomSnackbar.success(
-          title: "ជោគជ័យ",
-          message: "កែប្រែការឈប់សម្រាកបានជោគជ័យ",
-        );
+
       }
     } catch (e) {
       CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
@@ -137,7 +135,7 @@ class Leavecontroller extends GetxController {
       bool update = await leaveservice.changestatusleave(leaveid: leaveid);
       if (update) {
         await fetchleave();
-        CustomSnackbar.success(title: "ជោគជ័យ", message: "ប្តូរបានជោគជ័យ");
+    
       }
     } catch (e) {
       CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());

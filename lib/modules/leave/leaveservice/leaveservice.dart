@@ -54,9 +54,9 @@ class Leaveservice {
       if (branchid != null) params['branch_id'] = branchid;
       if (employeeid != null) params['employee_id'] = employeeid;
       if (employeename != null) params['employee_name'] = employeename;
-      if (ispermission != null) params['is_permission'] = ispermission;
-      if (iswithoutpermission != null) params['is_without_permission'] = iswithoutpermission;
-      if (isWeekend != null) params['is_weekend'] = isWeekend;
+      if (ispermission != null) params['permission'] = ispermission;
+      if (iswithoutpermission != null) params['withoutpermission'] = iswithoutpermission;
+      if (isWeekend != null) params['weekend'] = isWeekend;
       if (status != null) params['status'] = status;
 
       final response = await apiProvider.get(

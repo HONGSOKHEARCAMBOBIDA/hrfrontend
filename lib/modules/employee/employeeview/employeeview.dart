@@ -143,7 +143,7 @@ class _EmployeeviewState extends State<Employeeview> {
                                     width: 0.5,
                                   ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 onPressed: () {
@@ -184,7 +184,7 @@ class _EmployeeviewState extends State<Employeeview> {
                                     width: 0.5,
                                   ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 onPressed: () {
@@ -222,7 +222,7 @@ class _EmployeeviewState extends State<Employeeview> {
                                     width: 0.5,
                                   ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 onPressed: () {
@@ -260,7 +260,7 @@ class _EmployeeviewState extends State<Employeeview> {
                                     width: 0.5,
                                   ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 onPressed: () {

@@ -44,25 +44,23 @@ class CreateLeaveView extends StatelessWidget {
                     const SizedBox(height: 5),
                          SizedBox(
                           height: 75,
-                           child: Expanded(
-                                           child: ListView.builder(
-                                             itemCount: employeeShiftController.employeeshift.length,
-                                             itemBuilder: (context, index) {
-                                               final shift = employeeShiftController.employeeshift[index];
-                                               return Obx(() {
-                                                 final isSelected =
-                            employeeShiftController.selectedShiftId.value ==
-                            shift.id;
-                                                 return Employeeshiftcard(
-                                                   employeeshiftmodel: shift,
-                                                   isSelected: isSelected,
-                                                   onTap: () =>
-                              employeeShiftController.selectShift(shift.id!),
-                                                 );
-                                               });
-                                             },
-                                           ),
-                                         ),
+                           child: ListView.builder(
+                             itemCount: employeeShiftController.employeeshift.length,
+                             itemBuilder: (context, index) {
+                               final shift = employeeShiftController.employeeshift[index];
+                               return Obx(() {
+                                 final isSelected =
+                                                       employeeShiftController.selectedShiftId.value ==
+                                                       shift.id;
+                                 return Employeeshiftcard(
+                                   employeeshiftmodel: shift,
+                                   isSelected: isSelected,
+                                   onTap: () =>
+                                                         employeeShiftController.selectShift(shift.id!),
+                                 );
+                               });
+                             },
+                           ),
                          ),
 
                 
@@ -72,7 +70,7 @@ class CreateLeaveView extends StatelessWidget {
                     _buildSectionTitle("អ្នកអនុម័ត"),
                       const SizedBox(height: 5),
                     Padding(
-                      padding: const EdgeInsets.only(left: 12,right: 12),
+                      padding: const EdgeInsets.only(left: 15,right: 15),
                       child: CustomDropdown(
                         selectedValue: selectApproveById,
                         items: authController.users,
@@ -83,7 +81,7 @@ class CreateLeaveView extends StatelessWidget {
 
                     const SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.only(left: 12,right: 12,bottom: 10),
+                      padding: const EdgeInsets.only(left: 15,right: 15,bottom: 10),
                       child: Row(
                         children: [
                           Expanded(
@@ -121,7 +119,7 @@ class CreateLeaveView extends StatelessWidget {
                      _buildSectionTitle("ចំនួនថ្ងៃឈប់សម្រាក"),
                      SizedBox(height: 8,),
                     Padding(
-                      padding: const EdgeInsets.only(left: 12,right: 12,bottom: 6),
+                      padding: const EdgeInsets.only(left: 15,right: 15,bottom: 6),
                       child: CustomTextField(
                         controller: leavedaycontroller, 
                         hintText: "ឧ 2", 
@@ -131,7 +129,7 @@ class CreateLeaveView extends StatelessWidget {
                      _buildSectionTitle("ពិពណ៍នា"),
                      SizedBox(height: 8,),
                     Padding(
-                      padding: const EdgeInsets.only(left: 12,right: 12),
+                      padding: const EdgeInsets.only(left: 15,right: 15),
                       child: CustomTextField(
                         controller: descriptioncontroller, 
                         hintText: "ឧ មានការរល់", 
@@ -150,6 +148,9 @@ class CreateLeaveView extends StatelessWidget {
           final end = selectEndDate.value;
           final leave = int.tryParse(leavedaycontroller.text.trim());
           await leaveController.createleave(
+            ispermission: leaveTypeController.isPermission.value,
+            iswithoutpermission: leaveTypeController.isWithoutPermission.value,
+            isweekend: leaveTypeController.isWeekend.value,
             employeeshiftid: employeeShiftController.selectedShiftId.value!, 
             startdate: start!.toIso8601String(), 
             enddate: end!.toIso8601String(), 
@@ -164,7 +165,7 @@ class CreateLeaveView extends StatelessWidget {
 
   Widget _buildSectionTitle(String text) {
     return Padding(
-      padding: const EdgeInsets.only(left: 13,right: 13),
+      padding: const EdgeInsets.only(left: 15,right: 15),
       child: Text(
         text,
         style: TextStyles.siemreap(
