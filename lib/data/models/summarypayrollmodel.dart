@@ -63,6 +63,7 @@ class Data {
   double? totalDeductions;
   double? netsalary;
   int? isBonusAttendanace;
+  int? bonusAmount;
 
   Data({
     this.salaryId,
@@ -106,6 +107,7 @@ class Data {
     this.totalDeductions,
     this.netsalary,
     this.isBonusAttendanace,
+    this.bonusAmount,
   });
 
 
@@ -154,6 +156,7 @@ class Data {
     totalDeductions = (json['totalDeductions'] as num?)?.toDouble();
     netsalary = (json['netsalary'] as num?)?.toDouble();
     isBonusAttendanace = json['is_bonus_attendanace'];
+    bonusAmount = json['bonusamount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -200,6 +203,7 @@ class Data {
     data['totalDeductions'] = totalDeductions;
     data['netsalary'] = netsalary;
     data['is_bonus_attendanace'] = isBonusAttendanace;
+    data['bonusamount']= bonusAmount;
     return data;
   }
 }

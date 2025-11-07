@@ -84,7 +84,7 @@ class _LeaveviewState extends State<Leaveview> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: CustomAppBar(title: "របាយការណ៍ម៉ោងចូលនិងម៉ោងចេញ"),
+        appBar: CustomAppBar(title: "របាយការណ៍សុំច្បាប់"),
         backgroundColor: TheColors.bgColor,
         body: RefreshIndicator(
           onRefresh: () async {

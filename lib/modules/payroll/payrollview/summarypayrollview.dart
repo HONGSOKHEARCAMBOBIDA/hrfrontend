@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/helper/show_branch_buttonsheet.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
+import 'package:flutter_application_10/data/models/payrollrequestmodel.dart';
 import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
 import 'package:flutter_application_10/modules/payroll/payrollcontroller/payrollcontroller.dart';
 import 'package:flutter_application_10/shared/widgets/app_bar.dart';
+import 'package:flutter_application_10/shared/widgets/custombuttonnav.dart';
+import 'package:flutter_application_10/shared/widgets/elevated_button.dart';
 import 'package:flutter_application_10/shared/widgets/loading.dart';
 import 'package:flutter_application_10/shared/widgets/payrolldraffcard.dart';
 import 'package:get/get.dart';
@@ -21,7 +24,7 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
   final branchcontroller = Get.find<Branchcontroller>();
   final selectbranchid = Rxn<int>();
   final selectmonth = Rxn<int>();
-
+ final Map<int, double> loanDeductions = {};
   // Month list with Khmer and English names
   final List<Map<String, dynamic>> months = [
     {'id': 1, 'name': 'មករា', 'name_en': 'January'},
@@ -38,6 +41,7 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
     {'id': 12, 'name': 'ធ្នូ', 'name_en': 'December'},
   ];
 
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +49,67 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
     selectmonth.value = DateTime.now().month;
   }
 
+    void _onLoanDeductionChanged(double amount, int salaryId) {
+    loanDeductions[salaryId] = amount;
+  }
+  void _submitAllPayrolls() {
+    if (selectbranchid.value == null || selectmonth.value == null) {
+      Get.snackbar(
+        'ការជ្រើសរើស',
+        'សូមជ្រើសរើសសាខា និងខែជាមុនសិន',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    if (paycontroller.payrolldraff.isEmpty) {
+      Get.snackbar(
+        'ទិន្នន័យ',
+        'មិនមានទិន្នន័យប្រាក់ខែដេីម្បីបញ្ជូនទេ',
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    // Show confirmation dialog
+    Get.dialog(
+      AlertDialog(
+        title: Text('បញ្ជូនប្រាក់ខែ', style: TextStyles.siemreap(context)),
+        content: Text(
+          'តើអ្នកពិតជាចង់បញ្ជូនប្រាក់ខែទាំងអស់នេះមែនទេ?បញ្ជួនហេីយមិនអាចកែប្រែបានទេ!',
+          style: TextStyles.siemreap(context, fontSize: 14),
+        ),
+        actions: [
+
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: TheColors.errorColor,
+                  ),
+                  onPressed: () {
+                  
+                    paycontroller.submitAllPayrolls(
+                      month: selectmonth.value!,
+                      branchId: selectbranchid.value!,
+                      loanDeductions: loanDeductions,
+                    );
+                    Get.back();
+                  },
+                  child: Text('បញ្ជូន', style: TextStyles.siemreap(context, color: Colors.white)),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
   // Method to show month selector bottom sheet
   void _showMonthSelector(BuildContext context) {
     showModalBottomSheet(
@@ -167,9 +232,12 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
             _buildFilters(context),
             const SizedBox(height: 10),
             Expanded(child: _buildpayrolldraffList(context)),
+            SizedBox(height: 15,),
+              _buildSubmitButton(),
           ],
         ),
       ),
+
     );
   }
 
@@ -182,6 +250,21 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     );
   }
+    Widget _buildSubmitButton() {
+    return Obx(() {
+      if (paycontroller.payrolldraff.isEmpty) return SizedBox();
+      
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: CustomElevatedButton(
+          onPressed: paycontroller.isSubmitting.value ? null : _submitAllPayrolls,
+          backgroundColor: TheColors.errorColor,
+          text:"បញ្ចូនទាំងអស់" 
+        ),
+      );
+    });
+  }
+
 
   Widget _buildFilters(BuildContext context) {
     return Padding(
@@ -312,7 +395,6 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
       ],
     );
   }
-
   Widget _buildpayrolldraffList(BuildContext context) {
     return Obx(() {
       if (paycontroller.isLoading.value) return const CustomLoading();
@@ -343,10 +425,14 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
           final payroll = paycontroller.payrolldraff[index];
           return Padding(
             padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-            child: PayrollCard(payrollData: payroll),
+            child: PayrollCard(
+              payrollData: payroll,
+              onLoanDeductionChanged: _onLoanDeductionChanged, // Pass the callback
+            ),
           );
         },
       );
     });
   }
+
 }
