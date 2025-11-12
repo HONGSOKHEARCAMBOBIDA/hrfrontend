@@ -9,6 +9,7 @@ class CustomUserCard extends StatelessWidget {
   final String namekh;
   final String nameenglish;
   final String role;
+  final String branch;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onTap;
@@ -19,6 +20,7 @@ class CustomUserCard extends StatelessWidget {
     required this.namekh,
     required this.nameenglish,
     required this.role,
+    required this.branch,
     required this.onEdit,
     required this.onDelete,
     required this.onTap,
@@ -29,8 +31,7 @@ class CustomUserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    final token = GetStorage().read('token');
-
+   
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.0),
@@ -98,11 +99,11 @@ class CustomUserCard extends StatelessWidget {
                       Text("("),
                       SizedBox(width: 2,),
                                             Text(
-                        nameenglish,
+                        branch,
                         style: TextStyles.siemreap(
                           context,
                           fontSize: 10,
-                          color: TheColors.black
+                          color: TheColors.secondaryColor
                         ),
                       
                         maxLines: 1,

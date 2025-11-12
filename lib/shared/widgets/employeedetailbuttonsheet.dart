@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/theme/constants/constants.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/data/models/employeemodel.dart' as mymodel;
 import 'package:google_fonts/google_fonts.dart';
@@ -24,9 +25,20 @@ class Employeedetailbuttonsheet extends StatelessWidget {
       }
     }
 
+    String getMaritalStatus(int? status) {
+      if (status == null) return 'N/A';
+      switch (status) {
+        case 1: return 'នៅលីវ';
+        case 2: return 'រៀបការ';
+        case 3: return 'លែងលះ';
+        case 4: return 'ស្វាមី/ភរិយាស្លាប់';
+        default: return 'N/A';
+      }
+    }
+
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.8,
+      initialChildSize: 0.9,
       minChildSize: 0.4,
       maxChildSize: 0.95,
       builder: (_, controller) => Container(
@@ -60,44 +72,121 @@ class Employeedetailbuttonsheet extends StatelessWidget {
                       _buildDetailItem('ឈ្មោះ', employee.name ?? 'N/A'),
                       _buildDetailItem('ឈ្មោះអង់គ្លេស', employee.nameEn ?? 'N/A'),
                       _buildDetailItem('ភេទ', _getGender(employee.gender)),
-                      _buildDetailItem('ថ្ងៃកំណើត', formatDate(employee.dob)),
-                      _buildDetailItem('លេខអត្តសញ្ញាណ',
-                          employee.nationalIdNumber ?? 'N/A'),
+                      _buildDetailItem('ថ្ងៃកំណើត', formatDate(employee.dateOfBirth)),
+                      _buildDetailItem('លេខអត្តសញ្ញាណ', employee.nationalIdNumber ?? 'N/A'),
                       _buildDetailItem('លេខទូរស័ព្ទ', employee.contact ?? 'N/A'),
+                      _buildDetailItem('ស្ថានភាពគ្រួសារ', getMaritalStatus(employee.maritalStatus)),
+                      _buildDetailItem('លេខទូរស័ព្ទគ្រួសារ', employee.familyPhone ?? 'N/A'),
                     ],
                   ),
+                  
                   _buildSection(
                     icon: Icons.work_outline,
                     title: 'ព័ត៌មានការងារ',
                     children: [
                       _buildDetailItem('តួនាទី', employee.roleName ?? 'N/A'),
                       _buildDetailItem('សាខា', employee.branchName ?? 'N/A'),
-                      _buildDetailItem('ប្រភេទការងារ',
-                          employee.type == 1 ? 'ពេញម៉ោង' : 'កាលបរិច្ឆេទ'),
-                      _buildDetailItem('ថ្ងៃចូលបំពេញការងារ',
-                          formatDate(employee.hireDate)),
+                      _buildDetailItem('ប្រភេទការងារ', employee.type == 1 ? 'ពេញម៉ោង' : 'កាលកំណត់'),
+                      _buildDetailItem('ថ្ងៃចូលបំពេញការងារ', formatDate(employee.hireDate)),
+                      _buildDetailItem('ថ្ងៃតម្លើងតួនាទី', formatDate(employee.promoteDate)),
+                      _buildDetailItem('តម្លើងតួនាទី', employee.isPromote == true ? 'បានតម្លើង' : 'មិនទាន់តម្លើង'),
+                      _buildDetailItem('កម្រិតតួនាទី', employee.positionLevel == 1 ? "បុគ្គលិកធម្មតា" : "បុគ្គលិកជំនាញ"),
                       _buildDetailItem('វេន', employee.shiftName ?? 'N/A'),
-                      _buildDetailItem('ម៉ោងធ្វើការ',
-                          '${employee.startTime ?? ''} - ${employee.endTime ?? ''}'),
-                      _buildDetailItem(
-                          'ប្រាក់ខែគោល',
-                          employee.baseSalary != null
-                              ? '${employee.baseSalary} ដុល្លា'
-                              : 'N/A'),
-                      _buildDetailItem('ស្ថានភាព',
-                          employee.isActive == true ? 'សកម្ម' : 'អសកម្ម'),
+                      _buildDetailItem('ម៉ោងធ្វើការ', '${employee.startTime ?? ''} - ${employee.endTime ?? ''}'),
+
                     ],
                   ),
+
+                  _buildSection(
+                    icon: Icons.attach_money,
+                    title: 'ព័ត៌មានផ្នែកហិរញ្ញវត្ថុ',
+                    children: [
+                      _buildDetailItem('ប្រាក់ខែគោល', employee.baseSalary != null ? '${employee.baseSalary} ដុល្លា' : 'N/A'),
+                      _buildDetailItem('អត្រាប្រាក់ឈ្នួលប្រចាំថ្ងៃ', employee.dailyRate != null ? '${employee.dailyRate} ដុល្លា' : 'N/A'),
+                      _buildDetailItem('ថ្ងៃធ្វើការ', employee.workedDay!= null ? '${employee.workedDay} ថ្ងៃ': 'N/A'),
+                      _buildDetailItem('ធនាគារ', employee.bankName ?? 'N/A'),
+                      _buildDetailItem('លេខគណនីធនាគារ', employee.bankAccountNumber ?? 'N/A'),
+                           Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      "QR Code",
+      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+    ),
+    Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: TheColors.orange,width: 0.3),
+        borderRadius: BorderRadius.circular(8)
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8), // keep corners slightly rounded (optional)
+          child: Image.network(
+            employee.qrCodeBankAccount != null && employee.qrCodeBankAccount!.isNotEmpty
+                ? "${Appconstants.baseUrl}/qrcodeimage/${employee.qrCodeBankAccount}"
+                : "https://cdn-icons-png.flaticon.com/512/17634/17634775.png",
+            width: 100, // adjust size
+            height: 100,
+            fit: BoxFit.cover,
+            
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(Icons.broken_image, size: 100);
+            },
+          ),
+        ),
+      ),
+    ),
+  ],
+)
+
+                    ],
+                  ),
+
+                  _buildSection(
+                    icon: Icons.school_outlined,
+                    title: 'ព័ត៌មានអប់រំ និងបទពិសោធន៍',
+                    children: [
+                      _buildDetailItem('កម្រិតវប្បធម៌', employee.educationLevel ?? 'N/A'),
+                      _buildDetailItem('ឆ្នាំបទពិសោធន៍', employee.experienceYears?.toString() ?? 'N/A'),
+                      _buildDetailItem('ក្រុមហ៊ុនពីមុន', employee.previousCompany ?? 'N/A'),
+                    ],
+                  ),
+
                   _buildSection(
                     icon: Icons.location_on_outlined,
-                    title: 'អាសយដ្ឋាន',
+                    title: 'ទីកន្លែងកំណើត',
                     children: [
-                      _buildDetailItem('ខេត្ត', employee.provinceName ?? 'N/A'),
-                      _buildDetailItem('ស្រុក', employee.districtName ?? 'N/A'),
-                      _buildDetailItem('ឃុំ', employee.communeName ?? 'N/A'),
-                      _buildDetailItem('ភូមិ', employee.villageName ?? 'N/A'),
+                      _buildDetailItem('ខេត្ត', employee.provinceNameOfBirth ?? 'N/A'),
+                      _buildDetailItem('ស្រុក', employee.districtNameOfBirth ?? 'N/A'),
+                      _buildDetailItem('ឃុំ', employee.communceNameOfBirth ?? 'N/A'),
+                      _buildDetailItem('ភូមិ', employee.villageNameOfBirth ?? 'N/A'),
                     ],
                   ),
+
+                  _buildSection(
+                    icon: Icons.home_outlined,
+                    title: 'ទីកន្លែងបច្ចុប្បន្ន',
+                    children: [
+                      _buildDetailItem('ខេត្ត', employee.provinceNameCurrentAddress ?? 'N/A'),
+                      _buildDetailItem('ស្រុក', employee.districtNameCurrentAddress ?? 'N/A'),
+                      _buildDetailItem('ឃុំ', employee.communceNameCurrentAddress ?? 'N/A'),
+                      _buildDetailItem('ភូមិ', employee.villageNameCurrentAddress ?? 'N/A'),
+                    ],
+                  ),
+
+                  _buildSection(
+                    icon: Icons.note_outlined,
+                    title: 'ព័ត៌មានបន្ថែម',
+                    children: [
+                      _buildDetailItem('កំណត់សម្គាល់', employee.notes ?? 'N/A'),
+                      _buildDetailItem('ស្ថានភាព', employee.isActive == true ? 'សកម្ម' : 'អសកម្ម'),
+                      _buildDetailItem('លេខសម្គាល់', employee.id?.toString() ?? 'N/A'),
+                      _buildDetailItem('លេខសម្គាល់វេន', employee.employeeShitfId?.toString() ?? 'N/A'),
+                      _buildDetailItem('លេខសម្គាល់ប្រាក់ខែ', employee.salaryId?.toString() ?? 'N/A'),
+                    ],
+                  ),
+
                   const SizedBox(height: 20),
                 ],
               ),
@@ -114,9 +203,12 @@ class Employeedetailbuttonsheet extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 45,
-          backgroundImage: const NetworkImage(
-            'https://cdn-icons-png.flaticon.com/512/17634/17634775.png',
-          ),
+          backgroundColor: TheColors.bgColor,
+          backgroundImage: employee.profileImage != null && employee.profileImage!.isNotEmpty
+              ? NetworkImage("${Appconstants.baseUrl}/profileimage/${employee.profileImage}")
+              : const NetworkImage(
+                  'https://cdn-icons-png.flaticon.com/512/17634/17634775.png',
+                ) as ImageProvider,
         ),
         const SizedBox(height: 12),
         Text(
@@ -141,7 +233,7 @@ class Employeedetailbuttonsheet extends StatelessWidget {
             color: employee.isActive == true
                 ? TheColors.successColor.withOpacity(0.2)
                 : TheColors.errorColor.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
             employee.isActive == true ? 'សកម្ម' : 'អសកម្ម',
@@ -168,15 +260,10 @@ class Employeedetailbuttonsheet extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: TheColors.bgColor.withOpacity(0.7),
+        border: Border.all(color: TheColors.orange,width: 0.4),
+        
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          )
-        ],
+       
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,7 +283,7 @@ class Employeedetailbuttonsheet extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-          const Divider(height: 8),
+           Divider(height: 8,color: TheColors.orange),
           ...children,
         ],
       ),
@@ -210,11 +297,14 @@ class Employeedetailbuttonsheet extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '$label: ',
-            style: GoogleFonts.siemreap(
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
+          SizedBox(
+            width: 150,
+            child: Text(
+              '$label: ',
+              style: GoogleFonts.siemreap(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
             ),
           ),
           Expanded(

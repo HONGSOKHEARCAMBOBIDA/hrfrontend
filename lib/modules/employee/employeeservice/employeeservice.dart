@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_application_10/data/models/employeemodel.dart';
 import 'package:flutter_application_10/data/models/employeeupdatemodel.dart';
 import 'package:flutter_application_10/data/providers/api_provider.dart';
@@ -35,23 +39,103 @@ class Employeeservice {
     }
   }
 
-  Future<bool> updateemployee(Employeeupdatemodel employee) async {
+  // Future<bool> updateemployee(Employeeupdatemodel employee) async {
+  //   try {
+  //     final response = await apiProvider.put(
+  //       'editemployee/${employee.ID}',
+  //       employee.toJson(),
+  //     );
+  //     if (response.statusCode == 200) {
+  //       return true;
+  //     } else {
+  //       CustomSnackbar.error(title: "បរាជ័យ", message: "កែប្រែមិនបានទេ");
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     CustomSnackbar.error(
+  //       title: "កំហុស",
+  //       message: "មានបញ្ហា: ${e.toString()}",
+  //     );
+  //     return false;
+  //   }
+  // }
+  Future<bool> updateemployee({
+    required int employeeID,
+    required String branchID,
+    required String nameEn,
+    required String nameKh,
+    required int gender,
+    required String contact,
+    required String nationalIdNumber,
+    required int roleId,
+    required DateTime hireDate,
+    required DateTime promoteDate,
+    required int type,
+    required DateTime dateOfBirth,
+    required int villageIdofbirth,
+    required int materialstatus,
+    required int villageIdcurrentaddress,
+    required String familyPhone,
+    required String educationLevel,
+    required int experienceYears,
+    required String previousCompany,
+    required String bankName,
+    required String bankAccountNumber,
+    required String notes,
+    required int positionLevel,
+    File? profileImage,
+    File? qrcodeimage,
+  }) async {
     try {
+      var formData = FormData.fromMap({
+        '_method': 'PUT',
+        'branch_id': branchID,
+        'name_en': nameEn,
+        'name_kh': nameKh,
+        'gender': gender,
+        'contact': contact,
+        'national_id_number': nationalIdNumber,
+        'role_id': roleId,
+        'hire_date': hireDate,
+        'promote_date': promoteDate,
+        'type': type,
+        'date_of_birth': dateOfBirth,
+        'village_id_of_birth': villageIdofbirth,
+        'marital_status': materialstatus,
+        'village_id_current_address': villageIdcurrentaddress,
+        'family_phone': familyPhone,
+        'education_level': educationLevel,
+        'experience_years': experienceYears,
+        'previous_company': previousCompany,
+        'bank_name': bankName,
+        'bank_account_number': bankAccountNumber,
+        'notes': notes,
+        'position_level': positionLevel,
+        if (profileImage != null)
+          'profileimage': await MultipartFile.fromFile(
+            profileImage.path,
+            filename: profileImage.path.split('/').last,
+          ),
+        if (qrcodeimage != null)
+          'qrcodeimage': await MultipartFile.fromFile(
+            qrcodeimage.path,
+            filename: qrcodeimage.path.split('/').last,
+          ),
+      });
       final response = await apiProvider.put(
-        'editemployee/${employee.ID}',
-        employee.toJson(),
+        'editemployee/$employeeID',
+        formData,
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
       } else {
-        CustomSnackbar.error(title: "បរាជ័យ", message: "កែប្រែមិនបានទេ");
+        debugPrint(
+          'Update failed. Status: ${response.statusCode}, Data: ${response.data}',
+        );
         return false;
       }
     } catch (e) {
-      CustomSnackbar.error(
-        title: "កំហុស",
-        message: "មានបញ្ហា: ${e.toString()}",
-      );
+      debugPrint('Unexpected error: ${e.toString()}');
       return false;
     }
   }

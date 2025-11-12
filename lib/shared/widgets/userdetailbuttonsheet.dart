@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/data/models/usermodel.dart' as mymodel;
-import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -14,16 +13,16 @@ class UserDetailBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    String formatDate(String? isoDate) {
-      if (isoDate == null || isoDate.isEmpty) return 'N/A';
-      try {
-        final date = DateTime.parse(isoDate);
-        return DateFormat('dd/MM/yyyy').format(date);
-        // OR Khmer: return DateFormat('dd MMMM yyyy', 'km').format(date);
-      } catch (e) {
-        return 'N/A';
-      }
-    }
+    // String formatDate(String? isoDate) {
+    //   if (isoDate == null || isoDate.isEmpty) return 'N/A';
+    //   try {
+    //     final date = DateTime.parse(isoDate);
+    //     return DateFormat('dd/MM/yyyy').format(date);
+    //     // OR Khmer: return DateFormat('dd MMMM yyyy', 'km').format(date);
+    //   } catch (e) {
+    //     return 'N/A';
+    //   }
+    // }
 
     return DraggableScrollableSheet(
       expand: false,
@@ -56,10 +55,9 @@ class UserDetailBottomSheet extends StatelessWidget {
                 children: [
                   SizedBox(height: 4),
                   _buildSectionTitle('ព័ត៌មានផ្ទាល់ខ្លួន'),
-                  _buildDetailItem('ឈ្មោះ', user.name ?? 'N/A'),
+                  _buildDetailItem('ឈ្មោះ', user.nameKh ?? 'N/A'),
                   _buildDetailItem('ឈ្មោះអង់គ្លេស', user.nameEn ?? 'N/A'),
                   _buildDetailItem('ភេទ', _getGender(user.gender)),
-                  _buildDetailItem('ថ្ងៃកំណើត', formatDate(user.dob)),
                   _buildDetailItem(
                     'លេខអត្តសញ្ញាណ',
                     user.nationalIdNumber ?? 'N/A',
@@ -100,7 +98,7 @@ class UserDetailBottomSheet extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          user.name ?? 'N/A',
+          user.nameKh ?? 'N/A',
           style: GoogleFonts.siemreap(
             fontSize: 18,
             fontWeight: FontWeight.bold,

@@ -310,6 +310,7 @@ class _EmployeeviewState extends State<Employeeview> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8, right: 8),
                             child: CustomEmployeeCard(
+                              profileImage: employee.profileImage!,
                               basesalary: employee.baseSalary!,
                               start_time: employee.startTime!,
                               end_time: employee.endTime!,

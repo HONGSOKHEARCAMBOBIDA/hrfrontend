@@ -265,8 +265,9 @@ class _UserviewState extends State<Userview> {
                                 padding: const EdgeInsets.only(left: 8, right: 8),
                                 child: CustomUserCard(
                                   
-                                  namekh: user.name ?? "អត់មាន",
+                                  namekh: user.nameKh ?? "អត់មាន",
                                   role: user.roleName ?? "អត់មាន".tr,
+                                  branch: user.branchName!,
                                   nameenglish: user.nameEn ?? "",
                                   
                                   isActive: user.isActive,

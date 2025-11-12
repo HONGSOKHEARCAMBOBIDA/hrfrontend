@@ -1,12 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter_application_10/data/models/employeemodel.dart';
 import 'package:flutter_application_10/data/models/employeeupdatemodel.dart';
 import 'package:flutter_application_10/modules/employee/employeeservice/employeeservice.dart';
 import 'package:flutter_application_10/shared/widgets/snackbar.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Employeecontroller extends GetxController {
   final Employeeservice employeeservice = Employeeservice();
   var employees = <Data>[].obs;
+  final imagepicker = ImagePicker();
+  File? profileImage;
+  File? qrcodeimage;
   final RxString searchQuery = ''.obs;
   var isLoading = false.obs;
   @override
@@ -22,6 +28,40 @@ class Employeecontroller extends GetxController {
     );
 
     super.onInit();
+  }
+
+  Future<File?> pickProfile() async {
+    final XFile? pickedFile = await imagepicker.pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      profileImage = File(pickedFile.path);
+      update();
+      return profileImage; // Return the selected image
+    } else {
+      CustomSnackbar.error(
+        title: "error".tr,
+        message: "something_went_wrong".tr,
+      );
+      return null; // Return null if no image was picked
+    }
+  }
+
+  Future<File?> pickqrImage() async {
+    final XFile? pickedFile = await imagepicker.pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      qrcodeimage = File(pickedFile.path);
+      update();
+      return qrcodeimage; // Return the selected image
+    } else {
+      CustomSnackbar.error(
+        title: "error".tr,
+        message: "something_went_wrong".tr,
+      );
+      return null; // Return null if no image was picked
+    }
   }
 
   Future<void> fetchemployee({
@@ -48,15 +88,81 @@ class Employeecontroller extends GetxController {
     }
   }
 
-  Future<void> updateemployee(Employeeupdatemodel employee) async {
+  // Future<void> updateemployee(Employeeupdatemodel employee) async {
+  //   try {
+  //     isLoading.value = true;
+  //     bool isupdated = await employeeservice.updateemployee(employee);
+  //     if (isupdated == true) {
+  //       await fetchemployee();
+  //     }
+  //   } catch (e) {
+  //     CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
+  Future<void> updateemployee({
+    required int employeeID,
+    required String branchID,
+    required String nameEn,
+    required String nameKh,
+    required int gender,
+    required String contact,
+    required String nationalIdNumber,
+    required int roleId,
+    required DateTime hireDate,
+    required DateTime promoteDate,
+    required int type,
+    required DateTime dateOfBirth,
+    required int villageIdofbirth,
+    required int materialstatus,
+    required int villageIdcurrentaddress,//
+    required String familyPhone,//
+    required String educationLevel,//
+    required int experienceYears,//
+    required String previousCompany,
+    required String bankName,
+    required String bankAccountNumber,
+    required String notes,
+    required int positionLevel,
+    File? profileImage,
+    File? qrcodeimage,
+  }) async {
     try {
       isLoading.value = true;
-      bool isupdated = await employeeservice.updateemployee(employee);
-      if (isupdated == true) {
+      final isupdated = await employeeservice.updateemployee(
+        employeeID: employeeID,
+        branchID: branchID,
+        nameEn: nameEn,
+        nameKh: nameKh,
+        gender: gender,
+        contact: contact,
+        nationalIdNumber: nationalIdNumber,
+        roleId: roleId,
+        hireDate: hireDate,
+        promoteDate: promoteDate,
+        type: type,
+        dateOfBirth: dateOfBirth,
+        villageIdofbirth: villageIdofbirth,
+        materialstatus: materialstatus,
+        villageIdcurrentaddress: villageIdcurrentaddress,
+        familyPhone: familyPhone,
+        educationLevel: educationLevel,
+        experienceYears: experienceYears,
+        previousCompany: previousCompany,
+        bankName: bankName,
+        bankAccountNumber: bankAccountNumber,
+        notes: notes,
+        positionLevel: positionLevel,
+        profileImage: profileImage,
+        qrcodeimage: qrcodeimage,
+      );
+      if (isupdated) {
+        Get.back();
         await fetchemployee();
       }
     } catch (e) {
-      CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+      CustomSnackbar.error(title: "ខុសប្រក្រី".tr, message: "កែប្រែបរាជ័យ".tr);
     } finally {
       isLoading.value = false;
     }
@@ -130,28 +236,29 @@ class Employeecontroller extends GetxController {
       isLoading.value = false;
     }
   }
-  Future<void> createemployeeshift({
 
+  Future<void> createemployeeshift({
     required int employeeid,
     required int shiftid,
     required int baseSalary,
     required int workday,
     required int salaryid,
     required int employeeshiftid,
-  }) async{
-    try{
-isLoading.value = true;
-bool created = await employeeservice.creteEmployeeShift(
-  employeeid: employeeid, 
-  shiftid: shiftid, 
-  baseSalary: baseSalary, 
-  workday: workday, 
-  salaryid: salaryid, 
-  employeeshiftid: employeeshiftid);
-  if(created){
-    await fetchemployee();
-    Get.back();
-  }
+  }) async {
+    try {
+      isLoading.value = true;
+      bool created = await employeeservice.creteEmployeeShift(
+        employeeid: employeeid,
+        shiftid: shiftid,
+        baseSalary: baseSalary,
+        workday: workday,
+        salaryid: salaryid,
+        employeeshiftid: employeeshiftid,
+      );
+      if (created) {
+        await fetchemployee();
+        Get.back();
+      }
     } catch (e) {
       CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
     } finally {

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/theme/constants/constants.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
 import 'package:flutter_application_10/shared/widgets/employeeshifteditview.dart';
@@ -21,6 +22,7 @@ class CustomEmployeeCard extends StatelessWidget {
   final bool? isActive;
   final String? shiftname;
   final String? branchname;
+  final String profileImage;
 
   const CustomEmployeeCard({
     Key? key,
@@ -35,6 +37,7 @@ class CustomEmployeeCard extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     required this.onTap,
+    required this.profileImage,
     this.shiftname,
     this.isActive,
     this.branchname,
@@ -63,16 +66,15 @@ class CustomEmployeeCard extends StatelessWidget {
               // Avatar with online/offline dot
               Stack(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          "https://cdn-icons-png.flaticon.com/128/3177/3177440.png",
-                      width: 55,
-                      height: 55,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                   CircleAvatar(
+          radius: 30,
+          backgroundColor: TheColors.bgColor,
+          backgroundImage: profileImage!.isNotEmpty
+              ? NetworkImage("${Appconstants.baseUrl}/profileimage/${profileImage}")
+              : const NetworkImage(
+                  'https://cdn-icons-png.flaticon.com/512/17634/17634775.png',
+                ) as ImageProvider,
+        ),
                   Positioned(
                     bottom: 2,
                     right: 2,

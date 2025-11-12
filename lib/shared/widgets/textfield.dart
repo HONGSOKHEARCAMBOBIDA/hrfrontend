@@ -48,7 +48,7 @@ class CustomTextField extends StatelessWidget {
   ),
         contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
       ),
-      style: TextStyles.siemreap(context),
+      style: TextStyles.siemreap(context,fontSize: 12),
       validator: validator ??
           (value) {
             if (value == null || value.isEmpty) {

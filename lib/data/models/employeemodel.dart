@@ -28,20 +28,41 @@ class Data {
   String? nameEn;
   String? name;
   int? gender;
-  String? dob;
+  String? dateOfBirth;
+  int? villageIdOfBirth;
+  String? villageNameOfBirth;
+  int? communceIdOfBirth;
+  String? communceNameOfBirth;
+  int? districtIdOfBirth;
+  String? districtNameOfBirth;
+  int? provinceIdOfBirth;
+  String? provinceNameOfBirth;
+  int? maritalStatus;
+  String? profileImage;
+  int? villageIdCurrentAddress;
+  String? villageNameCurrentAddress;
+  int? communceIdCurrentAddress;
+  String? communceNameCurrentAddress;
+  int? districtIdCurrentAddress;
+  String? districtNameCurrentAddress;
+  int? provinceIdCurrentAddress;
+  String? provinceNameCurrentAddress;
+  String? familyPhone;
+  String? educationLevel;
+  int? experienceYears;
+  String? previousCompany;
+  String? bankName;
+  String? bankAccountNumber;
+  String? qrCodeBankAccount;
+  String? notes;
   String? contact;
   String? nationalIdNumber;
-  int? provinceId;
-  String? provinceName;
-  int? districtId;
-  String? districtName;
-  int? communeId;
-  String? communeName;
-  int? villageId;
-  String? villageName;
   int? roleId;
   String? roleName;
+  int? positionLevel;
   String? hireDate;
+  String? promoteDate;
+  bool? isPromote;
   int? type;
   int? shiftId;
   String? shiftName;
@@ -62,20 +83,41 @@ class Data {
       this.nameEn,
       this.name,
       this.gender,
-      this.dob,
+      this.dateOfBirth,
+      this.villageIdOfBirth,
+      this.villageNameOfBirth,
+      this.communceIdOfBirth,
+      this.communceNameOfBirth,
+      this.districtIdOfBirth,
+      this.districtNameOfBirth,
+      this.provinceIdOfBirth,
+      this.provinceNameOfBirth,
+      this.maritalStatus,
+      this.profileImage,
+      this.villageIdCurrentAddress,
+      this.villageNameCurrentAddress,
+      this.communceIdCurrentAddress,
+      this.communceNameCurrentAddress,
+      this.districtIdCurrentAddress,
+      this.districtNameCurrentAddress,
+      this.provinceIdCurrentAddress,
+      this.provinceNameCurrentAddress,
+      this.familyPhone,
+      this.educationLevel,
+      this.experienceYears,
+      this.previousCompany,
+      this.bankName,
+      this.bankAccountNumber,
+      this.qrCodeBankAccount,
+      this.notes,
       this.contact,
       this.nationalIdNumber,
-      this.provinceId,
-      this.provinceName,
-      this.districtId,
-      this.districtName,
-      this.communeId,
-      this.communeName,
-      this.villageId,
-      this.villageName,
       this.roleId,
       this.roleName,
+      this.positionLevel,
       this.hireDate,
+      this.promoteDate,
+      this.isPromote,
       this.type,
       this.shiftId,
       this.shiftName,
@@ -89,6 +131,7 @@ class Data {
       this.isActive,
       this.assignBranchId});
 
+
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     branchId = json['branch_id'];
@@ -96,20 +139,41 @@ class Data {
     nameEn = json['name_en'];
     name = json['name_kh'];
     gender = json['gender'];
-    dob = json['dob'];
+    dateOfBirth = json['date_of_birth'];
+    villageIdOfBirth = json['village_id_of_birth'];
+    villageNameOfBirth = json['village_name_of_birth'];
+    communceIdOfBirth = json['communce_id_of_birth'];
+    communceNameOfBirth = json['communce_name_of_birth'];
+    districtIdOfBirth = json['district_id_of_birth'];
+    districtNameOfBirth = json['district_name_of_birth'];
+    provinceIdOfBirth = json['province_id_of_birth'];
+    provinceNameOfBirth = json['province_name_of_birth'];
+    maritalStatus = json['marital_status'];
+    profileImage = json['profile_image'];
+    villageIdCurrentAddress = json['village_id_current_address'];
+    villageNameCurrentAddress = json['village_name_current_address'];
+    communceIdCurrentAddress = json['communce_id_current_address'];
+    communceNameCurrentAddress = json['communce_name_current_address'];
+    districtIdCurrentAddress = json['district_id_current_address'];
+    districtNameCurrentAddress = json['district_name_current_address'];
+    provinceIdCurrentAddress = json['province_id_current_address'];
+    provinceNameCurrentAddress = json['province_name_current_address'];
+    familyPhone = json['family_phone'];
+    educationLevel = json['education_level'];
+    experienceYears = json['experience_years'];
+    previousCompany = json['previous_company'];
+    bankName = json['bank_name'];
+    bankAccountNumber = json['bank_account_number'];
+    qrCodeBankAccount = json['qr_code_bank_account'];
+    notes = json['notes'];
     contact = json['contact'];
     nationalIdNumber = json['national_id_number'];
-    provinceId = json['province_id'];
-    provinceName = json['province_name'];
-    districtId = json['district_id'];
-    districtName = json['district_name'];
-    communeId = json['commune_id'];
-    communeName = json['commune_name'];
-    villageId = json['village_id'];
-    villageName = json['village_name'];
     roleId = json['role_id'];
     roleName = json['role_name'];
+    positionLevel = json['position_level'];
     hireDate = json['hire_date'];
+    promoteDate = json['promote_date'];
+    isPromote = json['is_promote'];
     type = json['type'];
     shiftId = json['shift_id'];
     shiftName = json['shift_name'];
@@ -133,20 +197,41 @@ class Data {
     data['name_en'] = this.nameEn;
     data['name_kh'] = this.name;
     data['gender'] = this.gender;
-    data['dob'] = this.dob;
+    data['date_of_birth'] = this.dateOfBirth;
+    data['village_id_of_birth'] = this.villageIdOfBirth;
+    data['village_name_of_birth'] = this.villageNameOfBirth;
+    data['communce_id_of_birth'] = this.communceIdOfBirth;
+    data['communce_name_of_birth'] = this.communceNameOfBirth;
+    data['district_id_of_birth'] = this.districtIdOfBirth;
+    data['district_name_of_birth'] = this.districtNameOfBirth;
+    data['province_id_of_birth'] = this.provinceIdOfBirth;
+    data['province_name_of_birth'] = this.provinceNameOfBirth;
+    data['marital_status'] = this.maritalStatus;
+    data['profile_image'] = this.profileImage;
+    data['village_id_current_address'] = this.villageIdCurrentAddress;
+    data['village_name_current_address'] = this.villageNameCurrentAddress;
+    data['communce_id_current_address'] = this.communceIdCurrentAddress;
+    data['communce_name_current_address'] = this.communceNameCurrentAddress;
+    data['district_id_current_address'] = this.districtIdCurrentAddress;
+    data['district_name_current_address'] = this.districtNameCurrentAddress;
+    data['province_id_current_address'] = this.provinceIdCurrentAddress;
+    data['province_name_current_address'] = this.provinceNameCurrentAddress;
+    data['family_phone'] = this.familyPhone;
+    data['education_level'] = this.educationLevel;
+    data['experience_years'] = this.experienceYears;
+    data['previous_company'] = this.previousCompany;
+    data['bank_name'] = this.bankName;
+    data['bank_account_number'] = this.bankAccountNumber;
+    data['qr_code_bank_account'] = this.qrCodeBankAccount;
+    data['notes'] = this.notes;
     data['contact'] = this.contact;
     data['national_id_number'] = this.nationalIdNumber;
-    data['province_id'] = this.provinceId;
-    data['province_name'] = this.provinceName;
-    data['district_id'] = this.districtId;
-    data['district_name'] = this.districtName;
-    data['commune_id'] = this.communeId;
-    data['commune_name'] = this.communeName;
-    data['village_id'] = this.villageId;
-    data['village_name'] = this.villageName;
     data['role_id'] = this.roleId;
     data['role_name'] = this.roleName;
+    data['position_level'] = this.positionLevel;
     data['hire_date'] = this.hireDate;
+    data['promote_date'] = this.promoteDate;
+    data['is_promote'] = this.isPromote;
     data['type'] = this.type;
     data['shift_id'] = this.shiftId;
     data['shift_name'] = this.shiftName;
