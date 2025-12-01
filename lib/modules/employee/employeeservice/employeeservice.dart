@@ -157,7 +157,23 @@ class Employeeservice {
       return false;
     }
   }
-
+  Future<bool> promoteemployee(int? id) async {
+    try {
+      final response = await apiProvider.put('promoteemployee/${id}', id);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        CustomSnackbar.error(title: "បរាជ័យ", message: "កែប្រែមិនបានទេ");
+        return false;
+      }
+    } catch (e) {
+      CustomSnackbar.error(
+        title: "កំហុស",
+        message: "មានបញ្ហា: ${e.toString()}",
+      );
+      return false;
+    }
+  }
   Future<bool> changeshift({
     int? EmployeeID,
     int? ShiftID,
@@ -192,9 +208,10 @@ class Employeeservice {
     required int baseSalary,
     required int workday,
     required int salaryID,
+    required int currencyID,
   }) async {
     try {
-      final body = {'base_salary': baseSalary, 'worked_day': workday};
+      final body = {'base_salary': baseSalary, 'worked_day': workday,'currency_id':currencyID};
       final response = await apiProvider.put("editsalary/${salaryID}", body);
       if (response.statusCode == 200) {
         return true;
@@ -215,6 +232,7 @@ class Employeeservice {
     required int workday,
     required int salaryid,
     required int employeeshiftid,
+    required int currencyID
   }) async {
     try {
       final body = {
@@ -222,6 +240,7 @@ class Employeeservice {
         'shift_id': shiftid,
         'base_salary': baseSalary,
         'worked_day': workday,
+        'currency_id':currencyID
       };
       final response = await apiProvider.post(
         "employee-shift/${employeeshiftid}/salary/${salaryid}",

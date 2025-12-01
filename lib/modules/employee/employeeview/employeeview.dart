@@ -310,6 +310,9 @@ class _EmployeeviewState extends State<Employeeview> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8, right: 8),
                             child: CustomEmployeeCard(
+                              currencycode: employee.currencyCode!,
+                              currencysymbol: employee.currencySymbol!,
+                              currencyname: employee.currencyName!,
                               profileImage: employee.profileImage!,
                               basesalary: employee.baseSalary!,
                               start_time: employee.startTime!,
@@ -320,6 +323,7 @@ class _EmployeeviewState extends State<Employeeview> {
                               nameenglish: employee.nameEn ?? "",
                               branchname: employee.branchName,
                               isActive: employee.isActive,
+                              isPromote: employee.isPromote,
                               onEdit: () {
                                 Get.to(
                                   () => Updateemployeeview(
@@ -334,6 +338,9 @@ class _EmployeeviewState extends State<Employeeview> {
                                 employeecontroller.changestatusemployee(
                                   employee.id,
                                 );
+                              },
+                              onPromote: (){
+                                employeecontroller.promoteemployee(employee.id);
                               },
                               onTap: () => _handleViewEmployee(employee),
                               onchangeshift: () {
@@ -354,19 +361,23 @@ class _EmployeeviewState extends State<Employeeview> {
                               },
                               chnagesalary: () {
                                 Get.bottomSheet(
-                                  EditSalaryView(salaryID: employee.salaryId!),
-
+                                  EditSalaryView(
+                                    employeemodel: employee,
+                                    salaryID: employee.salaryId!),
+                                  
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(
                                       top: Radius.circular(20),
                                     ),
                                   ),
                                 );
+                                
                               },
                               increasesalry: () {
                                 Get.bottomSheet(
                                    isScrollControlled: true,
                                   Increasesalaryview(
+                                    employeemodel: employee,
                                     employeeId: employee.id!,
                                     employeeShiftId: employee.employeeShitfId,
                                     salaryID: employee.salaryId,

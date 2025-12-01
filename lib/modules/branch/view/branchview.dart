@@ -115,14 +115,13 @@ class _BranchviewState extends State<Branchview> {
       ),
     );
   }
-
 void showUpdateBranchBottomSheet(Data branch) {
   final nameController = TextEditingController(text: branch.name);
   final radiusController = TextEditingController(text: branch.radius?.toString() ?? '');
 
-  // Make reactive variables
-  final selectedLat = RxnDouble(branch.latitude);
-  final selectedLng = RxnDouble(branch.longitude);
+  // Use RxDouble instead of RxnDouble for better reactivity
+  final selectedLat = (branch.latitude ?? 0.0).obs;
+  final selectedLng = (branch.longitude ?? 0.0).obs;
 
   Get.bottomSheet(
     SingleChildScrollView(
@@ -171,14 +170,13 @@ void showUpdateBranchBottomSheet(Data branch) {
               const SizedBox(height: 15),
               Text("ទីតាំងសាខា", style: TextStyles.siemreap(context, fontSize: 12)),
               const SizedBox(height: 8),
-
               Row(
                 children: [
                   Expanded(
                     child: Obx(() {
                       return Text(
-                        (selectedLat.value != null && selectedLng.value != null)
-                            ? "Lat: ${selectedLat.value!.toStringAsFixed(5)}, Lng: ${selectedLng.value!.toStringAsFixed(5)}"
+                        (selectedLat.value != 0.0 && selectedLng.value != 0.0)
+                            ? "Lat: ${selectedLat.value.toStringAsFixed(5)}, Lng: ${selectedLng.value.toStringAsFixed(5)}"
                             : "មិនទាន់ជ្រើសទីតាំង",
                         style: TextStyles.siemreap(context, fontSize: 12, color: TheColors.gray),
                       );
@@ -190,6 +188,7 @@ void showUpdateBranchBottomSheet(Data branch) {
                       if (result != null) {
                         selectedLat.value = result['lat'];
                         selectedLng.value = result['lng'];
+                        print("Updated location: ${selectedLat.value}, ${selectedLng.value}"); // Debug print
                       }
                     },
                     icon: const Icon(
@@ -200,7 +199,6 @@ void showUpdateBranchBottomSheet(Data branch) {
                   ),
                 ],
               ),
-
               const SizedBox(height: 15),
               Text("ចម្ថាយដែលអាចស្កែនបាន (m)", style: TextStyles.siemreap(context, fontSize: 12)),
               const SizedBox(height: 8),
@@ -211,27 +209,31 @@ void showUpdateBranchBottomSheet(Data branch) {
                 keyboardType: TextInputType.number,
                 validator: (value) => value == null || value.isEmpty ? 'សូមបញ្ចូល' : null,
               ),
-
               const SizedBox(height: 25),
               CustomElevatedButton(
                 text: "រក្សាទុក",
                 onPressed: () async {
-                  final int? radius = int.tryParse(radiusController.text.trim());
+                  final double? radius = double.tryParse(radiusController.text.trim());
                   if (formkey.currentState!.validate()) {
-                    if (selectedLat.value == null || selectedLng.value == null) {
+                    if (selectedLat.value == 0.0 || selectedLng.value == 0.0) {
                       Get.snackbar("កំហុស", "សូមជ្រើសទីតាំងសាខា");
+                      return;
+                    }
+
+                    if (radius == null) {
+                      Get.snackbar("កំហុស", "សូមបញ្ចូលចម្ងាយដែលត្រឹមត្រូវ");
                       return;
                     }
 
                     await branchcontroller.updatebranch(
                       branchid: branch.id!,
                       name: nameController.text,
-                      latitude: selectedLat.value!,
-                      longitude: selectedLng.value!,
-                      radius: radius!,
+                      latitude: selectedLat.value,
+                      longitude: selectedLng.value,
+                      radius: radius,
                     );
 
-                  
+                
                   }
                 },
               ),

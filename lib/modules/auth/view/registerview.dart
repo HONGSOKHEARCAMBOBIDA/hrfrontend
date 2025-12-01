@@ -1,16 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_application_10/core/helper/show_communce_buttonsheet.dart';
 import 'package:flutter_application_10/core/helper/show_district_buttonsheet.dart';
 import 'package:flutter_application_10/core/helper/show_province_buttonsheet.dart';
 import 'package:flutter_application_10/core/helper/show_village_buttonsheet.dart';
+
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
-import 'package:flutter_application_10/data/models/userregistermodel.dart';
 import 'package:flutter_application_10/modules/auth/controller/authcontroller.dart';
 import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
 import 'package:flutter_application_10/modules/communce/communcecontroller/communcecontroller.dart';
+import 'package:flutter_application_10/modules/currency/controller/currencycontroller.dart';
 import 'package:flutter_application_10/modules/district/districtcontroller/districtcontroller.dart';
+
 import 'package:flutter_application_10/modules/province/provincecontroller/provincecontroller.dart';
 import 'package:flutter_application_10/modules/role/rolecontroller/rolecontroller.dart';
 import 'package:flutter_application_10/modules/shift/shiftcontroller/shiftcontroller.dart';
@@ -20,21 +23,22 @@ import 'package:flutter_application_10/shared/widgets/custombuttonnav.dart';
 import 'package:flutter_application_10/shared/widgets/customdatepicker.dart';
 import 'package:flutter_application_10/shared/widgets/customoutlinebutton.dart';
 import 'package:flutter_application_10/shared/widgets/dropdown.dart';
-import 'package:flutter_application_10/shared/widgets/loading.dart';
 import 'package:flutter_application_10/shared/widgets/snackbar.dart';
 import 'package:flutter_application_10/shared/widgets/textfield.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/number_symbols_data.dart';
 
-class Registerview extends StatefulWidget {
-  const Registerview({super.key});
+class RegisterUserView extends StatefulWidget {
+  const RegisterUserView({super.key});
 
   @override
-  State<Registerview> createState() => _RegisterviewState();
+  State<RegisterUserView> createState() => _RegisterUserViewState();
 }
 
-class _RegisterviewState extends State<Registerview> {
+class _RegisterUserViewState extends State<RegisterUserView> {
+  Rx<File?> newProfileImage = Rx<File?>(null);
+  Rx<File?> newQrImage = Rx<File?>(null);
+  final currencycontroller = Get.find<Currencycontroller>();
   final authcontroller = Get.find<Authcontroller>();
   final provincecontroller = Get.find<Provincecontroller>();
   final districtcontroller = Get.find<Districtcontroller>();
@@ -43,75 +47,176 @@ class _RegisterviewState extends State<Registerview> {
   final rolecontroller = Get.find<Rolecontroller>();
   final branchcontroller = Get.find<Branchcontroller>();
   final shiftcontroller = Get.find<Shiftcontroller>();
+
   final _formkey = GlobalKey<FormState>();
+  final selectcorrencyID = Rxn<int>();
+  final selecttype = Rxn<int>();
+  final selectispromote = Rxn<bool>();
+  final selecthiredate = Rxn<DateTime>();
   final selectbranchid = Rxn<int>();
   final namekhcontroller = TextEditingController();
   final nameencontroller = TextEditingController();
-  final usernamecontroller = TextEditingController();
-  final emailcontroller = TextEditingController();
-  final passwordcontroller = TextEditingController();
   final selectgender = Rxn<int>();
+  final selectmaterialstatus = Rxn<int>();
+  final selectpositionlevel = Rxn<int>();
   final selectdob = Rxn<DateTime>();
-  final selecttype = Rxn<int>();
+  final selectpromotedate = Rxn<DateTime>();
   final contactcontroller = TextEditingController();
+  final familyphonecontroller = TextEditingController();
+  final educationlevelcontroller = TextEditingController();
+  final experienceyearcontroller = TextEditingController();
+  final previouscompanycontroller = TextEditingController();
+  final banknamecontroller = TextEditingController();
+  final bankaccountcontroller = TextEditingController();
+  final notecontroller = TextEditingController();
   final nationalidnumbercontroller = TextEditingController();
-  final selectvillageid = Rxn<int>();
-  final selectprovinceid = Rxn<int>();
-  final selectdistrictid = Rxn<int>();
-  final selectcommunceid = Rxn<int>();
+  final selectvillageidofbirth = Rxn<int>();
+  final selectprovinceidofbirth = Rxn<int>();
+  final selectdistrictidofbirth = Rxn<int>();
+  final selectcommunceidofbirth = Rxn<int>();
+  final selectvillageidofcurrenctadrress = Rxn<int>();
+  final selectprovinceidofcurrenctadrress = Rxn<int>();
+  final selectdistrictidofcurrenctadrress = Rxn<int>();
+  final selectcommunceidofcurrenctadrress = Rxn<int>();
   final selectroleid = Rxn<int>();
-  final selectshiftid = Rxn<int>();
-  final selecthiredate = Rxn<DateTime>();
-  final basesalarycontroller = TextEditingController();
-  final workeddaycontroller = TextEditingController();
 
-  var selectedProvinceName = "ជ្រើសរើសខេត្ត".obs;
-  var selectedDistrictName = "ជ្រើសរើសស្រុក".obs;
-  var selectedCommunceName = "ជ្រើសរើសឃុំ".obs;
-  var selectedVillageName = "ជ្រើសរើសភូមី".obs;
+  // NEW CONTROLLERS FOR REGISTRATION
+  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final baseSalaryController = TextEditingController();
+  final workdayController = TextEditingController();
+
+  // NEW RX VARIABLES
+  final selectShiftId = Rxn<int>();
+  final baseSalary = Rxn<double>();
+  final workday = Rxn<int>();
+
+  var selectedProvinceNameofbirth = "ជ្រើសរើសខេត្ត".obs;
+  var selectedDistrictNameofbirth = "ជ្រើសរើសស្រុក".obs;
+  var selectedCommunceNameofbirth = "ជ្រើសរើសឃុំ".obs;
+  var selectedVillageNameofbirth = "ជ្រើសរើសភូមិ".obs;
+  var selectedProvinceNameofcurrenctadrress = "ជ្រើសរើសខេត្ត".obs;
+  var selectedDistrictNameofcurrenctadrress = "ជ្រើសរើសស្រុក".obs;
+  var selectedCommunceNameofcurrenctadrress = "ជ្រើសរើសឃុំ".obs;
+  var selectedVillageNameofcurrenctadrress = "ជ្រើសរើសភូមិ".obs;
+
   final List<Map<String, dynamic>> genders = [
-    {"id": 1, "name": "ប្រុស"}, // Male
-    {"id": 2, "name": "ស្រី"}, // Female
-    {"id": 3, "name": "ផ្សេងទៀត"}, // Other
+    {"id": 1, "name": "ប្រុស"},
+    {"id": 2, "name": "ស្រី"},
+    {"id": 3, "name": "ផ្សេងទៀត"},
   ];
-    final List<Map<String, dynamic>> types = [
-    {"id": 1, "name": "Part Time"}, // Male
-    {"id": 2, "name": "Full Time"}, // Female
-   
+  final List<Map<String, dynamic>> materialstatus = [
+    {"id": 1, "name": "នៅលីវ"},
+    {"id": 2, "name": "មានគ្រូសារ"},
+    {"id": 3, "name": "ផ្សេងទៀត"},
   ];
-  void clearForm() {
-    selecttype.value = null;
-    selectbranchid.value = null;
-    namekhcontroller.clear();
-    nameencontroller.clear();
-    usernamecontroller.clear();
-    emailcontroller.clear();
-    passwordcontroller.clear();
-    selectgender.value = null;
-    selectdob.value = null;
-    contactcontroller.clear();
-    nationalidnumbercontroller.clear();
-    selectvillageid.value = null;
-    selectroleid.value = null;
-    selecthiredate.value = null;
-    selectshiftid.value = null;
-    basesalarycontroller.clear();
-    workeddaycontroller.clear();
-  }
+  final List<Map<String, dynamic>> types = [
+    {"id": 1, "name": "Part Time"},
+    {"id": 2, "name": "Full Time"},
+  ];
+  final List<Map<String, dynamic>> positionLevel = [
+    {"id": 1, "name": "បុគ្គលិកធម្មតា"},
+    {"id": 2, "name": "បុគ្គលិកជំនាញ"},
+  ];
+
+  // ADD SHIFT DATA (You'll need to fetch this from your API)
+  // final List<Map<String, dynamic>> shifts = [
+  //   {"id": 1, "name": "វេនព្រឹក"},
+  //   {"id": 2, "name": "វេនរសៀល"},
+  //   {"id": 3, "name": "វេនយប់"},
+  // ];
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    namekhcontroller.dispose();
-    nameencontroller.dispose();
-    usernamecontroller.dispose();
-    emailcontroller.dispose();
-    passwordcontroller.dispose();
-    contactcontroller.dispose();
-    nationalidnumbercontroller.dispose();
-    basesalarycontroller.dispose();
-    workeddaycontroller.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _loadInitialData();
+  }
+
+  void _loadInitialData() {
+    // Load initial data for dropdowns
+    provincecontroller.fetchprovince();
+    branchcontroller.fetchbranch();
+    rolecontroller.fetchrole();
+  }
+
+  Future<void> registerUser() async {
+    if (_formkey.currentState!.validate()) {
+      // Validate required fields for registration
+      if (selectbranchid.value == null ||
+          selectgender.value == null ||
+          selectdob.value == null ||
+          selectvillageidofbirth.value == null ||
+          selectroleid.value == null ||
+          selecttype.value == null ||
+          selecthiredate.value == null ||
+          usernameController.text.isEmpty ||
+          emailController.text.isEmpty ||
+          passwordController.text.isEmpty ||
+          selectShiftId.value == null ||
+          baseSalaryController.text.isEmpty ||
+          workdayController.text.isEmpty) {
+        CustomSnackbar.error(
+          title: "បញ្ចូលមិនពេញលេញ",
+          message: "សូមបញ្ចូលព័ត៌មានឲ្យបានពេញលេញ!",
+        );
+        return;
+      }
+
+      // Validate password confirmation
+      if (passwordController.text != confirmPasswordController.text) {
+        CustomSnackbar.error(
+          title: "លេខសំងាត់មិនត្រូវគ្នា",
+          message: "លេខសំងាត់និងលេខសំងាត់បញ្ជាក់មិនត្រូវគ្នា!",
+        );
+        return;
+      }
+
+      try {
+        final year = int.tryParse(experienceyearcontroller.text) ?? 0;
+        final salary = double.tryParse(baseSalaryController.text) ?? 0.0;
+        final workDays = int.tryParse(workdayController.text) ?? 0;
+
+        await authcontroller.register(
+          branchID: selectbranchid.value!.toString(),
+          nameEn: nameencontroller.text.trim(),
+          nameKh: namekhcontroller.text.trim(),
+          username: usernameController.text.trim(),
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+          gender: selectgender.value!,
+          contact: contactcontroller.text.trim(),
+          nationalIdNumber: nationalidnumbercontroller.text.trim(),
+          roleId: selectroleid.value!,
+          hireDate: selecthiredate.value!,
+          promoteDate: selectpromotedate.value ?? selecthiredate.value!,
+          type: selecttype.value!,
+          shiftID: selectShiftId.value!,
+          baseSalary: salary,
+          workday: workDays,
+          dateOfBirth: selectdob.value!,
+          villageIdofbirth: selectvillageidofbirth.value!,
+          materialstatus: selectmaterialstatus.value ?? 1,
+          villageIdcurrentaddress:
+              selectvillageidofcurrenctadrress.value ??
+              selectvillageidofbirth.value!,
+          familyPhone: familyphonecontroller.text,
+          educationLevel: educationlevelcontroller.text,
+          experienceYears: year,
+          previousCompany: previouscompanycontroller.text,
+          bankName: banknamecontroller.text,
+          bankAccountNumber: bankaccountcontroller.text,
+          notes: notecontroller.text,
+          currencyID: selectcorrencyID.value!,
+          positionLevel: selectpositionlevel.value ?? 1,
+          // profileImage: newProfileImage.value,
+          // qrcodeimage: newQrImage.value,
+        );
+      } catch (e) {
+        CustomSnackbar.error(title: "កំហុស", message: "មិនអាចចុះឈ្មោះបាន: $e");
+      }
+    }
   }
 
   Widget _buildLabel(String label) {
@@ -126,11 +231,13 @@ class _RegisterviewState extends State<Registerview> {
     );
   }
 
-  Widget _buildHeader(String label) {
+  Widget _buildHeader(String label, IconData icon) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Column(
+      padding: const EdgeInsets.all(2.0),
+      child: Row(
         children: [
+          Icon(icon, color: TheColors.orange, size: 18),
+          SizedBox(width: 6),
           Text(
             label,
             style: GoogleFonts.siemreap(
@@ -139,106 +246,594 @@ class _RegisterviewState extends State<Registerview> {
               color: TheColors.black,
             ),
           ),
-          SizedBox(height: 5),
         ],
       ),
     );
   }
 
   @override
+  void dispose() {
+    namekhcontroller.dispose();
+    nameencontroller.dispose();
+    contactcontroller.dispose();
+    nationalidnumbercontroller.dispose();
+    usernameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    baseSalaryController.dispose();
+    workdayController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "បង្កេីតអ្នកប្រេីប្រាស់"),
-      body: Obx(() {
-        if (authcontroller.isLoading.value) {
-          return CustomLoading();
-        }
-        return RefreshIndicator(
-          onRefresh: () async {
-            provincecontroller.provinces.clear();
-            districtcontroller.district.clear();
-            commmuncecontroller.communce.clear();
-            villagecontroller.village.clear();
-            provincecontroller.fetchprovince();
-            branchcontroller.branch.clear();
-            branchcontroller.fetchbranch();
-            rolecontroller.role.clear();
-            rolecontroller.fetchrole();
-            shiftcontroller.shift.clear();
-            shiftcontroller.fetchshift(null);
-            selectedProvinceName.value = "ជ្រើសរើសខេត្ត";
-                                                      selectedDistrictName.value =
-                                              "ជ្រើសរើសស្រុក";
-                                          selectcommunceid.value = null;
-                                          selectedCommunceName.value =
-                                              "ជ្រើសរើសឃុំ";
-                                          selectvillageid.value = null;
-                                          selectedVillageName.value =
-                                              "ជ្រើសរើសភូមី";
-
-          },
-          child: GestureDetector(
-              onTap: () {
-    FocusScope.of(context).unfocus();
-  },
-            child: SingleChildScrollView(
+      backgroundColor: TheColors.bgColor,
+      appBar: CustomAppBar(title: "ចុះឈ្មោះអ្នកប្រើប្រាស់ថ្មី"),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Form(
+              key: _formkey,
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  key: _formkey,
-            
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildHeader("ព័ត៌មានផ្ទាល់ខ្លួន"),
-                      SizedBox(height: 5),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                padding: const EdgeInsets.all(2.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Profile Image Section
+                    Center(
+                      child: Column(
                         children: [
-                          SizedBox(height: 8),
-                          _buildLabel("ឈ្មោះភាសាខ្មែរ"),
-                          CustomTextField(
-                            controller: namekhcontroller,
-                            hintText: "ឧ. ហុង សុខហ៊ា",
-                            prefixIcon: Icons.person_outlined,
+                          Obx(() {
+                            if (newProfileImage.value != null) {
+                              return CircleAvatar(
+                                radius: 60,
+                                backgroundImage: FileImage(
+                                  newProfileImage.value!,
+                                ),
+                              );
+                            } else {
+                              return CircleAvatar(
+                                radius: 60,
+                                child: Icon(Icons.person, size: 40),
+                              );
+                            }
+                          }),
+                          SizedBox(height: 10),
+                          OutlinedButton(
+                            style: ButtonStyle(
+                              side: MaterialStateProperty.all(
+                                BorderSide(
+                                  color: TheColors.errorColor,
+                                  width: 0.5,
+                                ),
+                              ),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(9),
+                                ),
+                              ),
+                            ),
+                            onPressed: () async {
+                              final image = await authcontroller.pickProfile();
+                              if (image != null) {
+                                newProfileImage.value = image;
+                              }
+                            },
+                            child: Text(
+                              "ជ្រើសរើសរូបភាព",
+                              style: TextStyles.siemreap(
+                                context,
+                                color: TheColors.orange,
+                                fontSize: 11,
+                              ),
+                            ),
                           ),
-                          SizedBox(height: 8),
-                          _buildLabel("ឈ្មោះអង់គ្លេស"),
-                          CustomTextField(
-                            controller: nameencontroller,
-                            hintText: "HONG SOKHEAR",
-                            prefixIcon: Icons.person_outlined,
-                          ),
-                          SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: 20),
+
+                    // Account Information Section
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: TheColors.orange, width: 0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildHeader("ព័ត៌មានគណនី", Icons.lock_outline),
+                            SizedBox(height: 8),
+                            _buildLabel("ឈ្មោះអ្នកប្រើប្រាស់"),
+                            CustomTextField(
+                              controller: usernameController,
+                              hintText: "hong.sokhear",
+                              prefixIcon: Icons.person_outlined,
+                            ),
+                            SizedBox(height: 8),
+                            _buildLabel("អ៊ីមែល"),
+                            CustomTextField(
+                              controller: emailController,
+                              hintText: "example@company.com",
+                              prefixIcon: Icons.email_outlined,
+                              keyboardType: TextInputType.emailAddress,
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildLabel("លេខសំងាត់"),
+                                      CustomTextField(
+                                        controller: passwordController,
+                                        hintText: "********",
+                                        prefixIcon: Icons.lock_outlined,
+                                        obscureText: true,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildLabel("បញ្ជាក់លេខសំងាត់"),
+                                      CustomTextField(
+                                        controller: confirmPasswordController,
+                                        hintText: "********",
+                                        prefixIcon: Icons.lock_outlined,
+                                        obscureText: true,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 15),
+
+                    // Personal Information Section
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: TheColors.orange, width: 0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildHeader("ព័ត៍មានផ្ទាល់ខ្លួន", Icons.person),
+                            SizedBox(height: 8),
+                            _buildLabel("ឈ្មោះភាសាខ្មែរ"),
+                            CustomTextField(
+                              controller: namekhcontroller,
+                              hintText: "ឧ. ហុង សុខហ៊ា",
+                              prefixIcon: Icons.person_outlined,
+                            ),
+                            SizedBox(height: 8),
+                            _buildLabel("ឈ្មោះអង់គ្លេស"),
+                            CustomTextField(
+                              controller: nameencontroller,
+                              hintText: "HONG SOKHEAR",
+                              prefixIcon: Icons.person_outlined,
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildLabel("ភេទ"),
+                                      Obx(
+                                        () => DropdownButtonFormField<int>(
+                                          value: selectgender.value,
+                                          decoration: InputDecoration(
+                                            labelText: "ភេទ",
+                                            labelStyle: TextStyles.siemreap(
+                                              context,
+                                              fontSize: 12,
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              borderSide: BorderSide(
+                                                color: TheColors.orange,
+                                                width: 0.5,
+                                              ),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              borderSide: BorderSide(
+                                                color: TheColors.errorColor,
+                                                width: 0.5,
+                                              ),
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: TheColors.orange,
+                                                width: 0.5,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                          items: genders.map((gender) {
+                                            return DropdownMenuItem<int>(
+                                              value: gender['id'] as int,
+                                              child: Text(
+                                                gender['name'],
+                                                style: TextStyles.siemreap(
+                                                  context,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (Value) {
+                                            selectgender.value = Value;
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildLabel("ថ្ងៃ-ខែ-ឆ្នាំ កំណេីត"),
+                                      CustomDatePickerField(
+                                        label: "",
+                                        selectedDate: selectdob,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildLabel("លេខអត្តសញ្ញាណប័ណ្ណ"),
+                                      CustomTextField(
+                                        controller: nationalidnumbercontroller,
+                                        hintText: "A123456",
+                                        prefixIcon: Icons.credit_card,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildLabel("លេខទូរសព្ទ"),
+                                      CustomTextField(
+                                        keyboardType: TextInputType.phone,
+                                        controller: contactcontroller,
+                                        hintText: "070366214",
+                                        prefixIcon: Icons.phone_callback,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildLabel("ស្ថានភាពគ្រួសារ"),
+                                Obx(
+                                  () => DropdownButtonFormField<int>(
+                                    value: selectmaterialstatus.value,
+                                    decoration: InputDecoration(
+                                      labelText: "ស្ថានភាព",
+                                      labelStyle: TextStyles.siemreap(
+                                        context,
+                                        fontSize: 12,
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: TheColors.orange,
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: TheColors.errorColor,
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: TheColors.orange,
+                                          width: 0.5,
+                                        ),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    items: materialstatus.map((material) {
+                                      return DropdownMenuItem<int>(
+                                        value: material['id'] as int,
+                                        child: Text(
+                                          material['name'],
+                                          style: TextStyles.siemreap(
+                                            context,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (Value) {
+                                      selectmaterialstatus.value = Value;
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            _buildLabel("លេខទូរសព្ទគ្រូសារ"),
+                            CustomTextField(
+                              keyboardType: TextInputType.phone,
+                              controller: familyphonecontroller,
+                              hintText: "070366214",
+                              prefixIcon: Icons.phone_callback,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 15),
+
+                    // Work Information Section
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: TheColors.orange, width: 0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildHeader("ព័ត៌មានការងារ", Icons.work_outline),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildLabel("តួនាទី"),
+                                CustomDropdown(
+                                  selectedValue: selectroleid,
+                                  items: rolecontroller.role,
+                                  hintText: "រេីសតួនាទី",
+                                  onChanged: (Value) {
+                                    selectroleid.value = Value;
+                                  },
+                                ),
+                                SizedBox(height: 8),
+                                _buildLabel("សាខា"),
+                                CustomDropdown(
+                                  selectedValue: selectbranchid,
+                                  items: branchcontroller.branch,
+                                  hintText: "រេីសសាខា",
+                                  onChanged: (value) async {
+                                    selectbranchid.value = value;
+                                    shiftcontroller.shift.clear();
+                                    shiftcontroller.fetchshift(
+                                      selectbranchid.value,
+                                    );
+                                  },
+                                ),
+                                SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _buildLabel("ថ្ងៃចូលបម្រេីការងារ"),
+                                          CustomDatePickerField(
+                                            label: "",
+                                            selectedDate: selecthiredate,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _buildLabel("ប្រភេទការងារ"),
+                                          Obx(
+                                            () => DropdownButtonFormField<int>(
+                                              value: selecttype.value,
+                                              decoration: InputDecoration(
+                                                labelText: "ប្រភេទការងារ",
+                                                labelStyle: TextStyles.siemreap(
+                                                  context,
+                                                  fontSize: 12,
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                      borderSide: BorderSide(
+                                                        color: TheColors.orange,
+                                                        width: 0.5,
+                                                      ),
+                                                    ),
+                                                errorBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  borderSide: BorderSide(
+                                                    color: TheColors.errorColor,
+                                                    width: 0.5,
+                                                  ),
+                                                ),
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: TheColors.orange,
+                                                    width: 0.5,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                              ),
+                                              items: types.map((typework) {
+                                                return DropdownMenuItem<int>(
+                                                  value: typework['id'] as int,
+                                                  child: Text(
+                                                    typework['name'],
+                                                    style: TextStyles.siemreap(
+                                                      context,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (Value) {
+                                                selecttype.value = Value;
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 8),
+                                Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildLabel("ភេទ"),
+                                    _buildLabel("រូបិយប័ណ្ណដែលប្រេី"),
+                                    CustomDropdown(
+                                      selectedValue: selectcorrencyID,
+                                      items: currencycontroller.currency,
+                                      hintText: "ឧ ប្រាក់រៀល",
+                                      onChanged: (id) {
+                                        selectcorrencyID.value = id;
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _buildLabel("ប្រាក់ខែគោល"),
+                                          CustomTextField(
+                                            controller: baseSalaryController,
+                                            hintText: "500.00",
+                                            prefixIcon: Icons.attach_money,
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                  decimal: true,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _buildLabel("ថ្ងៃធ្វើការ"),
+                                          CustomTextField(
+                                            controller: workdayController,
+                                            hintText: "26",
+                                            prefixIcon: Icons.calendar_today,
+                                            keyboardType: TextInputType.number,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildLabel("វេនការងារ"),
+                                    CustomDropdown(
+                                      selectedValue: selectShiftId,
+                                      items: shiftcontroller.shift,
+                                      hintText: "វេនការងារ",
+                                      onChanged: (value) {
+                                        selectShiftId.value = value;
+                                      },
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(height: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildLabel("កម្រិតតួនាទី"),
                                     Obx(
                                       () => DropdownButtonFormField<int>(
-                                        value: selectgender.value,
+                                        value: selectpositionlevel.value,
                                         decoration: InputDecoration(
-                                          labelText: "ភេទ",
+                                          labelText: "កម្រិត",
                                           labelStyle: TextStyles.siemreap(
                                             context,
                                             fontSize: 12,
                                           ),
-            
-                                          // Border when focused
                                           focusedBorder: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),
                                             borderSide: BorderSide(
-                                              color:
-                                                  TheColors.orange, // change here
+                                              color: TheColors.orange,
                                               width: 0.5,
                                             ),
                                           ),
-                                          // Optional: Border when error
                                           errorBorder: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
                                               12,
@@ -253,18 +848,16 @@ class _RegisterviewState extends State<Registerview> {
                                               color: TheColors.orange,
                                               width: 0.5,
                                             ),
-            
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),
                                           ),
                                         ),
-            
-                                        items: genders.map((gender) {
+                                        items: positionLevel.map((position) {
                                           return DropdownMenuItem<int>(
-                                            value: gender['id'] as int,
+                                            value: position['id'] as int,
                                             child: Text(
-                                              gender['name'],
+                                              position['name'],
                                               style: TextStyles.siemreap(
                                                 context,
                                                 fontSize: 12,
@@ -273,407 +866,624 @@ class _RegisterviewState extends State<Registerview> {
                                           );
                                         }).toList(),
                                         onChanged: (Value) {
-                                          selectgender.value = Value;
+                                          selectpositionlevel.value = Value;
                                         },
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildLabel("ថ្ងៃ-ខែ-ឆ្នាំ កំណេីត"),
-                                    CustomDatePickerField(
-                                      label: "",
-                                      selectedDate: selectdob,
-                                    ),
-                                  ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 15),
+
+                    // Financial Information Section
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: TheColors.orange, width: 0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildHeader(
+                              "ព័ត៌មានផ្នែកហិរញ្ញវត្ថុ",
+                              Icons.attach_money,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildLabel("កុងធនាគារដែលប្រេី"),
+                                CustomTextField(
+                                  controller: banknamecontroller,
+                                  hintText: "ABA",
+                                  prefixIcon: Icons.credit_card,
                                 ),
-                              ),
-                            ],
-                          ),
-            
-                          SizedBox(height: 15),
-                          _buildLabel("លេខអត្តសញ្ញាណប័ណ្ណ"),
-                          CustomTextField(
-                            controller: nationalidnumbercontroller,
-                            hintText: "A123456",
-                            prefixIcon: Icons.credit_card,
-                          ),
-                          SizedBox(height: 8),
-                          _buildLabel("លេខទូរសព្ទ"),
-                          CustomTextField(
-                            keyboardType: TextInputType.number,
-                            controller: contactcontroller,
-                            hintText: "070366214",
-                            prefixIcon: Icons.phone_callback,
-                          ),
-                          SizedBox(height: 8),
-                          _buildLabel("ទីកន្លែងរស់នៅ"),
-                          Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: CustomOutlinedButton(
-                                      text: selectedProvinceName.value,
+                                SizedBox(height: 8),
+                                _buildLabel("លេខកុងធនាគារ"),
+                                CustomTextField(
+                                  controller: bankaccountcontroller,
+                                  hintText: "A123",
+                                  prefixIcon: Icons.account_circle,
+                                ),
+                                SizedBox(height: 8),
+                                _buildLabel("QR Code"),
+                                Obx(() {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Stack(
+                                      alignment: Alignment.bottomRight,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          child: Container(
+                                            width: 120,
+                                            height: 120,
+                                            color: TheColors.orange,
+                                            child: newQrImage.value == null
+                                                ? Icon(
+                                                    Icons.qr_code,
+                                                    size: 50,
+                                                    color: Colors.white,
+                                                  )
+                                                : Image(
+                                                    image: FileImage(
+                                                      newQrImage.value!,
+                                                    ),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.camera_alt_rounded,
+                                            size: 30,
+                                            color: TheColors.errorColor,
+                                          ),
+                                          onPressed: () async {
+                                            File? pickedFile =
+                                                await authcontroller
+                                                    .pickqrImage();
+                                            if (pickedFile != null) {
+                                              newQrImage.value = pickedFile;
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 15),
+
+                    // Education and Experience Section
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: TheColors.orange, width: 0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildHeader(
+                              "ព័ត៌មានអប់រំ និងបទពិសោធន៍",
+                              Icons.school_outlined,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildLabel("កម្រិតសិក្សា"),
+                                      CustomTextField(
+                                        controller: educationlevelcontroller,
+                                        hintText: "បរញ្ញាបត្រ",
+                                        prefixIcon: Icons.menu_book,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildLabel("បទពិសោធន៍"),
+                                      CustomTextField(
+                                        controller: experienceyearcontroller,
+                                        hintText: "2",
+                                        prefixIcon: Icons.work_history,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            _buildLabel("ក្រុមហ៊ុនពីមុន"),
+                            CustomTextField(
+                              controller: previouscompanycontroller,
+                              hintText: "ABA",
+                              prefixIcon: Icons.apartment,
+                            ),
+                            SizedBox(height: 8),
+                            _buildLabel("សម្គាល់"),
+                            CustomTextField(
+                              controller: notecontroller,
+                              hintText: "..",
+                              prefixIcon: Icons.sticky_note_2,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 15),
+
+                    // Birth Place Section
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: TheColors.orange, width: 0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildHeader(
+                              "ទីកន្លែងកំណើត",
+                              Icons.location_on_outlined,
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomOutlinedButton(
+                                      text:
+                                          selectedProvinceNameofbirth
+                                              .value
+                                              .isEmpty
+                                          ? "ជ្រើសរើសខេត្ត"
+                                          : selectedProvinceNameofbirth.value,
                                       onPressed: () {
                                         showProvinceSelectorSheet(
                                           context: context,
-                                          provinces: provincecontroller.provinces,
+                                          provinces:
+                                              provincecontroller.provinces,
                                           onSelected: (id) {
-                                            selectprovinceid.value = id;
-                                            selectedProvinceName.value =
-                                                provincecontroller.provinces
-                                                    .firstWhere((p) => p.id == id)
-                                                    .name!;
-                                            selectdistrictid.value = null;
-                                            selectedDistrictName.value =
+                                            selectprovinceidofbirth.value = id;
+                                            selectedProvinceNameofbirth
+                                                .value = provincecontroller
+                                                .provinces
+                                                .firstWhere((p) => p.id == id)
+                                                .name!;
+                                            selectdistrictidofbirth.value =
+                                                null;
+                                            selectedDistrictNameofbirth.value =
                                                 "ជ្រើសរើសស្រុក";
-                                            selectcommunceid.value = null;
-                                            selectedCommunceName.value =
+                                            selectcommunceidofbirth.value =
+                                                null;
+                                            selectedCommunceNameofbirth.value =
                                                 "ជ្រើសរើសឃុំ";
-                                            selectvillageid.value = null;
-                                            selectedVillageName.value =
-                                                "ជ្រើសរើសភូមី";
+                                            selectvillageidofbirth.value = null;
+                                            selectedVillageNameofbirth.value =
+                                                "ជ្រើសរើសភូមិ";
                                             districtcontroller.district.clear();
-                                            commmuncecontroller.communce.clear();
+                                            commmuncecontroller.communce
+                                                .clear();
                                             villagecontroller.village.clear();
-                                            districtcontroller.fetchdistrict(id);
+                                            districtcontroller.fetchdistrict(
+                                              id,
+                                            );
                                           },
                                         );
                                       },
                                     ),
                                   ),
-                                  SizedBox(width: 5),
-            
-                                  Expanded(
-                                    child: CustomOutlinedButton(
-                                      text: selectedDistrictName.value,
+                                ),
+                                SizedBox(width: 5),
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomOutlinedButton(
+                                      text:
+                                          selectedDistrictNameofbirth
+                                              .value
+                                              .isEmpty
+                                          ? "ជ្រើសរើសស្រុក"
+                                          : selectedDistrictNameofbirth.value,
+                                      onPressed:
+                                          selectprovinceidofbirth.value == null
+                                          ? null
+                                          : () {
+                                              showDistrictSelectorSheet(
+                                                context: context,
+                                                district:
+                                                    districtcontroller.district,
+                                                onSelected: (id) {
+                                                  selectdistrictidofbirth
+                                                          .value =
+                                                      id;
+                                                  selectedDistrictNameofbirth
+                                                          .value =
+                                                      districtcontroller
+                                                          .district
+                                                          .firstWhere(
+                                                            (p) => p.id == id,
+                                                          )
+                                                          .name!;
+                                                  selectcommunceidofbirth
+                                                          .value =
+                                                      null;
+                                                  selectedCommunceNameofbirth
+                                                          .value =
+                                                      "ជ្រើសរើសឃុំ";
+                                                  selectvillageidofbirth.value =
+                                                      null;
+                                                  selectedVillageNameofbirth
+                                                          .value =
+                                                      "ជ្រើសរើសភូមិ";
+                                                  commmuncecontroller.communce
+                                                      .clear();
+                                                  commmuncecontroller
+                                                      .fetchcommunce(id);
+                                                },
+                                              );
+                                            },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomOutlinedButton(
+                                      text:
+                                          selectedCommunceNameofbirth
+                                              .value
+                                              .isEmpty
+                                          ? "ជ្រើសរើសឃុំ"
+                                          : selectedCommunceNameofbirth.value,
+                                      onPressed:
+                                          selectdistrictidofbirth.value == null
+                                          ? null
+                                          : () {
+                                              showCommunceSelectorSheet(
+                                                context: context,
+                                                communce: commmuncecontroller
+                                                    .communce,
+                                                onSelected: (id) {
+                                                  selectcommunceidofbirth
+                                                          .value =
+                                                      id;
+                                                  selectedCommunceNameofbirth
+                                                          .value =
+                                                      commmuncecontroller
+                                                          .communce
+                                                          .firstWhere(
+                                                            (p) => p.id == id,
+                                                          )
+                                                          .name!;
+                                                  selectvillageidofbirth.value =
+                                                      null;
+                                                  selectedVillageNameofbirth
+                                                          .value =
+                                                      "ជ្រើសរើសភូមិ";
+                                                  villagecontroller.village
+                                                      .clear();
+                                                  villagecontroller.fetvillage(
+                                                    id,
+                                                  );
+                                                },
+                                              );
+                                            },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomOutlinedButton(
+                                      text:
+                                          selectedVillageNameofbirth
+                                              .value
+                                              .isEmpty
+                                          ? "ជ្រើសរើសភូមិ"
+                                          : selectedVillageNameofbirth.value,
+                                      onPressed:
+                                          selectcommunceidofbirth.value == null
+                                          ? null
+                                          : () {
+                                              showVillageSelectorsheet(
+                                                context: context,
+                                                village:
+                                                    villagecontroller.village,
+                                                onSelected: (id) {
+                                                  selectvillageidofbirth.value =
+                                                      id;
+                                                  selectedVillageNameofbirth
+                                                      .value = villagecontroller
+                                                      .village
+                                                      .firstWhere(
+                                                        (p) => p.id == id,
+                                                      )
+                                                      .name!;
+                                                },
+                                              );
+                                            },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 15),
+
+                    // Current Address Section
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: TheColors.orange, width: 0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildHeader(
+                              "ទីកន្លែងបច្ចុប្បន្ន",
+                              Icons.home_outlined,
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomOutlinedButton(
+                                      text:
+                                          selectedProvinceNameofcurrenctadrress
+                                              .value
+                                              .isEmpty
+                                          ? "ជ្រើសរើសខេត្ត"
+                                          : selectedProvinceNameofcurrenctadrress
+                                                .value,
                                       onPressed: () {
-                                        showDistrictSelectorSheet(
+                                        showProvinceSelectorSheet(
                                           context: context,
-                                          district: districtcontroller.district,
+                                          provinces:
+                                              provincecontroller.provinces,
                                           onSelected: (id) {
-                                            selectdistrictid.value = id;
-                                            selectedDistrictName.value =
-                                                districtcontroller.district
-                                                    .firstWhere((p) => p.id == id)
-                                                    .name!;
-                                            selectcommunceid.value = null;
-                                            selectedCommunceName.value =
+                                            selectprovinceidofcurrenctadrress
+                                                    .value =
+                                                id;
+                                            selectedProvinceNameofcurrenctadrress
+                                                .value = provincecontroller
+                                                .provinces
+                                                .firstWhere((p) => p.id == id)
+                                                .name!;
+                                            selectdistrictidofcurrenctadrress
+                                                    .value =
+                                                null;
+                                            selectedDistrictNameofcurrenctadrress
+                                                    .value =
+                                                "ជ្រើសរើសស្រុក";
+                                            selectcommunceidofcurrenctadrress
+                                                    .value =
+                                                null;
+                                            selectedCommunceNameofcurrenctadrress
+                                                    .value =
                                                 "ជ្រើសរើសឃុំ";
-                                            selectvillageid.value = null;
-                                            selectedVillageName.value =
-                                                "ជ្រើសរើសភូមី";
-                                            commmuncecontroller.communce.clear();
-                                            commmuncecontroller.fetchcommunce(id);
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: CustomOutlinedButton(
-                                      text: selectedCommunceName.value,
-                                      onPressed: () {
-                                        showCommunceSelectorSheet(
-                                          context: context,
-                                          communce: commmuncecontroller.communce,
-                                          onSelected: (id) {
-                                            selectcommunceid.value = id;
-                                            selectedCommunceName.value =
-                                                commmuncecontroller.communce
-                                                    .firstWhere((p) => p.id == id)
-                                                    .name!;
-                                            selectvillageid.value = null;
-                                            selectedVillageName.value =
-                                                "ជ្រើសរើសភូមី";
+                                            selectvillageidofcurrenctadrress
+                                                    .value =
+                                                null;
+                                            selectedVillageNameofcurrenctadrress
+                                                    .value =
+                                                "ជ្រើសរើសភូមិ";
+                                            districtcontroller.district.clear();
+                                            commmuncecontroller.communce
+                                                .clear();
                                             villagecontroller.village.clear();
-                                            villagecontroller.fetvillage(id);
+                                            districtcontroller.fetchdistrict(
+                                              id,
+                                            );
                                           },
                                         );
                                       },
                                     ),
                                   ),
-                                  SizedBox(width: 5),
-                                  Expanded(
-                                    child: CustomOutlinedButton(
-                                      text: selectedVillageName.value,
-                                      onPressed: () {
-                                        showVillageSelectorsheet(
-                                          context: context,
-                                          village: villagecontroller.village,
-                                          onSelected: (id) {
-                                            selectvillageid.value = id;
-                                            selectedVillageName.value =
-                                                villagecontroller.village
-                                                    .firstWhere((p) => p.id == id)
-                                                    .name!;
-                                          },
-                                        );
-                                      },
+                                ),
+                                SizedBox(width: 5),
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomOutlinedButton(
+                                      text:
+                                          selectedDistrictNameofcurrenctadrress
+                                              .value
+                                              .isEmpty
+                                          ? "ជ្រើសរើសស្រុក"
+                                          : selectedDistrictNameofcurrenctadrress
+                                                .value,
+                                      onPressed:
+                                          selectprovinceidofcurrenctadrress
+                                                  .value ==
+                                              null
+                                          ? null
+                                          : () {
+                                              showDistrictSelectorSheet(
+                                                context: context,
+                                                district:
+                                                    districtcontroller.district,
+                                                onSelected: (id) {
+                                                  selectdistrictidofcurrenctadrress
+                                                          .value =
+                                                      id;
+                                                  selectedDistrictNameofcurrenctadrress
+                                                          .value =
+                                                      districtcontroller
+                                                          .district
+                                                          .firstWhere(
+                                                            (p) => p.id == id,
+                                                          )
+                                                          .name!;
+                                                  selectcommunceidofcurrenctadrress
+                                                          .value =
+                                                      null;
+                                                  selectedCommunceNameofcurrenctadrress
+                                                          .value =
+                                                      "ជ្រើសរើសឃុំ";
+                                                  selectvillageidofcurrenctadrress
+                                                          .value =
+                                                      null;
+                                                  selectedVillageNameofcurrenctadrress
+                                                          .value =
+                                                      "ជ្រើសរើសភូមិ";
+                                                  commmuncecontroller.communce
+                                                      .clear();
+                                                  commmuncecontroller
+                                                      .fetchcommunce(id);
+                                                },
+                                              );
+                                            },
                                     ),
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomOutlinedButton(
+                                      text:
+                                          selectedCommunceNameofcurrenctadrress
+                                              .value
+                                              .isEmpty
+                                          ? "ជ្រើសរើសឃុំ"
+                                          : selectedCommunceNameofcurrenctadrress
+                                                .value,
+                                      onPressed:
+                                          selectdistrictidofcurrenctadrress
+                                                  .value ==
+                                              null
+                                          ? null
+                                          : () {
+                                              showCommunceSelectorSheet(
+                                                context: context,
+                                                communce: commmuncecontroller
+                                                    .communce,
+                                                onSelected: (id) {
+                                                  selectcommunceidofcurrenctadrress
+                                                          .value =
+                                                      id;
+                                                  selectedCommunceNameofcurrenctadrress
+                                                          .value =
+                                                      commmuncecontroller
+                                                          .communce
+                                                          .firstWhere(
+                                                            (p) => p.id == id,
+                                                          )
+                                                          .name!;
+                                                  selectvillageidofcurrenctadrress
+                                                          .value =
+                                                      null;
+                                                  selectedVillageNameofcurrenctadrress
+                                                          .value =
+                                                      "ជ្រើសរើសភូមិ";
+                                                  villagecontroller.village
+                                                      .clear();
+                                                  villagecontroller.fetvillage(
+                                                    id,
+                                                  );
+                                                },
+                                              );
+                                            },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomOutlinedButton(
+                                      text:
+                                          selectedVillageNameofcurrenctadrress
+                                              .value
+                                              .isEmpty
+                                          ? "ជ្រើសរើសភូមិ"
+                                          : selectedVillageNameofcurrenctadrress
+                                                .value,
+                                      onPressed:
+                                          selectcommunceidofcurrenctadrress
+                                                  .value ==
+                                              null
+                                          ? null
+                                          : () {
+                                              showVillageSelectorsheet(
+                                                context: context,
+                                                village:
+                                                    villagecontroller.village,
+                                                onSelected: (id) {
+                                                  selectvillageidofcurrenctadrress
+                                                          .value =
+                                                      id;
+                                                  selectedVillageNameofcurrenctadrress
+                                                      .value = villagecontroller
+                                                      .village
+                                                      .firstWhere(
+                                                        (p) => p.id == id,
+                                                      )
+                                                      .name!;
+                                                },
+                                              );
+                                            },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      SizedBox(height: 10),
-                      _buildHeader("ប្រាក់ខែ & ការងារ"),
-            
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildLabel("សាខា"),
-            
-                          CustomDropdown(
-                            selectedValue: selectbranchid,
-                            items: branchcontroller.branch,
-                            hintText: "រេីសសាខា",
-                            onChanged: (Value) {
-                              selectbranchid.value = Value;
-                              shiftcontroller.fetchshift(selectbranchid.value);
-                            },
-                          ),
-                          SizedBox(height: 8),
-                          _buildLabel("តួនាទី"),
-                          CustomDropdown(
-                            selectedValue: selectroleid,
-                            items: rolecontroller.role,
-                            hintText: "រេីសតួនាទី",
-                            onChanged: (Value) {
-                              selectroleid.value = Value;
-                            },
-                          ),
-                          SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildLabel("ថ្ងៃចូលបម្រេីការងារ"),
-                                    CustomDatePickerField(
-                                      label: "",
-                                      selectedDate: selecthiredate,
-                                    ),
-                                  ],
-                                ),
-                              ),
-            
-                              SizedBox(width: 10),
-            
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildLabel("ចំនួនថ្ងៃធ្វេីការ"),
-                                    CustomTextField(
-                                      keyboardType: TextInputType.number,
-                                      controller: workeddaycontroller,
-                                      hintText: "30",
-                                      prefixIcon: Icons.lock_clock_rounded,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 15),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildLabel("ប្រាក់ខែ"),
-                                    CustomTextField(
-                                      keyboardType: TextInputType.number,
-                                      controller: basesalarycontroller,
-                                      hintText: "300",
-                                      prefixIcon: Icons.attach_money,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 10),
-            
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildLabel("ម៉ោងធ្វេីការ"),
-                                    CustomDropdown(
-                                      selectedValue: selectshiftid,
-                                      items: shiftcontroller.shift,
-                                      hintText: "វេនព្រឹក",
-                                      onChanged: (Value) {
-                                        selectshiftid.value = Value;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 5,),
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            _buildLabel("ប្រភេទការងារ"),
-                                                            Obx(
-                                                              () => DropdownButtonFormField<int>(
-                                                                value: selecttype.value,
-                                                                decoration: InputDecoration(
-                                                                  labelText: "ប្រភេទការងារ",
-                                                                  labelStyle: TextStyles.siemreap(
-                                                                    context,
-                                                                    fontSize: 12,
-                                                                  ),
-                                                                    
-                                                                  // Border when focused
-                                                                  focusedBorder: OutlineInputBorder(
-                                                                    borderRadius: BorderRadius.circular(
-                                                                      12,
-                                                                    ),
-                                                                    borderSide: BorderSide(
-                                                                      color:
-                                                                          TheColors.orange, // change here
-                                                                      width: 0.5,
-                                                                    ),
-                                                                  ),
-                                                                  // Optional: Border when error
-                                                                  errorBorder: OutlineInputBorder(
-                                                                    borderRadius: BorderRadius.circular(
-                                                                      12,
-                                                                    ),
-                                                                    borderSide: BorderSide(
-                                                                      color: TheColors.errorColor,
-                                                                      width: 0.5,
-                                                                    ),
-                                                                  ),
-                                                                  border: OutlineInputBorder(
-                                                                    borderSide: BorderSide(
-                                                                      color: TheColors.orange,
-                                                                      width: 0.5,
-                                                                    ),
-                                                                    
-                                                                    borderRadius: BorderRadius.circular(
-                                                                      12,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                    
-                                                                items: types.map((typework) {
-                                                                  return DropdownMenuItem<int>(
-                                                                    value: typework['id'] as int,
-                                                                    child: Text(
-                                                                      typework['name'],
-                                                                      style: TextStyles.siemreap(
-                                                                        context,
-                                                                        fontSize: 12,
-                                                                      ),
-                                                                    ),
-                                                                  );
-                                                                }).toList(),
-                                                                onChanged: (Value) {
-                                                                  selecttype.value = Value;
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      _buildHeader("ព័ត៌មានរបស់ System"),
-            
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildLabel("ឈ្មោះសម្រាប់ចូលប្រព័ន្ធ"),
-                          CustomTextField(
-                            controller: usernamecontroller,
-                            hintText: "hongsokhear",
-                            prefixIcon: Icons.person,
-                          ),
-                          SizedBox(height: 8),
-                          _buildLabel("អ៊ីម៉ែល"),
-                          CustomTextField(
-                            controller: emailcontroller,
-                            hintText: "hongsokhear@gmail.com",
-                            prefixIcon: Icons.email,
-                          ),
-                          SizedBox(height: 8),
-                          _buildLabel("លេខសម្ងាត់"),
-                          CustomTextField(
-                            controller: passwordcontroller,
-                            hintText: "123456",
-                            prefixIcon: Icons.remove_red_eye,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+
+                    SizedBox(height: 20),
+                  ],
                 ),
               ),
             ),
           ),
-        );
-      }),
+        ),
+      ),
       bottomNavigationBar: CustomBottomNav(
-        title: "បង្កេីត",
-        onTap: () async {
-      
-          if (_formkey.currentState!.validate()) {
-            if (selectbranchid.value == null ||
-                selectgender.value == null ||
-                selectdob.value == null ||
-                selectvillageid.value == null ||
-                selectroleid.value == null ||
-                selecthiredate.value == null) {
-              CustomSnackbar.error(
-                title: "បញ្ចូលមិនពេញលេញ",
-                message: "សូមបញ្ចូលព័ត៌មានឲ្យបានពេញលេញ!",
-              );
-              return;
-            }
-
-            final user = UserRegisterModel(
-              branchID: selectbranchid.value!,
-              nameEn: nameencontroller.text.trim(),
-              nameKh: namekhcontroller.text.trim(),
-              username: usernamecontroller.text.trim(),
-              email: emailcontroller.text.trim(),
-              password: passwordcontroller.text.trim(),
-              gender: selectgender.value!,
-              contact: contactcontroller.text.trim(),
-              nationalIdNumber: nationalidnumbercontroller.text.trim(),
-              dob: selectdob.value!,
-              villageId: selectvillageid.value!,
-              roleId: selectroleid.value!,
-              shiftId: selectshiftid.value!,
-              hireDate: selecthiredate.value!,
-              type: selecttype.value!, // or your default type value
-              baseSalary: int.tryParse(basesalarycontroller.text) ?? 0,
-              workedDay: int.tryParse(workeddaycontroller.text) ?? 0,
-            );
-
-            await authcontroller.register(user);
-            clearForm();
-          }
-        },
+        title: "ចុះឈ្មោះ",
+        onTap: registerUser,
       ),
     );
   }

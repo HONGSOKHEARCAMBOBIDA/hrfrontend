@@ -75,6 +75,10 @@ class Data {
   String? dailyRate;
   bool? isActive;
   int? assignBranchId;
+  int? currencyId;
+  String? currencyCode;
+  String? currencySymbol;
+  String? currencyName;
 
   Data(
       {this.id,
@@ -129,7 +133,11 @@ class Data {
       this.workedDay,
       this.dailyRate,
       this.isActive,
-      this.assignBranchId});
+      this.assignBranchId,
+      this.currencyId,
+      this.currencyCode,
+      this.currencySymbol,
+      this.currencyName});
 
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -186,6 +194,10 @@ class Data {
     dailyRate = json['daily_rate'];
     isActive = json['is_active'];
     assignBranchId = json['assign_branch_id'];
+    currencyId = json['currency_id'];
+    currencyCode = json['currency_code'];
+    currencySymbol = json['currency_symbol'];
+    currencyName = json['currency_name'];
   }
 
 
@@ -244,6 +256,10 @@ class Data {
     data['daily_rate'] = this.dailyRate;
     data['is_active'] = this.isActive;
     data['assign_branch_id'] = this.assignBranchId;
+    data['currency_id'] = this.currencyId;
+    data['currency_code'] = this.currencyCode;
+    data['currency_symbol'] = this.currencySymbol;
+    data['currency_name'] = this.currencyName;
     return data;
   }
 }

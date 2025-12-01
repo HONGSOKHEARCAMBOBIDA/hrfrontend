@@ -86,6 +86,30 @@ class a extends GetView<MainController> {
                Get.toNamed('/shift'); 
               },
             ),
+            Divider(),   
+            ListTile(
+              leading: const Icon(Icons.monetization_on,color: TheColors.errorColor,),
+              title:  Text('រូបិយប័ណ្ណ',style: TextStyles.siemreap(context,fontSize: 12),),
+              onTap: () {
+               Get.toNamed('/currency'); 
+              },
+            ),
+            Divider(),   
+            ListTile(
+              leading: const Icon(Icons.monetization_on,color: TheColors.errorColor,),
+              title:  Text('ប្ដូរូបិយប័ណ្ណ',style: TextStyles.siemreap(context,fontSize: 12),),
+              onTap: () {
+               Get.toNamed('/currencypair'); 
+              },
+            ),
+                        Divider(),   
+            ListTile(
+              leading: const Icon(Icons.monetization_on,color: TheColors.errorColor,),
+              title:  Text('ការប្ដូរប្រាក់',style: TextStyles.siemreap(context,fontSize: 12),),
+              onTap: () {
+               Get.toNamed('/exchangrate'); 
+              },
+            ),
             Divider(),
             ListTile(
               leading: const Icon(Icons.logout,color: TheColors.errorColor,),

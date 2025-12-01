@@ -14,7 +14,16 @@ class CustomAttendanceCard extends StatelessWidget {
   final String checkDate;
   final int isLate;
   final int? isLeftEarly;
+  final String? latitudeCheckIn;
+  final String? longitudeCheckIn;
+  final String? latitudeCheckOut;
+  final String? longitudeCheckOut;
+  final bool? isZoonCheckIn;
+  final bool? isZoonCheckOut;
+  final String? notes;
   final VoidCallback onTap;
+  final VoidCallback? onViewCheckInLocation;
+  final VoidCallback? onViewCheckOutLocation;
 
   const CustomAttendanceCard({
     super.key,
@@ -28,13 +37,25 @@ class CustomAttendanceCard extends StatelessWidget {
     required this.checkDate,
     required this.isLate,
     required this.isLeftEarly,
+    this.latitudeCheckIn,
+    this.longitudeCheckIn,
+    this.latitudeCheckOut,
+    this.longitudeCheckOut,
+    this.isZoonCheckIn,
+    this.isZoonCheckOut,
+    this.notes,
     required this.onTap,
+    this.onViewCheckInLocation,
+    this.onViewCheckOutLocation,
   });
 
   @override
   Widget build(BuildContext context) {
     final bool late = isLate == 1;
     final bool leftEarly = (isLeftEarly ?? 0) == 1;
+    final bool hasCheckInLocation = latitudeCheckIn != null && longitudeCheckIn != null;
+    final bool hasCheckOutLocation = latitudeCheckOut != null && longitudeCheckOut != null;
+    final bool hasNotes = notes != null && notes!.isNotEmpty;
 
     return InkWell(
       onTap: onTap,
@@ -133,27 +154,122 @@ class CustomAttendanceCard extends StatelessWidget {
                     children: [
                       Icon(Icons.login, size: 14, color: TheColors.successColor),
                       const SizedBox(width: 4),
-                      Text(
-                        "ចូល៖ $checkIn",
-                        style: TextStyles.siemreap(
-                          context,
-                          fontSize: 11,
-                          color: TheColors.successColor,
+                      Expanded(
+                        child: Text(
+                          "ចូល៖ $checkIn",
+                          style: TextStyles.siemreap(
+                            context,
+                            fontSize: 11,
+                            color: TheColors.successColor,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Icon(Icons.logout, size: 14, color: TheColors.errorColor),
-                      const SizedBox(width: 4),
-                      Text(
-                        "ចេញ៖ $checkOut",
-                        style: TextStyles.siemreap(
-                          context,
-                          fontSize: 11,
-                          color: TheColors.errorColor,
+                      if (hasCheckInLocation)
+                        InkWell(
+                          onTap: onViewCheckInLocation,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.location_on, size: 14, color: TheColors.successColor),
+                              const SizedBox(width: 2),
+                              Text(
+                                "មើលទីតាំងចូល",
+                                style: TextStyles.siemreap(
+                                  context,
+                                  fontSize: 10,
+                                  color: TheColors.successColor,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                     ],
                   ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.logout, size: 14, color: TheColors.errorColor),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          "ចេញ៖ $checkOut",
+                          style: TextStyles.siemreap(
+                            context,
+                            fontSize: 11,
+                            color: TheColors.errorColor,
+                          ),
+                        ),
+                      ),
+                      if (hasCheckOutLocation)
+                        InkWell(
+                          onTap: onViewCheckOutLocation,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.location_on, size: 14, color: TheColors.errorColor),
+                              const SizedBox(width: 2),
+                              Text(
+                                "មើលទីតាំងចេញ",
+                                style: TextStyles.siemreap(
+                                  context,
+                                  fontSize: 10,
+                                  color: TheColors.errorColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+// Location status
+Row(
+  children: [
+    // Check-in location status
+    Row(
+      children: [
+        Icon(
+          isZoonCheckIn == true ? Icons.check_circle : Icons.cancel,
+          size: 12,
+          color: isZoonCheckIn == true ? TheColors.successColor : TheColors.errorColor,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          isZoonCheckIn == true ? "ក្នុងតំបន់ចូល" : "ក្រៅតំបន់ចូល",
+          style: TextStyles.siemreap(
+            context,
+            fontSize: 10,
+            color: isZoonCheckIn == true ? TheColors.successColor : TheColors.errorColor,
+          ),
+        ),
+      ],
+    ),
+    
+    // Spacer between check-in and check-out status
+    if (isZoonCheckIn != null && isZoonCheckOut != null) const SizedBox(width: 8),
+    
+    // Check-out location status
+    if (isZoonCheckOut != null)
+      Row(
+        children: [
+          Icon(
+            isZoonCheckOut == true ? Icons.check_circle : Icons.cancel,
+            size: 12,
+            color: isZoonCheckOut == true ? TheColors.successColor : TheColors.errorColor,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            isZoonCheckOut == true ? "ក្នុងតំបន់ចេញ" : "ក្រៅតំបន់ចេញ",
+            style: TextStyles.siemreap(
+              context,
+              fontSize: 10,
+              color: isZoonCheckOut == true ? TheColors.successColor : TheColors.errorColor,
+            ),
+          ),
+        ],
+      ),
+  ],
+),
                   const SizedBox(height: 4),
                   // Status (Late / Early)
                   Row(
@@ -172,7 +288,7 @@ class CustomAttendanceCard extends StatelessWidget {
                           ],
                         ),
                       if (late && leftEarly) const SizedBox(width: 8),
-                      if (leftEarly ?? false)
+                      if (leftEarly)
                         Row(
                           children: [
                             const Icon(Icons.alarm_off_rounded,
@@ -187,6 +303,24 @@ class CustomAttendanceCard extends StatelessWidget {
                         ),
                     ],
                   ),
+                  // Notes
+                  if (hasNotes)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 4),
+                        Text(
+                          "កំណត់សម្គាល់: $notes",
+                          style: TextStyles.siemreap(
+                            context,
+                            fontSize: 10,
+                            color: TheColors.gray,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),

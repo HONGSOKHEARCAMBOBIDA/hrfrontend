@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
+import 'package:flutter_application_10/data/models/employeemodel.dart';
+import 'package:flutter_application_10/modules/currency/controller/currencycontroller.dart';
 import 'package:flutter_application_10/modules/employee/employeecontroller/employeecontroller.dart';
+import 'package:flutter_application_10/shared/widgets/dropdown.dart';
 import 'package:flutter_application_10/shared/widgets/elevated_button.dart';
 import 'package:flutter_application_10/shared/widgets/snackbar.dart';
 import 'package:flutter_application_10/shared/widgets/textfield.dart';
 import 'package:get/get.dart';
 
 class EditSalaryView extends StatefulWidget {
+  final Data employeemodel;
   final int salaryID;
 
-  const EditSalaryView({super.key, required this.salaryID});
+  const EditSalaryView({super.key, required this.salaryID,required this.employeemodel});
 
   @override
   State<EditSalaryView> createState() => _EditSalaryViewState();
@@ -17,8 +21,22 @@ class EditSalaryView extends StatefulWidget {
 
 class _EditSalaryViewState extends State<EditSalaryView> {
   final Employeecontroller employeeController = Get.find<Employeecontroller>();
+  final currencycontroller = Get.put(Currencycontroller());
   final TextEditingController baseSalaryController = TextEditingController();
   final TextEditingController workDayController = TextEditingController();
+  final selectcurrencyID = Rxn<int>();
+    @override
+  void initState() {
+    super.initState();
+    _initializeData();
+
+  }
+  void _initializeData(){
+    final employee = widget.employeemodel;
+    selectcurrencyID.value = employee.currencyId!;
+    baseSalaryController.text = employee.baseSalary.toString();
+    workDayController.text = employee.workedDay.toString();
+  }
 
   @override
   void dispose() {
@@ -60,6 +78,20 @@ class _EditSalaryViewState extends State<EditSalaryView> {
                   controller: scrollController,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
+                  SizedBox(height: 10,),
+                  Text(
+                      "រូបិយប័ណ្ណដែលប្រេី",
+                      style: TextStyles.siemreap(context, fontSize: 12),
+                    ),
+                    const SizedBox(height: 5),
+                    CustomDropdown(
+                      selectedValue: selectcurrencyID, 
+                      items: currencycontroller.currency, 
+                      hintText: "ឧ ប្រាក់រៀល", 
+                      onChanged: (id){
+                        selectcurrencyID.value =id;
+                      }),
+                    SizedBox(height: 8,), 
                     Text(
                       "ប្រាក់ខែគោល",
                       style: TextStyles.siemreap(context, fontSize: 12),
@@ -104,6 +136,7 @@ class _EditSalaryViewState extends State<EditSalaryView> {
                         }
 
                         await employeeController.editsalary(
+                          currencyID: selectcurrencyID.value!,
                           basesalary: baseSalary,
                           workday: workDays,
                           salaryID: widget.salaryID,

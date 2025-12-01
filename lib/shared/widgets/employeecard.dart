@@ -16,13 +16,18 @@ class CustomEmployeeCard extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onTap;
+  final VoidCallback onPromote;
   final VoidCallback onchangeshift;
   final VoidCallback chnagesalary;
   final VoidCallback increasesalry;
   final bool? isActive;
+  final bool? isPromote;
   final String? shiftname;
   final String? branchname;
   final String profileImage;
+  final String currencycode;
+  final String currencysymbol;
+  final String currencyname;
 
   const CustomEmployeeCard({
     Key? key,
@@ -36,10 +41,15 @@ class CustomEmployeeCard extends StatelessWidget {
     required this.role,
     required this.onEdit,
     required this.onDelete,
+    required this.onPromote,
     required this.onTap,
     required this.profileImage,
+    required this.currencycode,
+    required this.currencyname,
+    required this.currencysymbol,
     this.shiftname,
     this.isActive,
+    this.isPromote,
     this.branchname,
     required this.chnagesalary
   }) : super(key: key);
@@ -172,16 +182,20 @@ class CustomEmployeeCard extends StatelessWidget {
                     // Base salary
                     Row(
                       children: [
-                        const Icon(Icons.attach_money,
-                            size: 14, color: TheColors.errorColor),
                       
-                        Text(
-                          "$basesalary",
-                          style: GoogleFonts.siemreap(
-                            fontSize: 12,
-                            color: TheColors.errorColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      
+                        Row(
+                          children: [
+                            Text(
+                              "$basesalary",
+                              style: GoogleFonts.siemreap(
+                                fontSize: 12,
+                                color: TheColors.errorColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text("$currencysymbol",style: GoogleFonts.siemreap(fontSize: 13,color: TheColors.errorColor),)
+                          ],
                         ),
                         SizedBox(width: 1,),
                         Text("~"),
@@ -219,7 +233,10 @@ Widget _buildActionMenu(BuildContext context) {
         onEdit();
       } else if (value == 'delete') {
         onDelete();
-      }else if (value == 'changeshift') {
+      } else if (value == 'promote'){
+        onPromote();
+      }
+      else if (value == 'changeshift') {
           onchangeshift();
   } else if (value == 'changesalary'){
           chnagesalary();
@@ -255,6 +272,26 @@ Widget _buildActionMenu(BuildContext context) {
             const SizedBox(width: 8),
             Text(
               isActive == true ? 'បិទ' : 'បើក',
+              style: TextStyles.siemreap(context, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+            PopupMenuItem(
+        
+        value: 'promote',
+        child: Row(
+          children: [
+            Icon(
+              isPromote == true ? Icons.check_circle : Icons.pending,
+              color: isPromote == true
+                  ? TheColors.errorColor
+                  : TheColors.successColor,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              isPromote == true ? 'បានវាយតម្លៃ' : 'មិនទាន់វាយតម្លៃ',
               style: TextStyles.siemreap(context, fontSize: 12),
             ),
           ],

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+
 import 'package:flutter_application_10/data/models/usermodel.dart' as myModel;
 import 'package:flutter_application_10/data/models/userregistermodel.dart';
 import 'package:flutter_application_10/data/models/userupdatemodel.dart';
@@ -8,10 +11,14 @@ import 'package:flutter_application_10/modules/main/mainview/mainview.dart';
 import 'package:flutter_application_10/shared/widgets/snackbar.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Authcontroller extends GetxController {
   final Authservice authservice = Authservice();
   var users = <myModel.Data>[].obs;
+  final imagepicker = ImagePicker();
+  File? profileImage;
+  File? qrcodeimage;
   var isLoading = false.obs;
   final GetStorage box = GetStorage();
   final RxString searchQuery = ''.obs;
@@ -28,6 +35,40 @@ class Authcontroller extends GetxController {
     );
 
     super.onInit();
+  }
+
+  Future<File?> pickProfile() async {
+    final XFile? pickedFile = await imagepicker.pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      profileImage = File(pickedFile.path);
+      update();
+      return profileImage; // Return the selected image
+    } else {
+      CustomSnackbar.error(
+        title: "error".tr,
+        message: "something_went_wrong".tr,
+      );
+      return null; // Return null if no image was picked
+    }
+  }
+
+  Future<File?> pickqrImage() async {
+    final XFile? pickedFile = await imagepicker.pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      qrcodeimage = File(pickedFile.path);
+      update();
+      return qrcodeimage; // Return the selected image
+    } else {
+      CustomSnackbar.error(
+        title: "error".tr,
+        message: "something_went_wrong".tr,
+      );
+      return null; // Return null if no image was picked
+    }
   }
 
   Future<void> fetchUser({
@@ -77,21 +118,99 @@ class Authcontroller extends GetxController {
     }
   }
 
-  Future<void> register(UserRegisterModel user) async {
+  // Future<void> register(UserRegisterModel user) async {
+  //   try {
+  //     isLoading.value = true;
+
+  //     bool isCreated = await authservice.register(user);
+
+  //     if (isCreated) {
+  //        await fetchUser();
+  //       Get.back(result: true);
+  //       CustomSnackbar.success(title: "ជោគជ័យ", message: "បង្កើតបានជោគជ័យ");
+  //     }
+  //   } catch (e) {
+  //     CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+  //   } finally {
+  //     isLoading.value = false; // ❗ Fix: must be false, not true
+  //   }
+  // }
+  Future<void> register({
+   
+    required String branchID,
+    required String nameEn,
+    required String nameKh,
+    required String username,
+    required String email,
+    required String password,
+    required int gender,
+    required String contact,
+    required String nationalIdNumber,
+    required int roleId,
+    required DateTime hireDate,
+    required DateTime promoteDate,
+    required int type,
+    required int shiftID,
+    required double baseSalary,
+    required int workday,
+    required DateTime dateOfBirth,
+    required int villageIdofbirth,
+    required int materialstatus,
+    required int villageIdcurrentaddress,
+    required String familyPhone,
+    required String educationLevel,
+    required int experienceYears,
+    required String previousCompany,
+    required String bankName,
+    required String bankAccountNumber,
+    required String notes,
+    required int currencyID,
+    required int positionLevel,
+    // File? profileImage,
+    // File? qrcodeimage,
+  }) async {
     try {
       isLoading.value = true;
-
-      bool isCreated = await authservice.register(user);
-
-      if (isCreated) {
-         await fetchUser();
-        Get.back(result: true);
-        CustomSnackbar.success(title: "ជោគជ័យ", message: "បង្កើតបានជោគជ័យ");
+      final iscreated = await authservice.register(
+        branchID: branchID,
+        nameEn: nameEn,
+        nameKh: nameKh,
+        username: username,
+        email: email,
+        password: password,
+        gender: gender,
+        contact: contact,
+        nationalIdNumber: nationalIdNumber,
+        roleId: roleId,
+        hireDate: hireDate,
+        promoteDate: promoteDate,
+        type: type,
+        shiftID: shiftID,
+        baseSalary: baseSalary,
+        workday: workday,
+        dateOfBirth: dateOfBirth,
+        villageIdofbirth: villageIdofbirth,
+        materialstatus: materialstatus,
+        villageIdcurrentaddress: villageIdcurrentaddress,
+        familyPhone: familyPhone,
+        educationLevel: educationLevel,
+        experienceYears: experienceYears,
+        previousCompany: previousCompany,
+        bankName: bankName,
+        bankAccountNumber: bankAccountNumber,
+        notes: notes,
+        currencyID: currencyID,
+        positionLevel: positionLevel,
+        profileImage: profileImage,
+        qrcodeimage: qrcodeimage
+      );
+      if (iscreated) {
+        Get.back();
       }
     } catch (e) {
-      CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+      CustomSnackbar.error(title: "ខុសប្រក្រី".tr, message: "កែប្រែបរាជ័យ".tr);
     } finally {
-      isLoading.value = false; // ❗ Fix: must be false, not true
+      isLoading.value = false;
     }
   }
 
@@ -110,15 +229,14 @@ class Authcontroller extends GetxController {
       isLoading.value = false;
     }
   }
-  Future<void> changestatususer(int? id) async{
-    try{
+
+  Future<void> changestatususer(int? id) async {
+    try {
       isLoading.value = true;
       bool update = await authservice.changestatus(id: id);
-      if(update){
+      if (update) {
         await fetchUser();
-
       }
-
     } catch (e) {
       CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
     } finally {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
+import 'package:flutter_application_10/data/models/employeemodel.dart';
 import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
+import 'package:flutter_application_10/modules/currency/controller/currencycontroller.dart';
 import 'package:flutter_application_10/modules/employee/employeecontroller/employeecontroller.dart';
 import 'package:flutter_application_10/modules/shift/shiftcontroller/shiftcontroller.dart';
 import 'package:flutter_application_10/shared/widgets/dropdown.dart';
@@ -9,11 +11,17 @@ import 'package:flutter_application_10/shared/widgets/textfield.dart';
 import 'package:get/get.dart';
 
 class Increasesalaryview extends StatefulWidget {
+  final Data employeemodel;
   final int employeeId;
   final int? employeeShiftId;
   final int? salaryID;
+  final int? currencyID;
+
   const Increasesalaryview({
+    
     Key? key,
+    required this.employeemodel,
+    this.currencyID,
     required this.employeeId,
     this.employeeShiftId,
     this.salaryID,
@@ -24,6 +32,7 @@ class Increasesalaryview extends StatefulWidget {
 }
 
 class _IncreasesalaryviewState extends State<Increasesalaryview> {
+  final currencycontroller = Get.put(Currencycontroller());
   final branchcontroller = Get.find<Branchcontroller>();
   final shiftcontroller = Get.find<Shiftcontroller>();
   final employeecontroller = Get.find<Employeecontroller>();
@@ -31,7 +40,21 @@ class _IncreasesalaryviewState extends State<Increasesalaryview> {
   final TextEditingController workDayController = TextEditingController();
   final selectbranchid = Rxn<int>();
   final selectshiftid = Rxn<int>();
+  final selectcurrencyid = Rxn<int>();
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
 
+  }
+  void _initializeData(){
+ final employee = widget.employeemodel;
+ selectbranchid.value = employee.branchId!;
+ selectshiftid.value = employee.shiftId!;
+ selectcurrencyid.value = employee.currencyId!;
+ baseSalaryController.text = employee.baseSalary!;
+ workDayController.text = employee.workedDay!.toString();
+  }
   @override
   void dispose() {
     baseSalaryController.dispose();
@@ -101,7 +124,20 @@ class _IncreasesalaryviewState extends State<Increasesalaryview> {
                         selectshiftid.value = value;
                       },
                     ),
-                    SizedBox(height: 5),
+                    SizedBox(height: 10),
+                                        Text(
+                      "រូបិយប័ណ្ណដែលប្រេី",
+                      style: TextStyles.siemreap(context, fontSize: 12),
+                    ),
+                    SizedBox(height: 5,),
+                    CustomDropdown(
+                      selectedValue: selectcurrencyid, 
+                      items: currencycontroller.currency, 
+                      hintText: "ឧ ប្រាក់រៀល", 
+                      onChanged: (id){
+                        selectcurrencyid.value =id;
+                      }),
+                      SizedBox(height: 5),
                     Text(
                       "ប្រាក់ខែគោល",
                       style: TextStyles.siemreap(context, fontSize: 12),
@@ -152,6 +188,7 @@ class _IncreasesalaryviewState extends State<Increasesalaryview> {
                         }
 
                         await employeecontroller.createemployeeshift(
+                          currencyID: selectcurrencyid.value!,
                           employeeid: widget.employeeId,
                           shiftid: selectshiftid.value!,
                           baseSalary: baseSalary,

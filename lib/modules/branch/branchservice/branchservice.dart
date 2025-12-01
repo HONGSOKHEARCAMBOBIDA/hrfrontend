@@ -49,13 +49,13 @@ class Branchservice {
     required String name,
     required double latitude,
     required double longitude,
-    required int radius,
+    required double radius,
     required int branchID,
   }) async {
     try {
       final body = {
         'name': name,
-        'latitube': latitude,
+        'latitude': latitude,
         'longitude': longitude,
         'radius': radius,
       };

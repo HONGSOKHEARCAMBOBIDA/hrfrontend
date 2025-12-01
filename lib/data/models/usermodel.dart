@@ -26,7 +26,7 @@ class Data {
   int? branchId;
   String? branchName;
   String? nameEn;
-  String? nameKh;
+  String? name;
   String? username;
   String? email;
   int? gender;
@@ -41,7 +41,7 @@ class Data {
       this.branchId,
       this.branchName,
       this.nameEn,
-      this.nameKh,
+      this.name,
       this.username,
       this.email,
       this.gender,
@@ -56,7 +56,7 @@ class Data {
     branchId = json['branch_id'];
     branchName = json['branch_name'];
     nameEn = json['name_en'];
-    nameKh = json['name_kh'];
+    name = json['name_kh'];
     username = json['username'];
     email = json['email'];
     gender = json['gender'];
@@ -73,7 +73,7 @@ class Data {
     data['branch_id'] = this.branchId;
     data['branch_name'] = this.branchName;
     data['name_en'] = this.nameEn;
-    data['name_kh'] = this.nameKh;
+    data['name_kh'] = this.name;
     data['username'] = this.username;
     data['email'] = this.email;
     data['gender'] = this.gender;

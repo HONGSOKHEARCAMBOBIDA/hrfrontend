@@ -55,7 +55,7 @@ class UserDetailBottomSheet extends StatelessWidget {
                 children: [
                   SizedBox(height: 4),
                   _buildSectionTitle('ព័ត៌មានផ្ទាល់ខ្លួន'),
-                  _buildDetailItem('ឈ្មោះ', user.nameKh ?? 'N/A'),
+                  _buildDetailItem('ឈ្មោះ', user.name ?? 'N/A'),
                   _buildDetailItem('ឈ្មោះអង់គ្លេស', user.nameEn ?? 'N/A'),
                   _buildDetailItem('ភេទ', _getGender(user.gender)),
                   _buildDetailItem(
@@ -98,7 +98,7 @@ class UserDetailBottomSheet extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          user.nameKh ?? 'N/A',
+          user.name ?? 'N/A',
           style: GoogleFonts.siemreap(
             fontSize: 18,
             fontWeight: FontWeight.bold,

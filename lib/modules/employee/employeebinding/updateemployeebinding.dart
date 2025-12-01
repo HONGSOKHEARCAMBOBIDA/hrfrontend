@@ -1,3 +1,4 @@
+import 'package:flutter_application_10/modules/currency/binding/currencybinding.dart';
 import 'package:flutter_application_10/modules/employee/employeebinding/employeebinding.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_10/modules/branch/brandbinding/branchbinding.dart';
@@ -17,6 +18,7 @@ class Updateemployeebinding extends Bindings{
     Villagebinding().dependencies();
     Rolebinding().dependencies();
     Branchbinding().dependencies();
+    Currencybinding().dependencies();
 
   }
 }

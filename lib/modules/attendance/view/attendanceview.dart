@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/helper/MapUtils.dart';
 import 'package:flutter_application_10/core/helper/show_branch_buttonsheet.dart';
 import 'package:flutter_application_10/core/helper/show_isactive_buttonsheet.dart';
 import 'package:flutter_application_10/core/helper/show_shitf_buttonsheet.dart';
@@ -84,6 +85,37 @@ class _AttendanceviewState extends State<Attendanceview> {
       name: attendancecontroller.searchQuery.value,
     );
   }
+  void _openCheckInLocation(String latitude, String longitude) {
+  try {
+    final lat = double.parse(latitude);
+    final lng = double.parse(longitude);
+    MapUtils.openInGoogleMapsApp(lat, lng);
+  } catch (e) {
+    // Show error message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Unable to open location: ${e.toString()}'),
+        backgroundColor: TheColors.errorColor,
+      ),
+    );
+  }
+}
+
+void _openCheckOutLocation(String latitude, String longitude) {
+  try {
+    final lat = double.parse(latitude);
+    final lng = double.parse(longitude);
+    MapUtils.openInGoogleMapsApp(lat, lng);
+  } catch (e) {
+    // Show error message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Unable to open location: ${e.toString()}'),
+        backgroundColor: TheColors.errorColor,
+      ),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -220,22 +252,49 @@ class _AttendanceviewState extends State<Attendanceview> {
                       itemCount: attendancecontroller.attendance.length,
                       itemBuilder: (context, index) {
                         final attendnce = attendancecontroller.attendance[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: CustomAttendanceCard(
-                            nameKh: attendnce.nameKh ?? '',
-                            nameEn: attendnce.nameEn ?? '',
-                            role: attendnce.roleName ?? '',
-                            checkIn: attendnce.checkIn ?? '',
-                            checkOut: attendnce.checkOut ?? '',
-                            checkDate: formatDate(attendnce.checkDate)  ?? '',
-                            shiftName: attendnce.shiftName ?? '',
-                            branchName: attendnce.branchName ?? '',
-                            isLate: attendnce.isLate ?? 0,
-                            isLeftEarly: attendnce.isLeftEarly ?? 0,
-                            onTap: () {},
-                          ),
-                        );
+                        return  Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+  child: CustomAttendanceCard(
+    nameKh: attendnce.nameKh ?? '',
+    nameEn: attendnce.nameEn ?? '',
+    role: attendnce.roleName ?? '',
+    checkIn: attendnce.checkIn ?? 'មិនទាន់ចូល',
+    checkOut: attendnce.checkOut ?? 'មិនទាន់ចេញ',
+    checkDate: formatDate(attendnce.checkDate) ?? '',
+    shiftName: attendnce.shiftName ?? '',
+    branchName: attendnce.branchName ?? '',
+    isLate: attendnce.isLate ?? 0,
+    isLeftEarly: attendnce.isLeftEarly ?? 0,
+    latitudeCheckIn: attendnce.latitudeCheckIn,
+    longitudeCheckIn: attendnce.longitudeCheckIn,
+    latitudeCheckOut: attendnce.latitudeCheckOut,
+    longitudeCheckOut: attendnce.longitudeCheckOut,
+    isZoonCheckIn: attendnce.isZoonCheckIn,
+    isZoonCheckOut: attendnce.isZoonCheckOut,
+    notes: attendnce.notes,
+    onTap: () {
+      // Add your onTap functionality here
+    },
+    onViewCheckInLocation: attendnce.latitudeCheckIn != null && 
+                          attendnce.longitudeCheckIn != null
+        ? () {
+            _openCheckInLocation(
+              attendnce.latitudeCheckIn!, 
+              attendnce.longitudeCheckIn!
+            );
+          }
+        : null,
+    onViewCheckOutLocation: attendnce.latitudeCheckOut != null && 
+                           attendnce.longitudeCheckOut != null
+        ? () {
+            _openCheckOutLocation(
+              attendnce.latitudeCheckOut!, 
+              attendnce.longitudeCheckOut!
+            );
+          }
+        : null,
+  ),
+);
                       },
                     );
                   }),

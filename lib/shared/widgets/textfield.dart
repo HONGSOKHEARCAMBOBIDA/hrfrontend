@@ -39,10 +39,13 @@ class CustomTextField extends StatelessWidget {
         
         hintStyle: TextStyles.siemreap(context,fontSize: 11,color: TheColors.gray),
         border: OutlineInputBorder(
+          
           borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: TheColors.orange, width: 0.5), // Primary Blue
           
         ),
-          focusedBorder: OutlineInputBorder(
+    
+    focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(8),
     borderSide: const BorderSide(color: TheColors.errorColor, width: 0.5), // Primary Blue
   ),

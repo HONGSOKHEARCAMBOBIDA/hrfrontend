@@ -181,6 +181,19 @@ class Employeecontroller extends GetxController {
       isLoading.value = false;
     }
   }
+    Future<void> promoteemployee(int? id) async {
+    try {
+      isLoading.value = true;
+      bool update = await employeeservice.promoteemployee(id);
+      if (update == true) {
+        await fetchemployee();
+      }
+    } catch (e) {
+      CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   Future<void> changeshift({
     required int employeeID,
@@ -218,10 +231,12 @@ class Employeecontroller extends GetxController {
     required int basesalary,
     required int workday,
     required int salaryID,
+    required int currencyID,
   }) async {
     try {
       isLoading.value = true;
       bool update = await employeeservice.editsalary(
+        currencyID: currencyID,
         baseSalary: basesalary,
         workday: workday,
         salaryID: salaryID,
@@ -244,10 +259,12 @@ class Employeecontroller extends GetxController {
     required int workday,
     required int salaryid,
     required int employeeshiftid,
+    required int currencyID
   }) async {
     try {
       isLoading.value = true;
       bool created = await employeeservice.creteEmployeeShift(
+        currencyID: currencyID,
         employeeid: employeeid,
         shiftid: shiftid,
         baseSalary: baseSalary,

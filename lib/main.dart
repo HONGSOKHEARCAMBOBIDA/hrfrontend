@@ -10,9 +10,15 @@ import 'package:flutter_application_10/modules/auth/view/userview.dart';
 import 'package:flutter_application_10/modules/branch/brandbinding/branchbinding.dart';
 import 'package:flutter_application_10/modules/branch/view/branchview.dart';
 import 'package:flutter_application_10/modules/communce/communcebinding/communcebinding.dart';
+import 'package:flutter_application_10/modules/currency/binding/currencybinding.dart';
+import 'package:flutter_application_10/modules/currency/view/currencyview.dart';
+import 'package:flutter_application_10/modules/currencypair/binding/currencypairbinding.dart';
+import 'package:flutter_application_10/modules/currencypair/view/currencypairview.dart';
 import 'package:flutter_application_10/modules/district/districtbinding/districtbinding.dart';
 import 'package:flutter_application_10/modules/employee/employeebinding/employeebinding.dart';
 import 'package:flutter_application_10/modules/employee/employeeview/employeeview.dart';
+import 'package:flutter_application_10/modules/exchangerate/binding/exchangeratebinding.dart';
+import 'package:flutter_application_10/modules/exchangerate/view/exchangerateview.dart';
 import 'package:flutter_application_10/modules/leave/leavebinding/leavebinding.dart';
 import 'package:flutter_application_10/modules/leave/leaveview/createleaveview.dart';
 import 'package:flutter_application_10/modules/leave/leaveview/leaveview.dart';
@@ -34,7 +40,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 void main() async {
- 
   await GetStorage.init();
 
   //print token
@@ -54,103 +59,105 @@ class MyApp extends StatelessWidget {
       initialRoute: '/main',
       getPages: [
         GetPage(
-          name: '/main', 
+          name: '/main',
           middlewares: [MainMiddleware()],
-          page: ()=> MainView(),
-          
-          bindings: [MainBinding(),Attendancebinding()]),
+          page: () => MainView(),
+
+          bindings: [MainBinding(), Attendancebinding()],
+        ),
         GetPage(
-          name: '/login', 
-          page: ()=> LoginView(),
-          binding: Authbinding()),
+          name: '/login',
+          page: () => LoginView(),
+          binding: Authbinding(),
+        ),
         GetPage(
-  name: '/register',
-  page: () => Registerview(),
-  bindings: [
-    Authbinding(),
-    Provincebinding(),
-    Districtbinding(),
-    Communcebinding(),
-    Villagebinding(),
-    Rolebinding(),
-    Branchbinding(),
-    Shiftbinding()
+          name: '/register',
+          page: () => RegisterUserView(),
+          bindings: [
+            Authbinding(),
+            Provincebinding(),
+            Districtbinding(),
+            Communcebinding(),
+            Villagebinding(),
+            Rolebinding(),
+            Branchbinding(),
+            Shiftbinding(),
+            Currencybinding()
+          ],
+        ),
 
-  ]
-),
-
-GetPage(
-  name: '/listuser', 
-  page: ()=>Userview(),
-  bindings: [
-    Authbinding(),
-    Rolebinding(),
-    Branchbinding()
-  ]
-  ),
-  GetPage(
-  name: '/listemployee', 
-  page: ()=>Employeeview(),
-  bindings: [
-    Employeebinding(),
-    Rolebinding(),
-    Branchbinding(),
-    Shiftbinding(),
-  ]
-  ),
-  GetPage(
-    name: '/branch', 
-    page: ()=>Branchview(),
-    binding: Branchbinding()
-    ),
-      GetPage(
-    name: '/shift', 
-    page: ()=>Shiftview(),
-    bindings: [Branchbinding(),Shiftbinding()]
-    ),
-    GetPage(
-      name: '/attendance', 
-      page: ()=>Createattendanceview(),
-      binding: Attendancebinding()),
-    GetPage(
-      name: '/viewattendance', 
-      page: ()=> Attendanceview(),
-      bindings: [Branchbinding(),Attendancebinding()]),
-    GetPage(
-      name: '/loan', 
-      page: ()=> LoanView(),
-      bindings:[
-        Loanbinding(),
-        Branchbinding(),
-        Employeebinding()
-      ] 
-      ),
-    GetPage(
-      name: '/leave', 
-      page: ()=>Leaveview(),
-      bindings: [
-        Leavebinding(),
-        Authbinding(),
-        Branchbinding(),
-        Employeebinding()
-      ]
-      ),
         GetPage(
-      name: '/payroll', 
-      page: ()=>Summarypayrollview(),
-      bindings: [
-        Payrollbinding(),
-        Branchbinding(),
-
-      ]
-      ),
-
-
-
+          name: '/listuser',
+          page: () => Userview(),
+          bindings: [Authbinding(), Rolebinding(), Branchbinding()],
+        ),
+        GetPage(
+          name: '/listemployee',
+          page: () => Employeeview(),
+          bindings: [
+            Employeebinding(),
+            Rolebinding(),
+            Branchbinding(),
+            Shiftbinding(),
+            Currencybinding(),
+          ],
+        ),
+        GetPage(
+          name: '/branch',
+          page: () => Branchview(),
+          binding: Branchbinding(),
+        ),
+        GetPage(
+          name: '/shift',
+          page: () => Shiftview(),
+          bindings: [Branchbinding(), Shiftbinding()],
+        ),
+        GetPage(
+          name: '/attendance',
+          page: () => Createattendanceview(),
+          binding: Attendancebinding(),
+        ),
+        GetPage(
+          name: '/viewattendance',
+          page: () => Attendanceview(),
+          bindings: [Branchbinding(), Attendancebinding()],
+        ),
+        GetPage(
+          name: '/loan',
+          page: () => LoanView(),
+          bindings: [Loanbinding(), Branchbinding(), Employeebinding()],
+        ),
+        GetPage(
+          name: '/leave',
+          page: () => Leaveview(),
+          bindings: [
+            Leavebinding(),
+            Authbinding(),
+            Branchbinding(),
+            Employeebinding(),
+          ],
+        ),
+        GetPage(
+          name: '/payroll',
+          page: () => Summarypayrollview(),
+          bindings: [Payrollbinding(), Branchbinding()],
+        ),
+        GetPage(
+          name: '/currency',
+          page: () => CurrencyView(),
+          bindings: [Currencybinding()],
+        ),
+        GetPage(
+          name: '/currencypair',
+          page: () => Currencypairview(),
+          bindings: [Currencypairbinding()],
+        ),
+        GetPage(
+          name: '/exchangrate',
+          page: () => Exchangerateview(),
+          bindings: [Exchangeratebinding(),Currencypairbinding()],
+        ),
       ],
     );
   }
 }
-
-
-

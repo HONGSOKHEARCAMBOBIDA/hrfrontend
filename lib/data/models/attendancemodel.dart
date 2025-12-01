@@ -41,6 +41,13 @@ class Data {
   String? shiftName;
   String? startTime;
   String? endTime;
+  bool? isZoonCheckIn;
+  bool? isZoonCheckOut;
+  String? latitudeCheckIn;
+  String? longitudeCheckIn;
+  String? latitudeCheckOut;
+  String? longitudeCheckOut;
+  String? notes;
 
   Data(
       {this.id,
@@ -61,7 +68,14 @@ class Data {
       this.shiftId,
       this.shiftName,
       this.startTime,
-      this.endTime});
+      this.endTime,
+      this.isZoonCheckIn,
+      this.isZoonCheckOut,
+      this.latitudeCheckIn,
+      this.longitudeCheckIn,
+      this.latitudeCheckOut,
+      this.longitudeCheckOut,
+      this.notes});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -83,6 +97,13 @@ class Data {
     shiftName = json['shift_name'];
     startTime = json['start_time'];
     endTime = json['end_time'];
+    isZoonCheckIn = json['is_zoon_check_in'];
+    isZoonCheckOut = json['is_zoon_check_out'];
+    latitudeCheckIn = json['latitude_check_in'];
+    longitudeCheckIn = json['longitude_check_in'];
+    latitudeCheckOut = json['latitude_check_out'];
+    longitudeCheckOut = json['longitude_check_out'];
+    notes = json['notes'];
   }
 
   Map<String, dynamic> toJson() {
@@ -106,6 +127,13 @@ class Data {
     data['shift_name'] = this.shiftName;
     data['start_time'] = this.startTime;
     data['end_time'] = this.endTime;
+    data['is_zoon_check_in'] = this.isZoonCheckIn;
+    data['is_zoon_check_out'] = this.isZoonCheckOut;
+    data['latitude_check_in'] = this.latitudeCheckIn;
+    data['longitude_check_in'] = this.longitudeCheckIn;
+    data['latitude_check_out'] = this.latitudeCheckOut;
+    data['longitude_check_out'] = this.longitudeCheckOut;
+    data['notes'] = this.notes;
     return data;
   }
 }

@@ -52,7 +52,7 @@ class Branchcontroller extends GetxController {
     required String name,
     required double latitude,
     required double longitude,
-    required int radius,
+    required double radius,
     required int branchid,
   }) async {
     try {

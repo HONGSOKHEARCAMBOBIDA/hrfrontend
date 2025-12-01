@@ -4,6 +4,7 @@
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 
+
     <application
         android:label="flutter_application_10"
         android:name="${applicationName}"
@@ -46,5 +47,6 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <package android:name="com.google.android.apps.maps" />
     </queries>
 </manifest>
