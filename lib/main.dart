@@ -140,7 +140,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/payroll',
           page: () => Summarypayrollview(),
-          bindings: [Payrollbinding(), Branchbinding()],
+          bindings: [Payrollbinding(), Branchbinding(),Currencybinding()],
         ),
         GetPage(
           name: '/currency',

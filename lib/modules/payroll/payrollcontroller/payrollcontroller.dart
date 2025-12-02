@@ -12,10 +12,12 @@ class Payrollcontroller extends GetxController {
   Future<void> fetchdraffpayroll({
     required int branchid,
     required int month,
+    required int currencyID,
   }) async {
     try {
       isLoading.value = true;
       final result = await payrollservice.getsummarypayroll(
+        currencyID: currencyID,
         branchid: branchid,
         month: month,
       );
@@ -31,6 +33,7 @@ class Payrollcontroller extends GetxController {
   Future<void> submitAllPayrolls({
     required int month,
     required int branchId,
+    required int currencyId,
     required Map<int, double> loanDeductions,
   }) async {
     try {
@@ -79,6 +82,7 @@ class Payrollcontroller extends GetxController {
             'totalDeductions':totalDeductions,// Using totalDeductions
             'netsalary': finalNetSalary,
             'branch_id': branchId,
+            'currency_id': currencyId
           };
 
           payrollRequests.add(payrollRequest);

@@ -55,4 +55,45 @@ class Shiftcontroller extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<void> updateshift({
+    required int shiftID,
+    required String name,
+    required String start_time,
+    required String end_time,
+    required int branchid,
+  }) async {
+    try {
+      isLoading.value = true;
+      bool update = await shiftservice.Updateshift(
+        shiftID: shiftID,
+        name: name,
+        start_time: start_time,
+        end_time: end_time,
+        branchid: branchid,
+      );
+      if (update) {
+        Get.back();
+        await fetchallshift();
+      }
+    } catch (e) {
+      CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> changestatusshift({required int shiftID}) async {
+    try {
+      isLoading.value = true;
+      bool updated = await shiftservice.changestatusshift(shiftid: shiftID);
+      if (updated) {
+        await fetchallshift();
+      }
+    } catch (e) {
+      CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

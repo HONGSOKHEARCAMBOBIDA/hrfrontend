@@ -49,11 +49,13 @@ class _IncreasesalaryviewState extends State<Increasesalaryview> {
   }
   void _initializeData(){
  final employee = widget.employeemodel;
- selectbranchid.value = employee.branchId!;
+ selectbranchid.value = employee.branchshiftId!;
  selectshiftid.value = employee.shiftId!;
  selectcurrencyid.value = employee.currencyId!;
  baseSalaryController.text = employee.baseSalary!;
  workDayController.text = employee.workedDay!.toString();
+ shiftcontroller.shift.clear();
+shiftcontroller.fetchshift(selectbranchid.value);
   }
   @override
   void dispose() {

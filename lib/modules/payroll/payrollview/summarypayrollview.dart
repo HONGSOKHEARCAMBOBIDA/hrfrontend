@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/helper/show_branch_buttonsheet.dart';
+import 'package:flutter_application_10/core/helper/showcurrencyselector.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
 import 'package:flutter_application_10/data/models/payrollrequestmodel.dart';
 import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
+import 'package:flutter_application_10/modules/currency/controller/currencycontroller.dart';
 import 'package:flutter_application_10/modules/payroll/payrollcontroller/payrollcontroller.dart';
 import 'package:flutter_application_10/shared/widgets/app_bar.dart';
 import 'package:flutter_application_10/shared/widgets/custombuttonnav.dart';
@@ -22,8 +24,10 @@ class Summarypayrollview extends StatefulWidget {
 class _SummarypayrollviewState extends State<Summarypayrollview> {
   final paycontroller = Get.find<Payrollcontroller>();
   final branchcontroller = Get.find<Branchcontroller>();
+  final currencycontroller = Get.find<Currencycontroller>();
   final selectbranchid = Rxn<int>();
   final selectmonth = Rxn<int>();
+  final selectcurrencyID = Rxn<int>();
  final Map<int, double> loanDeductions = {};
   // Month list with Khmer and English names
   final List<Map<String, dynamic>> months = [
@@ -95,6 +99,7 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
                   onPressed: () {
                   
                     paycontroller.submitAllPayrolls(
+                      currencyId: selectcurrencyID.value!,
                       month: selectmonth.value!,
                       branchId: selectbranchid.value!,
                       loanDeductions: loanDeductions,
@@ -243,7 +248,7 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
 
   ButtonStyle _filterStyle() {
     return TextButton.styleFrom(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       minimumSize: Size.zero,
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       side: const BorderSide(color: TheColors.errorColor, width: 0.5),
@@ -273,6 +278,25 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Branch Button
+                    Expanded(
+            child: TextButton(
+              style: _filterStyle(),
+              onPressed: () {
+                showcurrencyselector(
+                  context: context,
+                  currency: currencycontroller.currency,
+                  selectedCurrencyId: selectcurrencyID.value,
+                  onSelected: (id) {
+                    setState(() {
+                      selectcurrencyID.value = id;
+                    });
+                  },
+                );
+              },
+              child: _buildCurrencyLabel(),
+            ),
+          ),
+          const SizedBox(width: 8),
           Expanded(
             child: TextButton(
               style: _filterStyle(),
@@ -322,6 +346,7 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
                   return;
                 }
                 paycontroller.fetchdraffpayroll(
+                  currencyID: selectcurrencyID.value!,
                   branchid: selectbranchid.value!, 
                   month: selectmonth.value!
                 );
@@ -334,28 +359,64 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
     );
   }
 
-  Widget _buildBranchLabel() {
-    final selectedBranch = selectbranchid.value;
-    final branchName = selectedBranch != null 
-        ? 'សាខា' 
-        : 'សាខា';
+Widget _buildBranchLabel() {
+  final selectedBranch = selectbranchid.value;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          branchName,
-          style: TextStyles.siemreap(context, fontSize: 10),
-        ),
-        const Icon(
-          Icons.arrow_drop_down,
-          color: TheColors.errorColor,
-          size: 18,
-        ),
-      ],
-    );
-  }
+  final branchName = selectedBranch != null
+      ? branchcontroller.branch
+          .firstWhere(
+            (p) => p.id == selectedBranch,
+          
+          )
+          ?.name ?? 'សាខា'
+      : 'សាខា';
+
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        branchName,
+        style: TextStyles.siemreap(context, fontSize: 10),
+      ),
+      const Icon(
+        Icons.arrow_drop_down,
+        color: TheColors.errorColor,
+        size: 18,
+      ),
+    ],
+  );
+}
+
+Widget _buildCurrencyLabel() {
+  final selectedCurrency = selectcurrencyID.value;
+
+  final currencyName = selectedCurrency != null
+      ? currencycontroller.currency
+          .firstWhere(
+            (p) => p.id == selectedCurrency,
+           
+          )
+          ?.name ?? 'រូបិយប័ណ្ណ'
+      : 'រូបិយប័ណ្ណ';
+
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        currencyName,
+        style: TextStyles.siemreap(context, fontSize: 10),
+      ),
+      const Icon(
+        Icons.arrow_drop_down,
+        color: TheColors.errorColor,
+        size: 18,
+      ),
+    ],
+  );
+}
+
 
   Widget _buildMonthLabel() {
     final selectedMonth = selectmonth.value;

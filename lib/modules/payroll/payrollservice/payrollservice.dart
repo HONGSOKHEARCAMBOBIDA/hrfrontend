@@ -9,11 +9,15 @@ class Payrollservice {
   Future<List<Data>> getsummarypayroll({
     required int branchid,
     required int month,
+    required int currencyID,
+    String? name,
   }) async {
     try {
       final params = <String, dynamic>{};
       if (branchid != null) params['branch_id'] = branchid;
       if (month != null) params['month'] = month;
+      if(name != null) params['staff_name']= name;
+      if(currencyID != null) params['currency_id']=currencyID;
       final respone = await apiProvider.get(
         'viewpayroll',
         queryParameters: params.isNotEmpty ? params : null,
@@ -29,7 +33,6 @@ class Payrollservice {
       throw Exception(e.toString());
     }
   }
-
   // Bulk payroll creation - send all at once
   Future<bool> createBulkPayroll(List<Map<String, dynamic>> payrolls) async {
     try {

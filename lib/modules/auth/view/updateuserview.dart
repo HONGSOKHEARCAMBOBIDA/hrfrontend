@@ -158,76 +158,84 @@ class _UpdateuserviewState extends State<Updateuserview> {
         },
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Form(
               key: _formkey,
               child: Padding(
                 padding: const EdgeInsets.only(left: 8,right: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeader("ព័ត៌មានផ្ទាល់ខ្លួន"),
-                    SizedBox(height: 5),
-                    Column(
+                child: Container(
+                   decoration: BoxDecoration(
+                        border: Border.all(color: TheColors.orange, width: 0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 8),
-                        _buildLabel("លេខទូរសព្ទ"),
-                        CustomTextField(
-                          keyboardType: TextInputType.phone,
-                          controller: contactcontroller,
-                          hintText: "070366214",
-                          prefixIcon: Icons.phone_callback,
+                     
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 8),
+                            _buildLabel("លេខទូរសព្ទ"),
+                            CustomTextField(
+                              keyboardType: TextInputType.phone,
+                              controller: contactcontroller,
+                              hintText: "070366214",
+                              prefixIcon: Icons.phone_callback,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                      
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildLabel("សាខា"),
+                            CustomDropdown(
+                              selectedValue: selectbranchid,
+                              items: branchcontroller.branch,
+                              hintText: "រេីសសាខា",
+                              onChanged: (Value) {
+                                selectbranchid.value = Value;
+                              },
+                            ),
+                            SizedBox(height: 8),
+                            _buildLabel("តួនាទី"),
+                            CustomDropdown(
+                              selectedValue: selectroleid,
+                              items: rolecontroller.role,
+                              hintText: "រេីសតួនាទី",
+                              onChanged: (Value) {
+                                selectroleid.value = Value;
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                    
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildLabel("ឈ្មោះសម្រាប់ចូលប្រព័ន្ធ"),
+                            CustomTextField(
+                              controller: usernamecontroller,
+                              hintText: "hongsokhear",
+                              prefixIcon: Icons.person,
+                            ),
+                            SizedBox(height: 8),
+                            _buildLabel("អ៊ីម៉ែល"),
+                            CustomTextField(
+                              controller: emailcontroller,
+                              hintText: "hongsokhear@gmail.com",
+                              prefixIcon: Icons.email,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
-                    _buildHeader("ព័ត៌មានការងារ"),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildLabel("សាខា"),
-                        CustomDropdown(
-                          selectedValue: selectbranchid,
-                          items: branchcontroller.branch,
-                          hintText: "រេីសសាខា",
-                          onChanged: (Value) {
-                            selectbranchid.value = Value;
-                          },
-                        ),
-                        SizedBox(height: 8),
-                        _buildLabel("តួនាទី"),
-                        CustomDropdown(
-                          selectedValue: selectroleid,
-                          items: rolecontroller.role,
-                          hintText: "រេីសតួនាទី",
-                          onChanged: (Value) {
-                            selectroleid.value = Value;
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 5),
-                    _buildHeader("ព័ត៌មានរបស់ System"),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildLabel("ឈ្មោះសម្រាប់ចូលប្រព័ន្ធ"),
-                        CustomTextField(
-                          controller: usernamecontroller,
-                          hintText: "hongsokhear",
-                          prefixIcon: Icons.person,
-                        ),
-                        SizedBox(height: 8),
-                        _buildLabel("អ៊ីម៉ែល"),
-                        CustomTextField(
-                          controller: emailcontroller,
-                          hintText: "hongsokhear@gmail.com",
-                          prefixIcon: Icons.email,
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),

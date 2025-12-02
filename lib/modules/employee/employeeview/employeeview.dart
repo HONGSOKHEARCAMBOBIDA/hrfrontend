@@ -93,6 +93,7 @@ class _EmployeeviewState extends State<Employeeview> {
             selectroleid.value = null;
             currentstate.value = null;
             selectshiftid.value = null;
+            shiftcontroller.shift.clear();
             await employeecontroller.fetchemployee();
             await rolecontroller.fetchrole();
             await branchcontroller.fetchbranch();
@@ -346,6 +347,7 @@ class _EmployeeviewState extends State<Employeeview> {
                               onchangeshift: () {
                                 Get.bottomSheet(
                                   Employeeshifteditview(
+                                    employeemodel: employee,
                                     employeeId:
                                         employee.id!, // pass your employee id
                                     employeeShiftId: employee

@@ -24,6 +24,7 @@ class EmployeeModel {
 class Data {
   int? id;
   int? branchId;
+  int? branchshiftId;
   String? branchName;
   String? nameEn;
   String? name;
@@ -83,6 +84,7 @@ class Data {
   Data(
       {this.id,
       this.branchId,
+      this.branchshiftId,
       this.branchName,
       this.nameEn,
       this.name,
@@ -143,6 +145,7 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     branchId = json['branch_id'];
+    branchshiftId = json['branch_shift_id'];
     branchName = json['branch_name'];
     nameEn = json['name_en'];
     name = json['name_kh'];
@@ -205,6 +208,7 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['branch_id'] = this.branchId;
+    data['branch_shift_id']= this.branchshiftId;
     data['branch_name'] = this.branchName;
     data['name_en'] = this.nameEn;
     data['name_kh'] = this.name;

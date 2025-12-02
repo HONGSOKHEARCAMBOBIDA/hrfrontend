@@ -59,4 +59,52 @@ class Shiftservice {
       return false;
     }
   }
+
+  Future<bool> Updateshift({
+    required int shiftID,
+    required String name,
+    required String start_time,
+    required String end_time,
+    required int branchid,
+  }) async {
+    try {
+      final body = {
+        'name': name,
+        'start_time': start_time,
+        'end_time': end_time,
+        'branch_id': branchid,
+      };
+      final response = await apiProvider.put('shift/${shiftID}', body);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        CustomSnackbar.error(title: "បរាជ័យ", message: "កែប្រែមិនបានទេ");
+        return false;
+      }
+    } catch (e) {
+      CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> changestatusshift({required int shiftid}) async {
+    try {
+      final response = await apiProvider.put(
+        "changestatusshift/${shiftid}",
+        shiftid,
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        CustomSnackbar.error(title: "បរាជ័យ", message: "កែប្រែមិនបានទេ");
+        return false;
+      }
+    } catch (e) {
+      CustomSnackbar.error(
+        title: "កំហុស",
+        message: "មានបញ្ហា: ${e.toString()}",
+      );
+      return false;
+    }
+  }
 }

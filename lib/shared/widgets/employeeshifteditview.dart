@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
+import 'package:flutter_application_10/data/models/employeemodel.dart';
 import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
 import 'package:flutter_application_10/modules/employee/employeecontroller/employeecontroller.dart';
 import 'package:flutter_application_10/modules/shift/shiftcontroller/shiftcontroller.dart';
@@ -8,11 +9,13 @@ import 'package:flutter_application_10/shared/widgets/elevated_button.dart';
 import 'package:get/get.dart';
 
 class Employeeshifteditview extends StatefulWidget {
+  final Data employeemodel;
   final int employeeId;
   final int? employeeShiftId;
 
   const Employeeshifteditview({
     Key? key,
+    required this.employeemodel,
     required this.employeeId,
     this.employeeShiftId,
   }) : super(key: key);
@@ -28,6 +31,23 @@ class _EmployeeshifteditviewState extends State<Employeeshifteditview> {
 
   final selectbranchid = Rxn<int>();
   final selectshiftid = Rxn<int>();
+      @override
+  void initState() {
+    super.initState();
+    _initializeData();
+
+  }
+void _initializeData() {
+  final employee = widget.employeemodel;
+
+  selectbranchid.value = employee.branchshiftId!;
+  selectshiftid.value = employee.shiftId!;
+
+  // fetch shift of that branch
+  shiftcontroller.shift.clear();
+  shiftcontroller.fetchshift(selectbranchid.value);
+}
+
 
   @override
   Widget build(BuildContext context) {
