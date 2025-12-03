@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/helper/format.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
-import 'package:flutter_application_10/data/models/summarypayrollmodel.dart';
+import 'package:flutter_application_10/data/models/payrollmodel.dart';
 import 'package:flutter_application_10/modules/payroll/payrollcontroller/payrollcontroller.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 
-class PayrollCard extends StatefulWidget {
+class Payrollmaincard extends StatefulWidget {
   final Data payrollData;
   final Function(double, int) onLoanDeductionChanged;
 
-  PayrollCard({
+  Payrollmaincard({
     Key? key,
     required this.payrollData,
     required this.onLoanDeductionChanged,
   }) : super(key: key);
 
   @override
-  State<PayrollCard> createState() => _PayrollCardState();
+  State<Payrollmaincard> createState() => _PayrollmaincardState();
 }
 
-class _PayrollCardState extends State<PayrollCard> {
+class _PayrollmaincardState extends State<Payrollmaincard> {
   final payrollcontroller = Get.put(Payrollcontroller());
   final loandeduction = TextEditingController();
   final RxDouble deduction = 0.0.obs;
-  
+
   // State variables for expandable sections
   final RxBool _isPersonalInfoExpanded = false.obs;
   final RxBool _isWorkInfoExpanded = false.obs;
@@ -40,7 +40,10 @@ class _PayrollCardState extends State<PayrollCard> {
       double newDeduction = double.tryParse(loandeduction.text) ?? 0;
       deduction.value = newDeduction;
       if (widget.payrollData.salaryId != null) {
-        widget.onLoanDeductionChanged(newDeduction, widget.payrollData.salaryId!);
+        widget.onLoanDeductionChanged(
+          newDeduction,
+          widget.payrollData.salaryId!,
+        );
       }
     });
   }
@@ -98,12 +101,6 @@ class _PayrollCardState extends State<PayrollCard> {
               ),
 
               // Loan Information - Expandable (if exists)
-              if (widget.payrollData.loanAmount != null)
-                _buildExpandableSection(
-                  title: 'លុយជំពាក់',
-                  isExpanded: _isLoanInfoExpanded,
-                  content: _buildLoanContent(),
-                ),
             ],
           ),
         ),
@@ -142,7 +139,7 @@ class _PayrollCardState extends State<PayrollCard> {
 
         // Net Salary Display
         Obx(() {
-          final bonus = (widget.payrollData.isBonusAttendanace == 1)
+          final bonus = (widget.payrollData.isAttendanceBonus == 1)
               ? (widget.payrollData.bonusAmount ?? 10)
               : 0;
           final netSalary =
@@ -165,16 +162,24 @@ class _PayrollCardState extends State<PayrollCard> {
                 ),
                 SizedBox(width: 5),
                 Text(
-                  widget.payrollData.targetcurrencysymbol!,
+                  widget.payrollData.currencySymbol!,
                   style: GoogleFonts.siemreap(
                     fontSize: 16,
                     color: TheColors.bgColor,
                   ),
-                )
+                ),
               ],
             ),
           );
         }),
+     Padding(
+       padding: const EdgeInsets.all(4.0),
+       child: GestureDetector(
+        onTap: ()async{
+          payrollcontroller.deletepayroll(ID: widget.payrollData.id!);
+        },
+        child: Icon(Icons.delete,color: const Color.fromARGB(255, 255, 17, 0),)),
+     )
       ],
     );
   }
@@ -185,55 +190,59 @@ class _PayrollCardState extends State<PayrollCard> {
     required RxBool isExpanded,
     required Widget content,
   }) {
-    return Obx(() => Column(
-      children: [
-        // Section Header with Expand/Collapse button
-        Container(
-          decoration: BoxDecoration(
-            color: isExpanded.value ? TheColors.orange.withOpacity(0.05) : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: InkWell(
-            onTap: () => isExpanded.value = !isExpanded.value,
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.siemreap(
-                      fontSize: 13,
-                     
-                      color: TheColors.secondaryColor,
+    return Obx(
+      () => Column(
+        children: [
+          // Section Header with Expand/Collapse button
+          Container(
+            decoration: BoxDecoration(
+              color: isExpanded.value
+                  ? TheColors.orange.withOpacity(0.05)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: InkWell(
+              onTap: () => isExpanded.value = !isExpanded.value,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.siemreap(
+                        fontSize: 13,
+
+                        color: TheColors.secondaryColor,
+                      ),
                     ),
-                  ),
-                  Icon(
-                    isExpanded.value ? Icons.expand_less : Icons.expand_more,
-                    color: TheColors.orange,
-                    size: 18,
-                  ),
-                ],
+                    Icon(
+                      isExpanded.value ? Icons.expand_less : Icons.expand_more,
+                      color: TheColors.orange,
+                      size: 18,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        
-        // Animated content
-        if (isExpanded.value) ...[
-          const SizedBox(height: 8),
-          content,
-          const SizedBox(height: 8),
-          Divider(
-            color: TheColors.orange.withOpacity(0.3),
-            thickness: 0.5,
-            height: 1,
-          ),
-          const SizedBox(height: 8),
+
+          // Animated content
+          if (isExpanded.value) ...[
+            const SizedBox(height: 8),
+            content,
+            const SizedBox(height: 8),
+            Divider(
+              color: TheColors.orange.withOpacity(0.3),
+              thickness: 0.5,
+              height: 1,
+            ),
+            const SizedBox(height: 8),
+          ],
         ],
-      ],
-    ));
+      ),
+    );
   }
 
   // Personal Information Content
@@ -241,9 +250,15 @@ class _PayrollCardState extends State<PayrollCard> {
     return _buildInfoGrid([
       _InfoItem('ឈ្មោះ ខ្មែរ', widget.payrollData.nameKh ?? 'N/A'),
       _InfoItem('អង់គ្លេស', widget.payrollData.nameEn ?? 'N/A'),
-      _InfoItem('ភេទ', widget.payrollData.genderText ?? 'N/A'),
+      _InfoItem(
+        'ភេទ',
+        widget.payrollData.gender == 1
+            ? 'ប្រុស'
+            : widget.payrollData.gender == 2
+            ? 'ស្រី'
+            : 'N/A',
+      ),
       _InfoItem('តួនាទី', widget.payrollData.roleName ?? 'N/A'),
-      _InfoItem('ធ្វេីការ', widget.payrollData.typeText ?? 'N/A'),
     ]);
   }
 
@@ -252,65 +267,85 @@ class _PayrollCardState extends State<PayrollCard> {
     return _buildInfoGrid([
       _InfoItem('សាខា', widget.payrollData.branchName ?? 'N/A'),
       _InfoItem('វ៉េនធ្វេីការ', widget.payrollData.shiftName ?? 'N/A'),
-      _InfoItem('ម៉ោង ធ្វេីការ',
-          '${FormatUtils.formatTime(widget.payrollData.startTime)} - ${FormatUtils.formatTime(widget.payrollData.endTime)}'),
-      _InfoItem('ចំនូន ថ្ងៃធ្វេីការ',
-          widget.payrollData.workedDay?.toString() ?? '0'),
-      _InfoItem('ចំនួន ថ្ងៃមកធ្វេីការ',
-          widget.payrollData.attendancecount?.toString() ?? '0'),
+      _InfoItem(
+        'ម៉ោង ធ្វេីការ',
+        '${FormatUtils.formatTime(widget.payrollData.startTime)} - ${FormatUtils.formatTime(widget.payrollData.endTime)}',
+      ),
+      _InfoItem(
+        'ចំនូន ថ្ងៃធ្វេីការ',
+        widget.payrollData.workedDay?.toString() ?? '0',
+      ),
     ]);
   }
 
   // Salary Information Content
   Widget _buildSalaryContent() {
-    final bonus = (widget.payrollData.isBonusAttendanace == 1) ? 10 : 0;
+    final bonus = (widget.payrollData.isAttendanceBonus == 1) ? 10 : 0;
 
-    return Obx(() => Column(
-      children: [
-        _buildAmountRow('ប្រាក់ខែ', widget.payrollData.baseSalary, widget.payrollData.targetcurrencysymbol!),
-        _buildAmountRow('ប្រាក់ជួលក្នុងមួយថ្ងៃ', widget.payrollData.dailyRate, widget.payrollData.targetcurrencysymbol!),
-        _buildAmountRow('ប្រាក់មិនទាន់កាត់', widget.payrollData.notdeduction, widget.payrollData.targetcurrencysymbol!),
-        _buildAmountRow('ប្រាក់លើកទឹកចិត្ត', bonus, widget.payrollData.targetcurrencysymbol!),
-        const SizedBox(height: 8),
-        _buildAmountRow(
-          'ប្រាក់ត្រូវបើកសរុប',
-          (widget.payrollData.netsalary ?? 0) - deduction.value + bonus,
-          widget.payrollData.targetcurrencysymbol!,
-          isTotal: true,
-        ),
-      ],
-    ));
+    return Obx(
+      () => Column(
+        children: [
+          _buildAmountRow(
+            'ប្រាក់ខែ',
+            widget.payrollData.baseSalary,
+            widget.payrollData.currencySymbol!,
+          ),
+          _buildAmountRow(
+            'ប្រាក់ជួលក្នុងមួយថ្ងៃ',
+            widget.payrollData.dailyRate,
+            widget.payrollData.currencySymbol!,
+          ),
+          _buildAmountRow(
+            'ប្រាក់លើកទឹកចិត្ត',
+            bonus,
+            widget.payrollData.currencySymbol!,
+          ),
+          const SizedBox(height: 8),
+          _buildAmountRow(
+            'ប្រាក់ត្រូវបើកសរុប',
+            (widget.payrollData.netsalary ?? 0) - deduction.value + bonus,
+            widget.payrollData.currencySymbol!,
+            isTotal: true,
+          ),
+        ],
+      ),
+    );
   }
 
   // Deductions Content
   Widget _buildDeductionsContent() {
     return Column(
       children: [
-        if (widget.payrollData.totalLate != null && widget.payrollData.totalLate! > 0)
+        if (widget.payrollData.totalLate != null &&
+            widget.payrollData.totalLate! > 0)
           _buildDeductionRow(
             'ចំនូនមកយឺត',
             widget.payrollData.totalLate,
-            widget.payrollData.penaltylate,
+            widget.payrollData.latepenalty!,
           ),
-        if (widget.payrollData.totalEarlyexit != null && widget.payrollData.totalEarlyexit! > 0)
+        if (widget.payrollData.totalEarlyexit != null &&
+            widget.payrollData.totalEarlyexit! > 0)
           _buildDeductionRow(
             'ចំនួនចេញមុនម៉ោង',
             widget.payrollData.totalEarlyexit,
             widget.payrollData.totalexitpenalty,
           ),
-        if (widget.payrollData.leaveWithPermission != null && widget.payrollData.leaveWithPermission! > 0)
+        if (widget.payrollData.leaveWithPermission != null &&
+            widget.payrollData.leaveWithPermission! > 0)
           _buildDeductionRow(
             'ឈប់មានច្បាប់',
             widget.payrollData.leaveWithPermission,
             widget.payrollData.penaltyLeaveWithPermission,
           ),
-        if (widget.payrollData.leaveWithoutPermission != null && widget.payrollData.leaveWithoutPermission! > 0)
+        if (widget.payrollData.leaveWithoutPermission != null &&
+            widget.payrollData.leaveWithoutPermission! > 0)
           _buildDeductionRow(
             'ឈប់អត់ច្បាប់',
             widget.payrollData.leaveWithoutPermission,
             widget.payrollData.penaltyLeaveWithoutPermission,
           ),
-        if (widget.payrollData.leaveWeekend != null && widget.payrollData.leaveWeekend! > 0)
+        if (widget.payrollData.leaveWeekend != null &&
+            widget.payrollData.leaveWeekend! > 0)
           _buildDeductionRow(
             'ឈប់សុក្រ/សៅរ៍',
             widget.payrollData.leaveWeekend,
@@ -320,7 +355,7 @@ class _PayrollCardState extends State<PayrollCard> {
         _buildAmountRow(
           'លុយត្រូវកាត់សរុប',
           widget.payrollData.totalDeductions,
-          widget.payrollData.targetcurrencysymbol!,
+          widget.payrollData.currencySymbol!,
           isDeduction: true,
         ),
       ],
@@ -328,16 +363,6 @@ class _PayrollCardState extends State<PayrollCard> {
   }
 
   // Loan Information Content
-  Widget _buildLoanContent() {
-    return Column(
-      children: [
-        _buildAmountRow('លុយដេីម', widget.payrollData.loanAmount, widget.payrollData.targetcurrencysymbol!),
-        _buildAmountRow('លុយនៅជំពាក់', widget.payrollData.remainingBalance, widget.payrollData.targetcurrencysymbol!),
-        const SizedBox(height: 8),
-        _buildAmountRowwithTextfield('លុយសង'),
-      ],
-    );
-  }
 
   // Helper Methods (Keep from original)
   Widget _buildInfoGrid(List<_InfoItem> items) {
@@ -349,13 +374,19 @@ class _PayrollCardState extends State<PayrollCard> {
             final firstIndex = rowIndex * 2;
             final secondIndex = firstIndex + 1;
             final firstItem = items[firstIndex];
-            final secondItem = secondIndex < items.length ? items[secondIndex] : null;
+            final secondItem = secondIndex < items.length
+                ? items[secondIndex]
+                : null;
 
             return Row(
               children: [
-                Expanded(child: _buildInfoRow(firstItem.label, firstItem.value)),
+                Expanded(
+                  child: _buildInfoRow(firstItem.label, firstItem.value),
+                ),
                 if (secondItem != null)
-                  Expanded(child: _buildInfoRow(secondItem.label, secondItem.value))
+                  Expanded(
+                    child: _buildInfoRow(secondItem.label, secondItem.value),
+                  )
                 else
                   const Spacer(),
               ],
@@ -397,8 +428,13 @@ class _PayrollCardState extends State<PayrollCard> {
     );
   }
 
-  Widget _buildAmountRow(String label, dynamic amount, String symbol,
-      {bool isTotal = false, bool isDeduction = false}) {
+  Widget _buildAmountRow(
+    String label,
+    dynamic amount,
+    String symbol, {
+    bool isTotal = false,
+    bool isDeduction = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -409,7 +445,9 @@ class _PayrollCardState extends State<PayrollCard> {
             style: GoogleFonts.siemreap(
               fontSize: 11,
               fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-              color: isDeduction ? TheColors.errorColor : TheColors.secondaryColor,
+              color: isDeduction
+                  ? TheColors.errorColor
+                  : TheColors.secondaryColor,
             ),
           ),
           Row(
@@ -419,7 +457,9 @@ class _PayrollCardState extends State<PayrollCard> {
                 style: GoogleFonts.siemreap(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: isDeduction ? TheColors.errorColor : TheColors.successColor,
+                  color: isDeduction
+                      ? TheColors.errorColor
+                      : TheColors.successColor,
                 ),
               ),
               SizedBox(width: 6),
@@ -427,9 +467,11 @@ class _PayrollCardState extends State<PayrollCard> {
                 symbol,
                 style: GoogleFonts.siemreap(
                   fontSize: 11,
-                  color: isDeduction ? TheColors.errorColor : TheColors.successColor,
+                  color: isDeduction
+                      ? TheColors.errorColor
+                      : TheColors.successColor,
                 ),
-              )
+              ),
             ],
           ),
         ],
@@ -461,16 +503,26 @@ class _PayrollCardState extends State<PayrollCard> {
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 hintText: 'បញ្ចូលចំនួន',
-                hintStyle: GoogleFonts.siemreap(fontSize: 10, color: TheColors.black),
+                hintStyle: GoogleFonts.siemreap(
+                  fontSize: 10,
+                  color: TheColors.black,
+                ),
                 isDense: true,
-                contentPadding: const EdgeInsets.only(left: 1, right: 1, bottom: 6),
+                contentPadding: const EdgeInsets.only(
+                  left: 1,
+                  right: 1,
+                  bottom: 6,
+                ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
                   borderSide: BorderSide(color: TheColors.orange, width: 0.8),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(color: TheColors.secondaryColor, width: 1.2),
+                  borderSide: BorderSide(
+                    color: TheColors.secondaryColor,
+                    width: 1.2,
+                  ),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
@@ -479,13 +531,13 @@ class _PayrollCardState extends State<PayrollCard> {
               ),
               keyboardType: TextInputType.number,
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildDeductionRow(String label, int? count, double? penalty) {
+  Widget _buildDeductionRow(String label, int? count, int? penalty) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(

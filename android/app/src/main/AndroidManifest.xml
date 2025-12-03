@@ -6,7 +6,7 @@
 
 
     <application
-        android:label="flutter_application_10"
+        android:label="HR-App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

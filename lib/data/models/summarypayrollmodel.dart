@@ -65,6 +65,22 @@ class Data {
   int? isBonusAttendanace;
   int? bonusAmount;
 
+  // Currency
+  int? currencyID;
+  String? currencycode;
+  String? currencysymbol;
+  String? currencyname;
+
+  // Target currency
+  int? targetID;
+  String? targetcurrencycode;
+  String? targetcurrencysymbol;
+  String? targetcurrencyname;
+
+  // Pair & exchange rate
+  int? currencypairID;
+  double? exchangerate;
+
   Data({
     this.salaryId,
     this.employeeShiftId,
@@ -108,8 +124,17 @@ class Data {
     this.netsalary,
     this.isBonusAttendanace,
     this.bonusAmount,
+    this.currencyID,
+    this.currencycode,
+    this.currencysymbol,
+    this.currencyname,
+    this.targetID,
+    this.targetcurrencycode,
+    this.targetcurrencysymbol,
+    this.targetcurrencyname,
+    this.currencypairID,
+    this.exchangerate,
   });
-
 
   Data.fromJson(Map<String, dynamic> json) {
     salaryId = json['salary_id'];
@@ -157,10 +182,24 @@ class Data {
     netsalary = (json['netsalary'] as num?)?.toDouble();
     isBonusAttendanace = json['is_bonus_attendanace'];
     bonusAmount = json['bonusamount'];
+
+    currencyID = json['currency_id'];
+    currencycode = json['currency_code'];
+    currencysymbol = json['currency_symbol'];
+    currencyname = json['currency_name'];
+
+    targetID = json['target_currency_id'];
+    targetcurrencycode = json['target_currency_code'];
+    targetcurrencyname = json['target_currency_name'];
+    targetcurrencysymbol = json['target_currency_symbol'];
+
+    currencypairID = json['currency_pair_id'];
+    exchangerate = (json['exchange_rate'] as num?)?.toDouble();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
+
     data['salary_id'] = salaryId;
     data['employee_shift_id'] = employeeShiftId;
     data['base_salary'] = baseSalary;
@@ -203,7 +242,21 @@ class Data {
     data['totalDeductions'] = totalDeductions;
     data['netsalary'] = netsalary;
     data['is_bonus_attendanace'] = isBonusAttendanace;
-    data['bonusamount']= bonusAmount;
+    data['bonusamount'] = bonusAmount;
+
+    data['currency_id'] = currencyID;
+    data['currency_code'] = currencycode;
+    data['currency_symbol'] = currencysymbol;
+    data['currency_name'] = currencyname;
+
+    data['target_currency_id'] = targetID;
+    data['target_currency_code'] = targetcurrencycode;
+    data['target_currency_symbol'] = targetcurrencysymbol;
+    data['target_currency_name'] = targetcurrencyname;
+
+    data['currency_pair_id'] = currencypairID;
+    data['exchange_rate'] = exchangerate;
+
     return data;
   }
 }

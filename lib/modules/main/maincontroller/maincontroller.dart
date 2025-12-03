@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 
 class MainController extends GetxController {
   var selectedIndex =
-      1; // Tracks the selected index for the bottom navigation bar
+      2; // Tracks the selected index for the bottom navigation bar
   var lstscreen = <Widget>[]; // List of screens for the IndexedStack
 
   final box = GetStorage(); // Local storage for token and role ID
@@ -26,7 +26,7 @@ class MainController extends GetxController {
       a(), // Screen for warehouse
       Createattendanceview(), // Screen for check time
       c(), // Screen for items
-      d(), // Screen for users
+
     ];
   }
 

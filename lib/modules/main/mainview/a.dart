@@ -13,7 +13,8 @@ class a extends GetView<MainController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "A"),
+      backgroundColor: TheColors.bgColor,
+      appBar: CustomAppBar(title: "អ្នកប្រេីប្រាស់"),
       drawer: Drawer(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.zero

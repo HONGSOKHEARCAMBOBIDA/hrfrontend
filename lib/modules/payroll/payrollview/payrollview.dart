@@ -12,25 +12,24 @@ import 'package:flutter_application_10/shared/widgets/custombuttonnav.dart';
 import 'package:flutter_application_10/shared/widgets/elevated_button.dart';
 import 'package:flutter_application_10/shared/widgets/loading.dart';
 import 'package:flutter_application_10/shared/widgets/payrolldraffcard.dart';
-import 'package:flutter_application_10/shared/widgets/textfield.dart';
+import 'package:flutter_application_10/shared/widgets/payrollmaincard.dart';
 import 'package:get/get.dart';
 
-class Summarypayrollview extends StatefulWidget {
-  const Summarypayrollview({super.key});
+class Payrollview extends StatefulWidget {
+  const Payrollview({super.key});
 
   @override
-  State<Summarypayrollview> createState() => _SummarypayrollviewState();
+  State<Payrollview> createState() => _PayrollviewState();
 }
 
-class _SummarypayrollviewState extends State<Summarypayrollview> {
+class _PayrollviewState extends State<Payrollview> {
   final paycontroller = Get.find<Payrollcontroller>();
   final branchcontroller = Get.find<Branchcontroller>();
   final currencycontroller = Get.find<Currencycontroller>();
   final selectbranchid = Rxn<int>();
   final selectmonth = Rxn<int>();
   final selectcurrencyID = Rxn<int>();
-  final searchcontroller = TextEditingController();
- final Map<int, double> loanDeductions = {};
+  final Map<int, double> loanDeductions = {};
   // Month list with Khmer and English names
   final List<Map<String, dynamic>> months = [
     {'id': 1, 'name': 'មករា', 'name_en': 'January'},
@@ -47,82 +46,17 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
     {'id': 12, 'name': 'ធ្នូ', 'name_en': 'December'},
   ];
 
-
   @override
   void initState() {
     super.initState();
     // Set current month as default
     selectmonth.value = DateTime.now().month;
   }
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    searchcontroller.dispose();
-    super.dispose();
-  }
 
-    void _onLoanDeductionChanged(double amount, int salaryId) {
+  void _onLoanDeductionChanged(double amount, int salaryId) {
     loanDeductions[salaryId] = amount;
   }
-  void _submitAllPayrolls() {
-    if (selectbranchid.value == null || selectmonth.value == null) {
-      Get.snackbar(
-        'ការជ្រើសរើស',
-        'សូមជ្រើសរើសសាខា និងខែជាមុនសិន',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      return;
-    }
 
-    if (paycontroller.payrolldraff.isEmpty) {
-      Get.snackbar(
-        'ទិន្នន័យ',
-        'មិនមានទិន្នន័យប្រាក់ខែដេីម្បីបញ្ជូនទេ',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      return;
-    }
-
-    // Show confirmation dialog
-    Get.dialog(
-      AlertDialog(
-        title: Text('បញ្ជូនប្រាក់ខែ', style: TextStyles.siemreap(context)),
-        content: Text(
-          'តើអ្នកពិតជាចង់បញ្ជូនប្រាក់ខែទាំងអស់នេះមែនទេ?បញ្ជួនហេីយមិនអាចកែប្រែបានទេ!',
-          style: TextStyles.siemreap(context, fontSize: 14),
-        ),
-        actions: [
-
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: TheColors.errorColor,
-                  ),
-                  onPressed: () {
-                  
-                    paycontroller.submitAllPayrolls(
-                      currencyId: selectcurrencyID.value!,
-                      month: selectmonth.value!,
-                      branchId: selectbranchid.value!,
-                      loanDeductions: loanDeductions,
-                    );
-                    Get.back();
-                  },
-                  child: Text('បញ្ជូន', style: TextStyles.siemreap(context, color: Colors.white)),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
   // Method to show month selector bottom sheet
   void _showMonthSelector(BuildContext context) {
     showModalBottomSheet(
@@ -141,7 +75,7 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
               Text(
                 'ជ្រើសរើសខែ',
                 style: TextStyles.siemreap(
-                  context, 
+                  context,
                   fontSize: 18,
                   fontweight: FontWeight.bold,
                 ),
@@ -159,20 +93,24 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
                   itemBuilder: (context, index) {
                     final month = months[index];
                     final isSelected = selectmonth.value == month['id'];
-                    
+
                     return GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         setState(() {
                           selectmonth.value = month['id'];
                         });
+                        paycontroller.fetchpayroll(month: selectmonth.value);
                         Navigator.pop(context);
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: isSelected ? TheColors.secondaryColor : Colors.grey[100],
+                          color: isSelected
+                              ? TheColors.secondaryColor
+                              : Colors.grey[100],
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: TheColors.orange,width: 0.5
+                            color: TheColors.orange,
+                            width: 0.5,
                           ),
                         ),
                         child: Column(
@@ -183,7 +121,9 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
                               style: TextStyles.siemreap(
                                 context,
                                 fontSize: 14,
-                                color: isSelected ? Colors.white : Colors.black87,
+                                color: isSelected
+                                    ? Colors.white
+                                    : Colors.black87,
                                 fontweight: FontWeight.w500,
                               ),
                             ),
@@ -193,7 +133,7 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
                               style: TextStyles.siemreap(
                                 context,
                                 fontSize: 10,
-                                color: TheColors.errorColor
+                                color: TheColors.errorColor,
                               ),
                             ),
                           ],
@@ -235,7 +175,7 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: TheColors.bgColor,
-      appBar: CustomAppBar(title: "បេីកប្រាក់ខែ"),
+      appBar: CustomAppBar(title: "របាយការណ៍បេីកប្រាក់ខែ"),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -245,12 +185,10 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
             _buildFilters(context),
             const SizedBox(height: 10),
             Expanded(child: _buildpayrolldraffList(context)),
-            SizedBox(height: 15,),
-              _buildSubmitButton(),
+            SizedBox(height: 15),
           ],
         ),
       ),
-
     );
   }
 
@@ -263,182 +201,128 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     );
   }
-    Widget _buildSubmitButton() {
-    return Obx(() {
-      if (paycontroller.payrolldraff.isEmpty) return SizedBox();
-      
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: CustomElevatedButton(
-          onPressed: paycontroller.isSubmitting.value ? null : _submitAllPayrolls,
-          backgroundColor: TheColors.errorColor,
-          text:"បញ្ចូនទាំងអស់" 
-        ),
-      );
-    });
-  }
-
 
   Widget _buildFilters(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 7, right: 7),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CustomTextField(
-            controller: searchcontroller, 
-            hintText: "ស្វែករកដោយឈ្មោះ", 
-            prefixIcon: Icons.search),
-          SizedBox(height: 10,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Branch Button
-                        Expanded(
-                child: TextButton(
-                  style: _filterStyle(),
-                  onPressed: () {
-                    showcurrencyselector(
-                      context: context,
-                      currency: currencycontroller.currency,
-                      selectedCurrencyId: selectcurrencyID.value,
-                      onSelected: (id) {
-                        setState(() {
-                          selectcurrencyID.value = id;
-                        });
-                      },
+          Expanded(
+            child: TextButton(
+              style: _filterStyle(),
+              onPressed: () {
+                showBranchSelectorSheet(
+                  context: context,
+                  branch: branchcontroller.branch,
+                  selectedBranchId: selectbranchid.value,
+                  onSelected: (id) async {
+                    setState(() {
+                      selectbranchid.value = id;
+                    });
+                    await paycontroller.fetchpayroll(
+                      branchid: selectbranchid.value,
                     );
                   },
-                  child: _buildCurrencyLabel(),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextButton(
-                  style: _filterStyle(),
-                  onPressed: () {
-                    showBranchSelectorSheet(
-                      context: context,
-                      branch: branchcontroller.branch,
-                      selectedBranchId: selectbranchid.value,
-                      onSelected: (id) {
-                        setState(() {
-                          selectbranchid.value = id;
-                        });
-                      },
-                    );
-                  },
-                  child: _buildBranchLabel(),
-                ),
-              ),
-              const SizedBox(width: 8),
-              
-              // Month Button
-              Expanded(
-                child: TextButton(
-                  style: _filterStyle(),
-                  onPressed: () {
-                    _showMonthSelector(context);
-                  },
-                  child: _buildMonthLabel(),
-                ),
-              ),
-              const SizedBox(width: 8),
-              
-              // Generate Button
-              Expanded(
-                child: TextButton(
-                  style: _filterStyle(),
-                  onPressed: () {
-                    if (selectbranchid.value == null || selectmonth.value == null) {
-                      // Show error message if branch or month is not selected
-                      Get.snackbar(
-                        'ការជ្រើសរើស',
-                        'សូមជ្រើសរើសសាខា និងខែជាមុនសិន',
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
-                      return;
-                    }
-                    paycontroller.fetchdraffpayroll(
-                      currencyID: selectcurrencyID.value!,
-                      branchid: selectbranchid.value!, 
-                      month: selectmonth.value!,
-                      name: searchcontroller.text
-                    );
-                  },
-                  child: _buildGenerateLabel(),
-                ),
-              ),
-            ],
+                );
+              },
+              child: _buildBranchLabel(),
+            ),
+          ),
+          const SizedBox(width: 8),
+
+          // Month Button
+          Expanded(
+            child: TextButton(
+              style: _filterStyle(),
+              onPressed: () async {
+                _showMonthSelector(context);
+              },
+              child: _buildMonthLabel(),
+            ),
+          ),
+          const SizedBox(width: 8),
+
+          // Generate Button
+          Expanded(
+            child: TextButton(
+              style: _filterStyle(),
+              onPressed: () {
+                if (selectbranchid.value == null || selectmonth.value == null) {
+                  // Show error message if branch or month is not selected
+                  Get.snackbar(
+                    'ការជ្រើសរើស',
+                    'សូមជ្រើសរើសសាខា និងខែជាមុនសិន',
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+                  return;
+                }
+                paycontroller.fetchpayroll(
+                  branchid: selectbranchid.value!,
+                  month: selectmonth.value!,
+                );
+              },
+              child: _buildGenerateLabel(),
+            ),
           ),
         ],
       ),
     );
   }
 
-Widget _buildBranchLabel() {
-  final selectedBranch = selectbranchid.value;
+  Widget _buildBranchLabel() {
+    final selectedBranch = selectbranchid.value;
 
-  final branchName = selectedBranch != null
-      ? branchcontroller.branch
-          .firstWhere(
-            (p) => p.id == selectedBranch,
-          
-          )
-          ?.name ?? 'សាខា'
-      : 'សាខា';
+    final branchName = selectedBranch != null
+        ? branchcontroller.branch
+                  .firstWhere((p) => p.id == selectedBranch)
+                  ?.name ??
+              'សាខា'
+        : 'សាខា';
 
-  return Row(
-    mainAxisSize: MainAxisSize.min,
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        branchName,
-        style: TextStyles.siemreap(context, fontSize: 10),
-      ),
-      const Icon(
-        Icons.arrow_drop_down,
-        color: TheColors.errorColor,
-        size: 18,
-      ),
-    ],
-  );
-}
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(branchName, style: TextStyles.siemreap(context, fontSize: 10)),
+        const Icon(
+          Icons.arrow_drop_down,
+          color: TheColors.errorColor,
+          size: 18,
+        ),
+      ],
+    );
+  }
 
-Widget _buildCurrencyLabel() {
-  final selectedCurrency = selectcurrencyID.value;
+  Widget _buildCurrencyLabel() {
+    final selectedCurrency = selectcurrencyID.value;
 
-  final currencyName = selectedCurrency != null
-      ? currencycontroller.currency
-          .firstWhere(
-            (p) => p.id == selectedCurrency,
-           
-          )
-          ?.name ?? 'រូបិយប័ណ្ណ'
-      : 'រូបិយប័ណ្ណ';
+    final currencyName = selectedCurrency != null
+        ? currencycontroller.currency
+                  .firstWhere((p) => p.id == selectedCurrency)
+                  ?.name ??
+              'រូបិយប័ណ្ណ'
+        : 'រូបិយប័ណ្ណ';
 
-  return Row(
-    mainAxisSize: MainAxisSize.min,
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        currencyName,
-        style: TextStyles.siemreap(context, fontSize: 10),
-      ),
-      const Icon(
-        Icons.arrow_drop_down,
-        color: TheColors.errorColor,
-        size: 18,
-      ),
-    ],
-  );
-}
-
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(currencyName, style: TextStyles.siemreap(context, fontSize: 10)),
+        const Icon(
+          Icons.arrow_drop_down,
+          color: TheColors.errorColor,
+          size: 18,
+        ),
+      ],
+    );
+  }
 
   Widget _buildMonthLabel() {
     final selectedMonth = selectmonth.value;
-    final monthName = selectedMonth != null 
+    final monthName = selectedMonth != null
         ? months.firstWhere(
             (month) => month['id'] == selectedMonth,
             orElse: () => {'name': 'ខែ', 'name_en': 'Month'},
@@ -449,10 +333,7 @@ Widget _buildCurrencyLabel() {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          monthName,
-          style: TextStyles.siemreap(context, fontSize: 10),
-        ),
+        Text(monthName, style: TextStyles.siemreap(context, fontSize: 10)),
         const Icon(
           Icons.arrow_drop_down,
           color: TheColors.errorColor,
@@ -467,18 +348,16 @@ Widget _buildCurrencyLabel() {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          "បង្កើត",
-          style: TextStyles.siemreap(context, fontSize: 10),
-        ),
+        Text("ទាញទិន្ន័យ", style: TextStyles.siemreap(context, fontSize: 10)),
       ],
     );
   }
+
   Widget _buildpayrolldraffList(BuildContext context) {
     return Obx(() {
       if (paycontroller.isLoading.value) return const CustomLoading();
 
-      if (paycontroller.payrolldraff.isEmpty) {
+      if (paycontroller.payroll.isEmpty) {
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -491,7 +370,11 @@ Widget _buildCurrencyLabel() {
               if (selectbranchid.value == null || selectmonth.value == null)
                 Text(
                   'សូមជ្រើសរើសសាខា និងខែជាមុន',
-                  style: TextStyles.siemreap(context, fontSize: 10, color: Colors.grey),
+                  style: TextStyles.siemreap(
+                    context,
+                    fontSize: 10,
+                    color: Colors.grey,
+                  ),
                 ),
             ],
           ),
@@ -499,19 +382,19 @@ Widget _buildCurrencyLabel() {
       }
 
       return ListView.builder(
-        itemCount: paycontroller.payrolldraff.length,
+        itemCount: paycontroller.payroll.length,
         itemBuilder: (context, index) {
-          final payroll = paycontroller.payrolldraff[index];
+          final payroll = paycontroller.payroll[index];
           return Padding(
             padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-            child: PayrollCard(
+            child: Payrollmaincard(
               payrollData: payroll,
-              onLoanDeductionChanged: _onLoanDeductionChanged, // Pass the callback
+              onLoanDeductionChanged:
+                  _onLoanDeductionChanged, // Pass the callback
             ),
           );
         },
       );
     });
   }
-
 }

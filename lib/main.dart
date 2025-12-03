@@ -30,6 +30,7 @@ import 'package:flutter_application_10/modules/main/mainview/mainview.dart';
 import 'package:flutter_application_10/modules/main/mainview/splacescreen.dart';
 import 'package:flutter_application_10/modules/main/mainview/test.dart';
 import 'package:flutter_application_10/modules/payroll/payrollbinding/payrollbinding.dart';
+import 'package:flutter_application_10/modules/payroll/payrollview/payrollview.dart';
 import 'package:flutter_application_10/modules/payroll/payrollview/summarypayrollview.dart';
 import 'package:flutter_application_10/modules/province/provincebinding/provincebinding.dart';
 import 'package:flutter_application_10/modules/role/rolebinding/rolebinding.dart';
@@ -140,6 +141,11 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/payroll',
           page: () => Summarypayrollview(),
+          bindings: [Payrollbinding(), Branchbinding(),Currencybinding()],
+        ),
+          GetPage(
+          name: '/payrollview',
+          page: () => Payrollview(),
           bindings: [Payrollbinding(), Branchbinding(),Currencybinding()],
         ),
         GetPage(
