@@ -29,6 +29,7 @@ class _RoleviewState extends State<Roleview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: TheColors.bgColor,
       appBar: CustomAppBar(title: "តួនាទី"),
       body: RefreshIndicator(
         onRefresh: () async {

@@ -25,9 +25,9 @@ class Data {
   int? id;
   int? salaryId;
   int? employeeShiftId;
-  int? baseSalary;
+  String? baseSalary;
   int? workedDay;
-  int? dailyRate;
+  String? dailyRate;
   int? employeeId;
   String? nameEn;
   String? nameKh;
@@ -40,7 +40,7 @@ class Data {
   String? endTime;
   int? payrollYear;
   int? payrollmonth;
-  int? grosssalary;
+  String? grosssalary;
   int? totalLate;
   int? latepenalty;
   int? totalEarlyexit;
@@ -48,15 +48,15 @@ class Data {
   int? leaveWithPermission;
   int? penaltyLeaveWithPermission;
   int? leaveWithoutPermission;
-  int? penaltyLeaveWithoutPermission;
+  String? penaltyLeaveWithoutPermission;
   int? leaveWeekend;
   int? penaltyLeaveWeekend;
-  int? loanDeduction;
+  String? loanDeduction;
   int? isAttendanceBonus;
   String? bonusType;
   int? bonusAmount;
-  int? totalDeductions;
-  int? netsalary;
+  String? totalDeductions;
+  String? netsalary;
   int? status;
   int? branchId;
   String? branchName;
@@ -64,7 +64,10 @@ class Data {
   String? currencyCode;
   String? currencySymbol;
   String? currencyName;
-  int? exchangeRate;
+  int? baseCurrencyId;
+  String? baseCurrencyCode;
+  String? baseCurrencySymbol;
+  String? exchangeRate;
 
   Data(
       {this.id,
@@ -109,6 +112,9 @@ class Data {
       this.currencyCode,
       this.currencySymbol,
       this.currencyName,
+      this.baseCurrencyId,
+      this.baseCurrencyCode,
+      this.baseCurrencySymbol,
       this.exchangeRate});
 
 
@@ -155,6 +161,9 @@ class Data {
     currencyCode = json['currency_code'];
     currencySymbol = json['currency_symbol'];
     currencyName = json['currency_name'];
+    baseCurrencyId = json['base_currency_id'];
+    baseCurrencyCode = json['base_currency_code'];
+    baseCurrencySymbol = json['base_currency_symbol'];
     exchangeRate = json['exchange_rate'];
   }
 
@@ -203,6 +212,10 @@ class Data {
     data['currency_code'] = this.currencyCode;
     data['currency_symbol'] = this.currencySymbol;
     data['currency_name'] = this.currencyName;
+    data['base_currency_id'] = this.baseCurrencyId;
+
+    data['base_currency_code'] = this.baseCurrencyCode;
+    data['base_currency_symbol'] = this.baseCurrencySymbol;
     data['exchange_rate'] = this.exchangeRate;
     return data;
   }

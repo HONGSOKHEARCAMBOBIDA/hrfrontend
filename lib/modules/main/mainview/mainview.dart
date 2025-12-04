@@ -43,7 +43,7 @@ class MainView extends GetView<MainController> {
                   backgroundColor: TheColors.bgColor,
 
                   activeColor: Colors.white, // Active icon/text color
-                  tabBackgroundColor: TheColors.primaryColor, // Active tab bg
+                  tabBackgroundColor: TheColors.errorColor, // Active tab bg
                   tabBorderRadius: 12,
                   tabMargin: const EdgeInsets.symmetric(vertical: 4),
                   
@@ -58,6 +58,7 @@ class MainView extends GetView<MainController> {
                   textStyle: GoogleFonts.siemreap(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
+                    color: TheColors.bgColor
                   ),
                   iconSize: 22,
                   

@@ -39,7 +39,16 @@ class CustomDropdown extends StatelessWidget {
             )
           )
         ),
-        
+
+        dropdownColor: TheColors.bgColor,
+                  borderRadius: BorderRadius.circular(12),
+          icon: const Icon(
+            Icons.arrow_drop_down,
+            color: TheColors.orange,
+          ),
+          iconSize: 20,
+          elevation: 2,
+          menuMaxHeight: 180,
         style:TextStyles.siemreap(context,fontSize: 12),
         items: isLoading
             ? [] // Empty while loading

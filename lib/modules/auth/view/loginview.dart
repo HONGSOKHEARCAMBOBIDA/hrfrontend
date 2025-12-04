@@ -37,84 +37,97 @@ class _LoginViewState extends State<LoginView> {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-             
-               
-                  Form(
-                    key: _formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CustomTextField(
-                                controller: phoneController,
-                                hintText: "លេខទូរសព្ទ",
-                                prefixIcon: Icons.phone,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "សូមបញ្ចូលលេខទូរសព្ទ";
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CustomTextField(
-                                controller: passwordController,
-                                hintText: "លេខកូដ",
-                                
-                                prefixIcon: Icons.lock,
-                                obscureText: true,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "សូមបញ្ចូលលេខកូដ";
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Obx(() {
-                                      return CustomElevatedButton(
-                                        text: controller.isLoading.value
-                                            ? "កំពុងភ្ជាប់..."
-                                            : "ចូល",
-                                        onPressed: controller.isLoading.value
-                                            ? () {} // Empty function to prevent null error
-                                            : () {
-                                                if (_formKey.currentState!
-                                                    .validate()) {
-                                                  controller.login(
-                                                    phone: phoneController.text,
-                                                    password:
-                                                        passwordController.text,
-                                                  );
-                                                }
-                                              },
-                                      );
-                                    }),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                                        decoration: BoxDecoration(
+                          border: Border.all(color: TheColors.orange, width: 0.5),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                               
+                   
+                      Form(
+                        key: _formKey,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset("assets/image/hr.png",width: 100,height: 100,fit: BoxFit.cover,),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CustomTextField(
+                                    controller: phoneController,
+                                    hintText: "លេខទូរសព្ទ",
+                                    prefixIcon: Icons.phone,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "សូមបញ្ចូលលេខទូរសព្ទ";
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                ],
-                              ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CustomTextField(
+                                    controller: passwordController,
+                                    hintText: "លេខកូដ",
+                                    
+                                    prefixIcon: Icons.lock,
+                                    obscureText: true,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "សូមបញ្ចូលលេខកូដ";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Obx(() {
+                                          return CustomElevatedButton(
+                                            text: controller.isLoading.value
+                                                ? "កំពុងភ្ជាប់..."
+                                                : "ចូល",
+                                            onPressed: controller.isLoading.value
+                                                ? () {} // Empty function to prevent null error
+                                                : () {
+                                                    if (_formKey.currentState!
+                                                        .validate()) {
+                                                      controller.login(
+                                                        phone: phoneController.text,
+                                                        password:
+                                                            passwordController.text,
+                                                      );
+                                                    }
+                                                  },
+                                          );
+                                        }),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

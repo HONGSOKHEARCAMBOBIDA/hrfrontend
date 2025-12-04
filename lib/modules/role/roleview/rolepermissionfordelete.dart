@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/modules/role/rolecontroller/rolecontroller.dart';
 import 'package:flutter_application_10/shared/widgets/Customcardpermissionremove.dart';
 import 'package:flutter_application_10/shared/widgets/app_bar.dart';
@@ -33,6 +34,7 @@ class _RolepermissionfordeleteState extends State<Rolepermissionfordelete> {
     });
 
     return Scaffold(
+      backgroundColor: TheColors.bgColor,
       appBar: CustomAppBar(title: "ដកសិទ្ធ"),
       body: RefreshIndicator(
         onRefresh: () async {

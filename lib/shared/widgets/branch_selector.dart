@@ -48,7 +48,7 @@ class _BranchSelectorState extends State<BranchSelector> {
                   return ChoiceChip(
                     label: Text(
                       branchs.name ?? '',
-                       style: TextStyles.siemreap(context,fontSize: 12)
+                       style: TextStyles.siemreap(context,fontSize: 12,color: isSelected ? TheColors.bgColor : TheColors.black)
                     ),
                     selected: isSelected,
                     backgroundColor: TheColors.lightGreyColor,

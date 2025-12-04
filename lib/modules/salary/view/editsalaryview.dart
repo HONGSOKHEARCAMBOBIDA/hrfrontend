@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/helper/showcurrencyselector.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
 import 'package:flutter_application_10/data/models/employeemodel.dart';
 import 'package:flutter_application_10/modules/currency/controller/currencycontroller.dart';
 import 'package:flutter_application_10/modules/employee/employeecontroller/employeecontroller.dart';
+import 'package:flutter_application_10/shared/widgets/customoutlinebutton.dart';
 import 'package:flutter_application_10/shared/widgets/dropdown.dart';
 import 'package:flutter_application_10/shared/widgets/elevated_button.dart';
 import 'package:flutter_application_10/shared/widgets/snackbar.dart';
@@ -12,7 +14,7 @@ import 'package:get/get.dart';
 class EditSalaryView extends StatefulWidget {
   final Data employeemodel;
   final int salaryID;
-
+  
   const EditSalaryView({super.key, required this.salaryID,required this.employeemodel});
 
   @override
@@ -25,6 +27,7 @@ class _EditSalaryViewState extends State<EditSalaryView> {
   final TextEditingController baseSalaryController = TextEditingController();
   final TextEditingController workDayController = TextEditingController();
   final selectcurrencyID = Rxn<int>();
+  var selectedcurrencyname = "សូមជ្រេីសរេីសរូបិយប័ណ្ណ".obs;
     @override
   void initState() {
     super.initState();
@@ -36,6 +39,7 @@ class _EditSalaryViewState extends State<EditSalaryView> {
     selectcurrencyID.value = employee.currencyId!;
     baseSalaryController.text = employee.baseSalary.toString();
     workDayController.text = employee.workedDay.toString();
+    selectedcurrencyname.value = employee.currencyName.toString();
   }
 
   @override
@@ -84,24 +88,65 @@ class _EditSalaryViewState extends State<EditSalaryView> {
                       style: TextStyles.siemreap(context, fontSize: 12),
                     ),
                     const SizedBox(height: 5),
-                    CustomDropdown(
-                      selectedValue: selectcurrencyID, 
-                      items: currencycontroller.currency, 
-                      hintText: "ឧ ប្រាក់រៀល", 
-                      onChanged: (id){
-                        selectcurrencyID.value =id;
-                      }),
+
+                  
+
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomOutlinedButton(
+                                      text:
+                                          selectedcurrencyname
+                                              .value
+                                              .isEmpty
+                                          ? "សូមជ្រេីសរេីសរុបិយប័ណ្ណ"
+                                          : selectedcurrencyname.value,
+                                      onPressed: () {
+                                        showcurrencyselector(
+                                          context: context,
+                                          currency:
+                                              currencycontroller.currency,
+                                          onSelected: (id) {
+                                            selectcurrencyID.value = id;
+                                            selectedcurrencyname
+                                                .value = currencycontroller
+                                                .currency
+                                                .firstWhere((p) => p.id == id)
+                                                .name!;
+                                          
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+
+
                     SizedBox(height: 8,), 
-                    Text(
-                      "ប្រាក់ខែគោល",
-                      style: TextStyles.siemreap(context, fontSize: 12),
-                    ),
+Obx(
+  () => Text.rich(
+    TextSpan(
+      text: "ប្រាក់ខែគោល សូមបំពេញជា ", // normal text
+      style: TextStyles.siemreap(context, fontSize: 12),
+      children: [
+        TextSpan(
+          text: selectedcurrencyname.value, // reactive part
+          style: TextStyles.siemreap(context, fontSize: 12).copyWith(
+            color: const Color.fromARGB(255, 238, 16, 0), // make it red
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+
+
                     const SizedBox(height: 5),
                     CustomTextField(
                       keyboardType: TextInputType.number,
                       controller: baseSalaryController,
                       hintText: "300",
-                      prefixIcon: Icons.attach_money,
+                      prefixIcon: Icons.lock_open,
+                      
                     ),
                     const SizedBox(height: 10),
                     Text(

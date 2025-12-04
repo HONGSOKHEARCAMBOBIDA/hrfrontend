@@ -49,7 +49,7 @@ class _RoleSelectorState extends State<RoleSelector> {
                   return ChoiceChip(
                     label: Text(
                       roles.displayName ?? '',
-                       style: TextStyles.siemreap(context,fontSize: 12)
+                       style: TextStyles.siemreap(context,fontSize: 12,color: isSelected ? TheColors.bgColor : TheColors.black)
                     ),
                     selected: isSelected,
                     backgroundColor: TheColors.lightGreyColor,

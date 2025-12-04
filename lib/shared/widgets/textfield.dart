@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final IconData prefixIcon;
+  final IconData? prefixIcon;
   final String? Function(String?)? validator;
   final TextInputType keyboardType;
   final bool obscureText;
@@ -18,7 +18,7 @@ class CustomTextField extends StatelessWidget {
     this.readOnly=false,
     required this.controller,
     required this.hintText,
-    required this.prefixIcon,
+     this.prefixIcon,
     this.validator,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,

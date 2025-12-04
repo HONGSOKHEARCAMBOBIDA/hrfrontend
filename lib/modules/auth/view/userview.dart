@@ -34,6 +34,8 @@ class _UserviewState extends State<Userview> {
   final selectbranchid = Rxn<int>();
   final selectisactive = Rxn<bool>();
   final currentstate = Rxn<int>();
+  final ScrollController _scrollController = ScrollController();
+  
   void _handleViewUser(mymodel.Data user) {
     Get.bottomSheet(
       UserDetailBottomSheet(user: user),
@@ -48,18 +50,29 @@ class _UserviewState extends State<Userview> {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Row(
-        mainAxisSize: MainAxisSize.min, // so it wraps tightly
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(label, style: TextStyles.siemreap(context, fontSize: 10)),
           const SizedBox(width: 4),
           const Icon(
             color: TheColors.errorColor,
             Icons.arrow_drop_down,
-            size: 18, // smaller size to match text
+            size: 18,
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _refreshData() async {
+    searchController.clear();
+    authcontroller.searchQuery.value = '';
+    selectbranchid.value = null;
+    selectroleid.value = null;
+    currentstate.value = null;
+    await authcontroller.fetchUser();
+    await rolecontroller.fetchrole();
+    await branchcontroller.fetchbranch();
   }
 
   @override
@@ -71,32 +84,18 @@ class _UserviewState extends State<Userview> {
       child: Scaffold(
         appBar: CustomAppBar(title: "អ្នកប្រេីប្រាស់"),
         backgroundColor: TheColors.bgColor,
-
         body: RefreshIndicator(
-          onRefresh: () async {
-            searchController.clear();
-            authcontroller.searchQuery.value = '';
-            selectbranchid.value = null;
-            selectroleid.value = null;
-            currentstate.value = null;
-            await authcontroller.fetchUser();
-            await rolecontroller.fetchrole();
-            await branchcontroller.fetchbranch();
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8,right: 8),
-            child: Column(
-              children: [
-                Padding(
+          onRefresh: _refreshData,
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(
-                      
-                          left: 10,
-                          right: 10,
-                        ),
+                        padding: const EdgeInsets.only(left: 10, right: 10),
                         child: SizedBox(
                           height: 40,
                           child: CustomTextField(
@@ -120,13 +119,9 @@ class _UserviewState extends State<Userview> {
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 3,
-                                  ), // very tight
-                                  minimumSize: Size(
-                                    0,
-                                    0,
-                                  ), // remove default min size
-                                  tapTargetSize: MaterialTapTargetSize
-                                      .shrinkWrap, // remove extra tap padding
+                                  ),
+                                  minimumSize: Size(0, 0),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   side: BorderSide(
                                     color: TheColors.errorColor,
                                     width: 0.5,
@@ -141,12 +136,12 @@ class _UserviewState extends State<Userview> {
                                     branch: branchcontroller.branch,
                                     selectedBranchId: selectbranchid.value,
                                     onSelected: (id) {
-                                     setState(() {
+                                      setState(() {
                                         selectbranchid.value = id;
-                                      authcontroller.fetchUser(
-                                        branchID: selectbranchid.value,
-                                      );
-                                     });
+                                        authcontroller.fetchUser(
+                                          branchID: selectbranchid.value,
+                                        );
+                                      });
                                     },
                                   );
                                 },
@@ -160,13 +155,9 @@ class _UserviewState extends State<Userview> {
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 3,
-                                  ), // very tight
-                                  minimumSize: Size(
-                                    0,
-                                    0,
-                                  ), // remove default min size
-                                  tapTargetSize: MaterialTapTargetSize
-                                      .shrinkWrap, // remove extra tap padding
+                                  ),
+                                  minimumSize: Size(0, 0),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   side: BorderSide(
                                     color: TheColors.errorColor,
                                     width: 0.5,
@@ -183,9 +174,9 @@ class _UserviewState extends State<Userview> {
                                     onSelected: (id) {
                                       setState(() {
                                         selectroleid.value = id;
-                                      authcontroller.fetchUser(
-                                        roleId: selectroleid.value,
-                                      );
+                                        authcontroller.fetchUser(
+                                          roleId: selectroleid.value,
+                                        );
                                       });
                                     },
                                   );
@@ -200,13 +191,9 @@ class _UserviewState extends State<Userview> {
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 3,
-                                  ), // very tight
-                                  minimumSize: Size(
-                                    0,
-                                    0,
-                                  ), // remove default min size
-                                  tapTargetSize: MaterialTapTargetSize
-                                      .shrinkWrap, // remove extra tap padding
+                                  ),
+                                  minimumSize: Size(0, 0),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   side: BorderSide(
                                     color: TheColors.errorColor,
                                     width: 0.5,
@@ -218,8 +205,7 @@ class _UserviewState extends State<Userview> {
                                 onPressed: () {
                                   showIsActiveSelectorSheet(
                                     context: context,
-                                    selectedValue:
-                                        currentstate.value, // e.g. 1 or 0
+                                    selectedValue: currentstate.value,
                                     onSelected: (value) {
                                       setState(() {
                                         currentstate.value = value;
@@ -239,68 +225,79 @@ class _UserviewState extends State<Userview> {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Obx(() {
-                    if (authcontroller.isLoading.value) {
-                      return const CustomLoading();
-                    }
+              ),
+              SliverFillRemaining(
+                child: Obx(() {
+                  if (authcontroller.isLoading.value) {
+                    return const CustomLoading();
+                  }
 
-                    if (authcontroller.users.isEmpty) {
+                  if (authcontroller.users.isEmpty) {
+                    // Always return a scrollable widget, even when empty
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        return SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: constraints.maxHeight,
+                            ),
+                            child: Center(
+                              child: Text(
+                                'អត់ទាន់មានអ្នកប្រេីប្រាស់',
+                                style: TextStyles.siemreap(context, fontSize: 12),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+
+                  return ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: authcontroller.users.length,
+                    itemBuilder: (context, index) {
+                      final user = authcontroller.users[index];
                       return Center(
-                        child: Text(
-                          'អត់ទាន់មានអ្នកប្រេីប្រាស់',
-                          style: TextStyles.siemreap(context,fontSize: 12),
-                        ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      itemCount: authcontroller.users.length,
-                      itemBuilder: (context, index) {
-                        final user = authcontroller.users[index];
-                        return Center(
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8, right: 8),
-                                child: CustomUserCard(
-                                  
-                                  namekh: user.name ?? "អត់មាន",
-                                  role: user.roleName ?? "អត់មាន".tr,
-                                  branch: user.branchName!,
-                                  nameenglish: user.nameEn ?? "",
-                                  
-                                  isActive: user.isActive,
-                                  onEdit: () {
-                                    Get.to(()=>Updateuserview(userModel: user),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8),
+                              child: CustomUserCard(
+                                namekh: user.name ?? "អត់មាន",
+                                role: user.roleName ?? "អត់មាន".tr,
+                                branch: user.branchName!,
+                                nameenglish: user.nameEn ?? "",
+                                isActive: user.isActive,
+                                onEdit: () {
+                                  Get.to(
+                                    () => Updateuserview(userModel: user),
                                     transition: Transition.rightToLeft,
-                                    
-                                    binding: UpdateUserBindings()
-                                    );
-                                  },
-                                  onDelete: () {authcontroller.changestatususer(user.id);},
-                                  onTap: () => _handleViewUser(user),
-                                ),
+                                    binding: UpdateUserBindings(),
+                                  );
+                                },
+                                onDelete: () {
+                                  authcontroller.changestatususer(user.id);
+                                },
+                                onTap: () => _handleViewUser(user),
                               ),
-                                                          Padding(
-                              padding: const EdgeInsets.only(
-                                left: 82,
-                             
-                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 82),
                               child: Divider(
                                 color: TheColors.gray,
                                 thickness: 0.3,
                               ),
                             ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  }),
-                ),
-              ],
-            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }),
+              ),
+            ],
           ),
         ),
       ),

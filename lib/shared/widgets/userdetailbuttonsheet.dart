@@ -11,8 +11,8 @@ class UserDetailBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final theme = TheColors.bgColor;
+  
     // String formatDate(String? isoDate) {
     //   if (isoDate == null || isoDate.isEmpty) return 'N/A';
     //   try {
@@ -31,7 +31,7 @@ class UserDetailBottomSheet extends StatelessWidget {
       maxChildSize: 0.95,
       builder: (_, controller) => Container(
         decoration: BoxDecoration(
-          color: theme.cardColor,
+          color: TheColors.bgColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(

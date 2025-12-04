@@ -22,37 +22,15 @@ class Payrollmaincard extends StatefulWidget {
 }
 
 class _PayrollmaincardState extends State<Payrollmaincard> {
-  final payrollcontroller = Get.put(Payrollcontroller());
+  final payrollcontroller = Get.find<Payrollcontroller>();
   final loandeduction = TextEditingController();
-  final RxDouble deduction = 0.0.obs;
+
 
   // State variables for expandable sections
   final RxBool _isPersonalInfoExpanded = false.obs;
   final RxBool _isWorkInfoExpanded = false.obs;
   final RxBool _isSalaryInfoExpanded = true.obs;
   final RxBool _isDeductionsExpanded = false.obs;
-  final RxBool _isLoanInfoExpanded = false.obs;
-
-  @override
-  void initState() {
-    super.initState();
-    loandeduction.addListener(() {
-      double newDeduction = double.tryParse(loandeduction.text) ?? 0;
-      deduction.value = newDeduction;
-      if (widget.payrollData.salaryId != null) {
-        widget.onLoanDeductionChanged(
-          newDeduction,
-          widget.payrollData.salaryId!,
-        );
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    loandeduction.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +89,7 @@ class _PayrollmaincardState extends State<Payrollmaincard> {
   // Header Section (Always visible)
   Widget _buildHeaderSection() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Column(
@@ -129,57 +107,61 @@ class _PayrollmaincardState extends State<Payrollmaincard> {
               Text(
                 widget.payrollData.roleName ?? 'No Role',
                 style: GoogleFonts.siemreap(
-                  fontSize: 14,
+                  fontSize: 11,
                   color: TheColors.orange,
                 ),
               ),
             ],
           ),
         ),
-
+    
         // Net Salary Display
-        Obx(() {
-          final bonus = (widget.payrollData.isAttendanceBonus == 1)
-              ? (widget.payrollData.bonusAmount ?? 10)
-              : 0;
-          final netSalary =
-              (widget.payrollData.netsalary ?? 0) - deduction.value + bonus;
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: _getNetSalaryColor(netSalary),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  _formatCurrencyWithoutDollar(netSalary),
-                  style: GoogleFonts.siemreap(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+    Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+    FittedBox(
+      fit: BoxFit.scaleDown,
+      child: IntrinsicWidth(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            border: Border.all(color: TheColors.orange, width: 0.5),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Row(
+            children: [
+              Text(
+                widget.payrollData.netsalary.toString(),
+                style: GoogleFonts.siemreap(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: TheColors.errorColor,
                 ),
-                SizedBox(width: 5),
-                Text(
-                  widget.payrollData.currencySymbol!,
-                  style: GoogleFonts.siemreap(
-                    fontSize: 16,
-                    color: TheColors.bgColor,
-                  ),
+              ),
+              const SizedBox(width: 5),
+              Text(
+                widget.payrollData.currencySymbol ?? '',
+                style: GoogleFonts.siemreap(
+                  fontSize: 16,
+                  color: TheColors.errorColor,
                 ),
-              ],
-            ),
-          );
-        }),
-     Padding(
-       padding: const EdgeInsets.all(4.0),
-       child: GestureDetector(
-        onTap: ()async{
-          payrollcontroller.deletepayroll(ID: widget.payrollData.id!);
-        },
-        child: Icon(Icons.delete,color: const Color.fromARGB(255, 255, 17, 0),)),
-     )
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+           GestureDetector(
+            onTap: ()async{
+              payrollcontroller.deletepayroll(ID: widget.payrollData.id!);
+            },
+            child: Icon(Icons.delete,color: const Color.fromARGB(255, 255, 17, 0),))
+        ],
+      ),
+    ),
+    
+    
       ],
     );
   }
@@ -279,41 +261,41 @@ class _PayrollmaincardState extends State<Payrollmaincard> {
   }
 
   // Salary Information Content
-  Widget _buildSalaryContent() {
-    final bonus = (widget.payrollData.isAttendanceBonus == 1) ? 10 : 0;
+Widget _buildSalaryContent() {
+  final bonus = (widget.payrollData.isAttendanceBonus == 1) ? 10.0 : 0;
 
-    return Obx(
-      () => Column(
-        children: [
-          _buildAmountRow(
-            'ប្រាក់ខែ',
-            widget.payrollData.baseSalary,
-            widget.payrollData.currencySymbol!,
-          ),
-          _buildAmountRow(
-            'ប្រាក់ជួលក្នុងមួយថ្ងៃ',
-            widget.payrollData.dailyRate,
-            widget.payrollData.currencySymbol!,
-          ),
-          _buildAmountRow(
-            'ប្រាក់លើកទឹកចិត្ត',
-            bonus,
-            widget.payrollData.currencySymbol!,
-          ),
-          const SizedBox(height: 8),
-          _buildAmountRow(
-            'ប្រាក់ត្រូវបើកសរុប',
-            (widget.payrollData.netsalary ?? 0) - deduction.value + bonus,
-            widget.payrollData.currencySymbol!,
-            isTotal: true,
-          ),
-        ],
+  return Column(
+    children: [
+      _buildAmountRow(
+        'ប្រាក់ខែ',
+        widget.payrollData.baseSalary?.toString() ?? '0',
+        widget.payrollData.currencySymbol ?? '',
       ),
-    );
-  }
+      _buildAmountRow(
+        'ប្រាក់ជួលក្នុងមួយថ្ងៃ',
+        widget.payrollData.dailyRate?.toString() ?? '0',
+        widget.payrollData.currencySymbol ?? '',
+      ),
+      _buildAmountRow(
+        'ប្រាក់លើកទឹកចិត្ត',
+        bonus.toString(),
+        widget.payrollData.currencySymbol ?? '',
+      ),
+      const SizedBox(height: 8),
+      _buildAmountRow(
+        'ប្រាក់ត្រូវបើកសរុប',
+        widget.payrollData.netsalary?.toString() ?? '0',
+        widget.payrollData.currencySymbol ?? '',
+        isTotal: true,
+      ),
+    ],
+  );
+}
+
 
   // Deductions Content
   Widget _buildDeductionsContent() {
+    final penaltyleavwithoudpermission = int.tryParse(widget.payrollData.penaltyLeaveWithoutPermission!) ?? 0;
     return Column(
       children: [
         if (widget.payrollData.totalLate != null &&
@@ -342,7 +324,7 @@ class _PayrollmaincardState extends State<Payrollmaincard> {
           _buildDeductionRow(
             'ឈប់អត់ច្បាប់',
             widget.payrollData.leaveWithoutPermission,
-            widget.payrollData.penaltyLeaveWithoutPermission,
+            penaltyleavwithoudpermission,
           ),
         if (widget.payrollData.leaveWeekend != null &&
             widget.payrollData.leaveWeekend! > 0)
@@ -354,7 +336,7 @@ class _PayrollmaincardState extends State<Payrollmaincard> {
         const SizedBox(height: 8),
         _buildAmountRow(
           'លុយត្រូវកាត់សរុប',
-          widget.payrollData.totalDeductions,
+          widget.payrollData.totalDeductions.toString(),
           widget.payrollData.currencySymbol!,
           isDeduction: true,
         ),
@@ -430,7 +412,7 @@ class _PayrollmaincardState extends State<Payrollmaincard> {
 
   Widget _buildAmountRow(
     String label,
-    dynamic amount,
+    String amount,
     String symbol, {
     bool isTotal = false,
     bool isDeduction = false,
@@ -453,7 +435,7 @@ class _PayrollmaincardState extends State<Payrollmaincard> {
           Row(
             children: [
               Text(
-                _formatCurrencyWithoutDollar(amount),
+                amount,
                 style: GoogleFonts.siemreap(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
@@ -479,63 +461,7 @@ class _PayrollmaincardState extends State<Payrollmaincard> {
     );
   }
 
-  Widget _buildAmountRowwithTextfield(String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(
-              label,
-              style: GoogleFonts.siemreap(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: TheColors.secondaryColor,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 1,
-            child: TextFormField(
-              controller: loandeduction,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                hintText: 'បញ្ចូលចំនួន',
-                hintStyle: GoogleFonts.siemreap(
-                  fontSize: 10,
-                  color: TheColors.black,
-                ),
-                isDense: true,
-                contentPadding: const EdgeInsets.only(
-                  left: 1,
-                  right: 1,
-                  bottom: 6,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: BorderSide(color: TheColors.orange, width: 0.8),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(
-                    color: TheColors.secondaryColor,
-                    width: 1.2,
-                  ),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: BorderSide(color: Colors.red, width: 0.8),
-                ),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildDeductionRow(String label, int? count, int? penalty) {
     return Padding(
@@ -553,7 +479,7 @@ class _PayrollmaincardState extends State<Payrollmaincard> {
             ),
           ),
           Text(
-            _formatCurrencyWithoutDollar(penalty),
+           penalty.toString(),
             style: const TextStyle(
               fontSize: 11,
               color: TheColors.errorColor,
@@ -575,12 +501,7 @@ class _PayrollmaincardState extends State<Payrollmaincard> {
     }
   }
 
-  String _formatCurrencyWithoutDollar(dynamic amount) {
-    if (amount == null) return '0';
-    String formatted = FormatUtils.formatCurrency(amount);
-    formatted = formatted.replaceAll('\$', '').trim();
-    return formatted;
-  }
+
 }
 
 class _InfoItem {

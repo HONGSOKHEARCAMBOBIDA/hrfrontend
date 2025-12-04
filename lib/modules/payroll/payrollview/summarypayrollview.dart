@@ -169,7 +169,7 @@ class _SummarypayrollviewState extends State<Summarypayrollview> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: isSelected ? TheColors.secondaryColor : Colors.grey[100],
+                          color: isSelected ? TheColors.errorColor : Colors.grey[100],
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
                             color: TheColors.orange,width: 0.5

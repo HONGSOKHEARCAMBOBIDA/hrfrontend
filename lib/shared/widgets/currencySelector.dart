@@ -32,7 +32,7 @@ class _BranchSelectorState extends State<Currencyselector> {
             children: [
               Text('ជ្រើសរើសរូបិយប័ណ្ណ', style: TextStyles.siemreap(context)),
               IconButton(
-                icon: const Icon(Icons.close, color: TheColors.errorColor),
+                icon: const Icon(Icons.close),
                 onPressed: () => Navigator.pop(context),
               ),
             ],
@@ -46,10 +46,12 @@ class _BranchSelectorState extends State<Currencyselector> {
                 children: widget.currency.map((currency) {
                   final isSelected = currency.id == widget.selectedCurrencyId;
                   return ChoiceChip(
+                    
                     label: Text(
                       currency.name ?? '',
-                       style: TextStyles.siemreap(context,fontSize: 12)
+                       style: TextStyles.siemreap(context,fontSize: 12,color: isSelected ? TheColors.bgColor : TheColors.black)
                     ),
+                    
                     selected: isSelected,
                     backgroundColor: TheColors.lightGreyColor,
                     selectedColor: TheColors.orange,
