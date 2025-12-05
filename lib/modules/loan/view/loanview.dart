@@ -34,6 +34,8 @@ class _LoanViewState extends State<LoanView> {
       backgroundColor: TheColors.bgColor,
       appBar: const CustomAppBar(title: "លុយបុគ្គលិកជំពាក់"),
       body: RefreshIndicator(
+           color: TheColors.errorColor,
+          backgroundColor: TheColors.bgColor,
         onRefresh: () async {
           selectBranchId.value = null;
           selectEmployeeId.value = null;
@@ -128,6 +130,8 @@ class _LoanViewState extends State<LoanView> {
           return Padding(
             padding: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
             child: LoanCard(
+  currencyname: loan.currencyName!,
+  currencyId: loan.currencyId!,
   loanId: loan.id!,
   employeeId: loan.employeeId!,
   employeeName: loan.employeeName ?? "N/A",

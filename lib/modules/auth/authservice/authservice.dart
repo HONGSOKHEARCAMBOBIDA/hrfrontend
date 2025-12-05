@@ -149,7 +149,7 @@ class Authservice {
         'previous_company': previousCompany,
         'bank_name': bankName,
         'bank_account_number': bankAccountNumber,
-        'notes': notes,
+        'note': notes,
         'currency_id':currencyID,
         'position_level': positionLevel,
         if (profileImage != null)

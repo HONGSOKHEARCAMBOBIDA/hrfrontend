@@ -76,15 +76,27 @@ class CustomEmployeeCard extends StatelessWidget {
               // Avatar with online/offline dot
               Stack(
                 children: [
-                   CircleAvatar(
-          radius: 30,
-          backgroundColor: TheColors.bgColor,
-          backgroundImage: profileImage!.isNotEmpty
-              ? NetworkImage("${Appconstants.baseUrl}/profileimage/${profileImage}")
-              : const NetworkImage(
-                  'https://cdn-icons-png.flaticon.com/512/17634/17634775.png',
-                ) as ImageProvider,
-        ),
+                   Container(
+                          decoration: BoxDecoration(
+      border: Border.all(
+        color: TheColors.warningColor,// Border color
+        width: 0.9,
+      ),
+      borderRadius: BorderRadius.circular(50),
+    ),
+                     child: Padding(
+                       padding: const EdgeInsets.all(2.0),
+                       child: CircleAvatar(
+                                 radius: 30,
+                                 backgroundColor: TheColors.bgColor,
+                                 backgroundImage: profileImage!.isNotEmpty
+                                     ? NetworkImage("${Appconstants.baseUrl}/profileimage/${profileImage}")
+                                     : const NetworkImage(
+                                         'https://cdn-icons-png.flaticon.com/512/17634/17634775.png',
+                                       ) as ImageProvider,
+                               ),
+                     ),
+                   ),
                   Positioned(
                     bottom: 2,
                     right: 2,
@@ -94,7 +106,7 @@ class CustomEmployeeCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: isActive == true
                             ? TheColors.successColor
-                            : TheColors.errorColor,
+                            : TheColors.red,
                         shape: BoxShape.circle,
                         border: Border.all(
                           color:

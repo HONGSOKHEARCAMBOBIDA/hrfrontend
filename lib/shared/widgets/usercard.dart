@@ -44,16 +44,28 @@ class CustomUserCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(50),
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        "https://cdn-icons-png.flaticon.com/512/1870/1870038.png",
-                    width: 45,
-                    height: 45,
-                    fit: BoxFit.cover,
-                    memCacheWidth: 100,
-                    memCacheHeight: 100,
-                    maxWidthDiskCache: 200,
-                    maxHeightDiskCache: 200,
+                  child: Container(
+                        decoration: BoxDecoration(
+      border: Border.all(
+        color: TheColors.warningColor,// Border color
+        width: 0.9,
+      ),
+      borderRadius: BorderRadius.circular(50),
+    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            "https://cdn-icons-png.flaticon.com/128/428/428933.png",
+                        width: 45,
+                        height: 45,
+                        fit: BoxFit.cover,
+                        memCacheWidth: 100,
+                        memCacheHeight: 100,
+                        maxWidthDiskCache: 200,
+                        maxHeightDiskCache: 200,
+                      ),
+                    ),
                   ),
                 ),
                 Positioned(
@@ -65,7 +77,7 @@ class CustomUserCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isActive == true
                           ? TheColors.successColor
-                          : TheColors.errorColor,
+                          : TheColors.red,
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: isDarkMode ? Colors.grey[850]! : Colors.white,

@@ -27,6 +27,8 @@ class _ExchangerateviewState extends State<Exchangerateview> {
       backgroundColor: TheColors.bgColor,
       appBar: CustomAppBar(title: "អត្រាប្ដូរប្រាក់"),
       body: RefreshIndicator(
+           color: TheColors.errorColor,
+          backgroundColor: TheColors.bgColor,
         onRefresh: ()async {
           await exchangratecontroller.fetchexchangrate();
         },

@@ -18,8 +18,8 @@ class CustomFloatingActionButton extends StatelessWidget {
     this.icon = Icons.add,
     this.label,
     this.backgroundColor = TheColors.orange,
-    this.iconColor = Colors.white,
-    this.size = 56.0,
+    this.iconColor = TheColors.warningColor,
+    this.size = 66.0,
     this.isExtended = false,
     this.heroTag = "default_fab", // ✅ Default heroTag
   }) : super(key: key);

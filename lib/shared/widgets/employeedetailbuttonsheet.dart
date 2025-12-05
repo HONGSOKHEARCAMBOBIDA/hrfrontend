@@ -5,15 +5,20 @@ import 'package:flutter_application_10/data/models/employeemodel.dart' as mymode
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class Employeedetailbuttonsheet extends StatelessWidget {
+class Employeedetailbuttonsheet extends StatefulWidget {
   final mymodel.Data employee;
 
   const Employeedetailbuttonsheet({Key? key, required this.employee})
       : super(key: key);
 
   @override
+  State<Employeedetailbuttonsheet> createState() => _EmployeedetailbuttonsheetState();
+}
+
+class _EmployeedetailbuttonsheetState extends State<Employeedetailbuttonsheet> {
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = TheColors.bgColor;
 
     String formatDate(String? isoDate) {
       if (isoDate == null || isoDate.isEmpty) return 'N/A';
@@ -37,13 +42,14 @@ class Employeedetailbuttonsheet extends StatelessWidget {
     }
 
     return DraggableScrollableSheet(
+      
       expand: false,
       initialChildSize: 0.9,
       minChildSize: 0.4,
       maxChildSize: 0.95,
       builder: (_, controller) => Container(
         decoration: BoxDecoration(
-          color: theme.cardColor,
+          color: TheColors.bgColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -69,14 +75,14 @@ class Employeedetailbuttonsheet extends StatelessWidget {
                     icon: Icons.person,
                     title: 'ព័ត៌មានផ្ទាល់ខ្លួន',
                     children: [
-                      _buildDetailItem('ឈ្មោះ', employee.name ?? 'N/A'),
-                      _buildDetailItem('ឈ្មោះអង់គ្លេស', employee.nameEn ?? 'N/A'),
-                      _buildDetailItem('ភេទ', _getGender(employee.gender)),
-                      _buildDetailItem('ថ្ងៃកំណើត', formatDate(employee.dateOfBirth)),
-                      _buildDetailItem('លេខអត្តសញ្ញាណ', employee.nationalIdNumber ?? 'N/A'),
-                      _buildDetailItem('លេខទូរស័ព្ទ', employee.contact ?? 'N/A'),
-                      _buildDetailItem('ស្ថានភាពគ្រួសារ', getMaritalStatus(employee.maritalStatus)),
-                      _buildDetailItem('លេខទូរស័ព្ទគ្រួសារ', employee.familyPhone ?? 'N/A'),
+                      _buildDetailItem('ឈ្មោះ', widget.employee.name ?? 'N/A'),
+                      _buildDetailItem('ឈ្មោះអង់គ្លេស', widget.employee.nameEn ?? 'N/A'),
+                      _buildDetailItem('ភេទ', _getGender(widget.employee.gender)),
+                      _buildDetailItem('ថ្ងៃកំណើត', formatDate(widget.employee.dateOfBirth)),
+                      _buildDetailItem('លេខអត្តសញ្ញាណ', widget.employee.nationalIdNumber ?? 'N/A'),
+                      _buildDetailItem('លេខទូរស័ព្ទ', widget.employee.contact ?? 'N/A'),
+                      _buildDetailItem('ស្ថានភាពគ្រួសារ', getMaritalStatus(widget.employee.maritalStatus)),
+                      _buildDetailItem('លេខទូរស័ព្ទគ្រួសារ', widget.employee.familyPhone ?? 'N/A'),
                     ],
                   ),
                   
@@ -84,15 +90,15 @@ class Employeedetailbuttonsheet extends StatelessWidget {
                     icon: Icons.work_outline,
                     title: 'ព័ត៌មានការងារ',
                     children: [
-                      _buildDetailItem('តួនាទី', employee.roleName ?? 'N/A'),
-                      _buildDetailItem('សាខា', employee.branchName ?? 'N/A'),
-                      _buildDetailItem('ប្រភេទការងារ', employee.type == 1 ? 'ពេញម៉ោង' : 'កាលកំណត់'),
-                      _buildDetailItem('ថ្ងៃចូលបំពេញការងារ', formatDate(employee.hireDate)),
-                      _buildDetailItem('ថ្ងៃតម្លើងតួនាទី', formatDate(employee.promoteDate)),
-                      _buildDetailItem('តម្លើងតួនាទី', employee.isPromote == true ? 'បានវាយតម្លៃ' : 'មិនទាន់វាយតម្លៃ'),
-                      _buildDetailItem('កម្រិតតួនាទី', employee.positionLevel == 1 ? "បុគ្គលិកធម្មតា" : "បុគ្គលិកជំនាញ"),
-                      _buildDetailItem('វេន', employee.shiftName ?? 'N/A'),
-                      _buildDetailItem('ម៉ោងធ្វើការ', '${employee.startTime ?? ''} - ${employee.endTime ?? ''}'),
+                      _buildDetailItem('តួនាទី', widget.employee.roleName ?? 'N/A'),
+                      _buildDetailItem('សាខា', widget.employee.branchName ?? 'N/A'),
+                      _buildDetailItem('ប្រភេទការងារ', widget.employee.type == 1 ? 'ពេញម៉ោង' : 'កាលកំណត់'),
+                      _buildDetailItem('ថ្ងៃចូលបំពេញការងារ', formatDate(widget.employee.hireDate)),
+                      _buildDetailItem('ថ្ងៃតម្លើងតួនាទី', formatDate(widget.employee.promoteDate)),
+                      _buildDetailItem('តម្លើងតួនាទី', widget.employee.isPromote == true ? 'បានវាយតម្លៃ' : 'មិនទាន់វាយតម្លៃ'),
+                      _buildDetailItem('កម្រិតតួនាទី', widget.employee.positionLevel == 1 ? "បុគ្គលិកធម្មតា" : "បុគ្គលិកជំនាញ"),
+                      _buildDetailItem('វេន', widget.employee.shiftName ?? 'N/A'),
+                      _buildDetailItem('ម៉ោងធ្វើការ', '${widget.employee.startTime ?? ''} - ${widget.employee.endTime ?? ''}'),
 
                     ],
                   ),
@@ -101,12 +107,12 @@ class Employeedetailbuttonsheet extends StatelessWidget {
                     icon: Icons.attach_money,
                     title: 'ព័ត៌មានផ្នែកហិរញ្ញវត្ថុ',
                     children: [
-                      _buildDetailItem('រូបិយប័ណ្ណប្រេី', employee.currencyName!),
-                      _buildDetailItem('ប្រាក់ខែគោល', employee.baseSalary != null ? '${employee.baseSalary} ${employee.currencyName}' : 'N/A'),
-                      _buildDetailItem('អត្រាប្រាក់ឈ្នួលប្រចាំថ្ងៃ', employee.dailyRate != null ? '${employee.dailyRate} ${employee.currencyName}' : 'N/A'),
-                      _buildDetailItem('ថ្ងៃធ្វើការ', employee.workedDay!= null ? '${employee.workedDay} ថ្ងៃ': 'N/A'),
-                      _buildDetailItem('ធនាគារ', employee.bankName ?? 'N/A'),
-                      _buildDetailItem('លេខគណនីធនាគារ', employee.bankAccountNumber ?? 'N/A'),
+                      _buildDetailItem('រូបិយប័ណ្ណប្រេី', widget.employee.currencyName!),
+                      _buildDetailItem('ប្រាក់ខែគោល', widget.employee.baseSalary != null ? '${widget.employee.baseSalary} ${widget.employee.currencyName}' : 'N/A'),
+                      _buildDetailItem('អត្រាប្រាក់ឈ្នួលប្រចាំថ្ងៃ', widget.employee.dailyRate != null ? '${widget.employee.dailyRate} ${widget.employee.currencyName}' : 'N/A'),
+                      _buildDetailItem('ថ្ងៃធ្វើការ', widget.employee.workedDay!= null ? '${widget.employee.workedDay} ថ្ងៃ': 'N/A'),
+                      _buildDetailItem('ធនាគារ', widget.employee.bankName ?? 'N/A'),
+                      _buildDetailItem('លេខគណនីធនាគារ', widget.employee.bankAccountNumber ?? 'N/A'),
                            Row(
   mainAxisAlignment: MainAxisAlignment.spaceBetween,
   children: [
@@ -116,7 +122,7 @@ class Employeedetailbuttonsheet extends StatelessWidget {
     ),
     Container(
       decoration: BoxDecoration(
-        border: Border.all(color: TheColors.orange,width: 0.3),
+        border: Border.all(color: TheColors.warningColor,width: 0.3),
         borderRadius: BorderRadius.circular(8)
       ),
       child: Padding(
@@ -124,8 +130,8 @@ class Employeedetailbuttonsheet extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8), // keep corners slightly rounded (optional)
           child: Image.network(
-            employee.qrCodeBankAccount != null && employee.qrCodeBankAccount!.isNotEmpty
-                ? "${Appconstants.baseUrl}/qrcodeimage/${employee.qrCodeBankAccount}"
+            widget.employee.qrCodeBankAccount != null && widget.employee.qrCodeBankAccount!.isNotEmpty
+                ? "${Appconstants.baseUrl}/qrcodeimage/${widget.employee.qrCodeBankAccount}"
                 : "https://cdn-icons-png.flaticon.com/512/17634/17634775.png",
             width: 100, // adjust size
             height: 100,
@@ -148,9 +154,9 @@ class Employeedetailbuttonsheet extends StatelessWidget {
                     icon: Icons.school_outlined,
                     title: 'ព័ត៌មានអប់រំ និងបទពិសោធន៍',
                     children: [
-                      _buildDetailItem('កម្រិតវប្បធម៌', employee.educationLevel ?? 'N/A'),
-                      _buildDetailItem('ឆ្នាំបទពិសោធន៍', employee.experienceYears?.toString() ?? 'N/A'),
-                      _buildDetailItem('ក្រុមហ៊ុនពីមុន', employee.previousCompany ?? 'N/A'),
+                      _buildDetailItem('កម្រិតវប្បធម៌', widget.employee.educationLevel ?? 'N/A'),
+                      _buildDetailItem('ឆ្នាំបទពិសោធន៍', widget.employee.experienceYears?.toString() ?? 'N/A'),
+                      _buildDetailItem('ក្រុមហ៊ុនពីមុន', widget.employee.previousCompany ?? 'N/A'),
                     ],
                   ),
 
@@ -158,10 +164,10 @@ class Employeedetailbuttonsheet extends StatelessWidget {
                     icon: Icons.location_on_outlined,
                     title: 'ទីកន្លែងកំណើត',
                     children: [
-                      _buildDetailItem('ខេត្ត', employee.provinceNameOfBirth ?? 'N/A'),
-                      _buildDetailItem('ស្រុក', employee.districtNameOfBirth ?? 'N/A'),
-                      _buildDetailItem('ឃុំ', employee.communceNameOfBirth ?? 'N/A'),
-                      _buildDetailItem('ភូមិ', employee.villageNameOfBirth ?? 'N/A'),
+                      _buildDetailItem('ខេត្ត', widget.employee.provinceNameOfBirth ?? 'N/A'),
+                      _buildDetailItem('ស្រុក', widget.employee.districtNameOfBirth ?? 'N/A'),
+                      _buildDetailItem('ឃុំ', widget.employee.communceNameOfBirth ?? 'N/A'),
+                      _buildDetailItem('ភូមិ', widget.employee.villageNameOfBirth ?? 'N/A'),
                     ],
                   ),
 
@@ -169,10 +175,10 @@ class Employeedetailbuttonsheet extends StatelessWidget {
                     icon: Icons.home_outlined,
                     title: 'ទីកន្លែងបច្ចុប្បន្ន',
                     children: [
-                      _buildDetailItem('ខេត្ត', employee.provinceNameCurrentAddress ?? 'N/A'),
-                      _buildDetailItem('ស្រុក', employee.districtNameCurrentAddress ?? 'N/A'),
-                      _buildDetailItem('ឃុំ', employee.communceNameCurrentAddress ?? 'N/A'),
-                      _buildDetailItem('ភូមិ', employee.villageNameCurrentAddress ?? 'N/A'),
+                      _buildDetailItem('ខេត្ត', widget.employee.provinceNameCurrentAddress ?? 'N/A'),
+                      _buildDetailItem('ស្រុក', widget.employee.districtNameCurrentAddress ?? 'N/A'),
+                      _buildDetailItem('ឃុំ', widget.employee.communceNameCurrentAddress ?? 'N/A'),
+                      _buildDetailItem('ភូមិ', widget.employee.villageNameCurrentAddress ?? 'N/A'),
                     ],
                   ),
 
@@ -180,11 +186,11 @@ class Employeedetailbuttonsheet extends StatelessWidget {
                     icon: Icons.note_outlined,
                     title: 'ព័ត៌មានបន្ថែម',
                     children: [
-                      _buildDetailItem('កំណត់សម្គាល់', employee.notes ?? 'N/A'),
-                      _buildDetailItem('ស្ថានភាព', employee.isActive == true ? 'សកម្ម' : 'អសកម្ម'),
-                      _buildDetailItem('លេខសម្គាល់', employee.id?.toString() ?? 'N/A'),
-                      _buildDetailItem('លេខសម្គាល់វេន', employee.employeeShitfId?.toString() ?? 'N/A'),
-                      _buildDetailItem('លេខសម្គាល់ប្រាក់ខែ', employee.salaryId?.toString() ?? 'N/A'),
+                      _buildDetailItem('កំណត់សម្គាល់', widget.employee.notes ?? 'N/A'),
+                      _buildDetailItem('ស្ថានភាព', widget.employee.isActive == true ? 'សកម្ម' : 'អសកម្ម'),
+                      _buildDetailItem('លេខសម្គាល់', widget.employee.id?.toString() ?? 'N/A'),
+                      _buildDetailItem('លេខសម្គាល់វេន', widget.employee.employeeShitfId?.toString() ?? 'N/A'),
+                      _buildDetailItem('លេខសម្គាល់ប្រាក់ខែ', widget.employee.salaryId?.toString() ?? 'N/A'),
                     ],
                   ),
 
@@ -202,28 +208,40 @@ class Employeedetailbuttonsheet extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 45,
-          backgroundColor: TheColors.bgColor,
-          backgroundImage: employee.profileImage != null && employee.profileImage!.isNotEmpty
-              ? NetworkImage("${Appconstants.baseUrl}/profileimage/${employee.profileImage}")
-              : const NetworkImage(
-                  'https://cdn-icons-png.flaticon.com/512/17634/17634775.png',
-                ) as ImageProvider,
+        Container(
+                              decoration: BoxDecoration(
+      border: Border.all(
+        color: TheColors.warningColor,// Border color
+        width: 0.9,
+      ),
+      borderRadius: BorderRadius.circular(50),
+    ),
+          child: Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: CircleAvatar(
+              radius: 45,
+              backgroundColor: TheColors.bgColor,
+              backgroundImage: widget.employee.profileImage != null && widget.employee.profileImage!.isNotEmpty
+                  ? NetworkImage("${Appconstants.baseUrl}/profileimage/${widget.employee.profileImage}")
+                  : const NetworkImage(
+                      'https://cdn-icons-png.flaticon.com/512/17634/17634775.png',
+                    ) as ImageProvider,
+            ),
+          ),
         ),
         const SizedBox(height: 12),
         Text(
-          employee.name ?? 'N/A',
+          widget.employee.name ?? 'N/A',
           style: GoogleFonts.siemreap(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: TheColors.secondaryColor,
           ),
         ),
-        if (employee.roleName != null) ...[
+        if (widget.employee.roleName != null) ...[
           const SizedBox(height: 4),
           Text(
-            employee.roleName!,
+            widget.employee.roleName!,
             style: GoogleFonts.siemreap(fontSize: 14, color: Colors.grey[700]),
           ),
         ],
@@ -231,15 +249,15 @@ class Employeedetailbuttonsheet extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: employee.isActive == true
+            color: widget.employee.isActive == true
                 ? TheColors.successColor.withOpacity(0.2)
                 : TheColors.errorColor.withOpacity(0.2),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
-            employee.isActive == true ? 'សកម្ម' : 'អសកម្ម',
+            widget.employee.isActive == true ? 'សកម្ម' : 'អសកម្ម',
             style: GoogleFonts.siemreap(
-              color: employee.isActive == true
+              color: widget.employee.isActive == true
                   ? TheColors.successColor
                   : TheColors.errorColor,
               fontSize: 13,

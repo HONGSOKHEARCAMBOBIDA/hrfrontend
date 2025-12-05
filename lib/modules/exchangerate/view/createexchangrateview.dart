@@ -69,11 +69,13 @@ class _CreateexchangrateviewState extends State<Createexchangrateview> {
             children: [
               Obx(
                 () => CustomOutlinedButton(
+                  alignment: MainAxisAlignment.center,
                   text: selectpairName.value,
                   onPressed: () {
                     showcurrencypair(
                       context: context,
                       currencypair: currencypaircontroler.currencypair,
+                      selectedCurrencypair: selectpairID.value,
                       onSelected: (id) {
                         selectpairID.value = id;
 

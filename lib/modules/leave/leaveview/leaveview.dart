@@ -87,6 +87,8 @@ class _LeaveviewState extends State<Leaveview> {
         appBar: CustomAppBar(title: "របាយការណ៍សុំច្បាប់"),
         backgroundColor: TheColors.bgColor,
         body: RefreshIndicator(
+             color: TheColors.errorColor,
+          backgroundColor: TheColors.bgColor,
           onRefresh: () async {
             employeecontroller.employees.clear();
             searchController.clear();

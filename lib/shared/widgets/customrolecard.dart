@@ -43,43 +43,57 @@ class CustomRoleCard extends StatelessWidget {
             // Left side: name + insurance
             Row(
               children: [
-                            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        "https://cdn-icons-png.flaticon.com/512/9940/9940338.png",
-                    width: 45,
-                    height: 45,
-                    fit: BoxFit.cover,
-                    memCacheWidth: 100,
-                    memCacheHeight: 100,
-                    maxWidthDiskCache: 200,
-                    maxHeightDiskCache: 200,
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Container(
-                    width: 14,
-                    height: 14,
-                    decoration: BoxDecoration(
-                      color: isActive == true
-                          ? TheColors.successColor
-                          : TheColors.errorColor,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isDarkMode ? Colors.grey[850]! : Colors.white,
-                        width: 2,
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: TheColors.warningColor, // Border color
+                            width: 0.9,
+                          ),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                "https://cdn-icons-png.flaticon.com/512/9940/9940338.png",
+                            width: 45,
+                            height: 45,
+                            fit: BoxFit.cover,
+                            memCacheWidth: 100,
+                            memCacheHeight: 100,
+                            maxWidthDiskCache: 200,
+                            maxHeightDiskCache: 200,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: 14,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          color: isActive == true
+                              ? TheColors.successColor
+                              : TheColors.errorColor,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isDarkMode
+                                ? Colors.grey[850]!
+                                : Colors.white,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(width: 10,),
+                SizedBox(width: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -93,12 +107,16 @@ class CustomRoleCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                       
+
                         Row(
                           children: [
                             Text(
                               name,
-                              style: TextStyles.siemreap(context, fontSize: 12,color: TheColors.secondaryColor),
+                              style: TextStyles.siemreap(
+                                context,
+                                fontSize: 12,
+                                color: TheColors.secondaryColor,
+                              ),
                             ),
                           ],
                         ),
@@ -116,81 +134,85 @@ class CustomRoleCard extends StatelessWidget {
     );
   }
 
-Widget _buildActionMenu(BuildContext context) {
-  final theme = Theme.of(context);
+  Widget _buildActionMenu(BuildContext context) {
+    final theme = Theme.of(context);
 
-  return Builder(
-    builder: (innerContext) {
-      return IconButton(
-        icon: Icon(
-          Icons.more_vert,
-          color: theme.iconTheme.color?.withOpacity(0.8),
-        ),
-        padding: EdgeInsets.zero,
-        onPressed: () {
-          final box = innerContext.findRenderObject() as RenderBox;
-          final overlay = Overlay.of(innerContext).context.findRenderObject() as RenderBox;
-          final position = RelativeRect.fromRect(
-            Rect.fromPoints(
-              box.localToGlobal(Offset.zero, ancestor: overlay),
-              box.localToGlobal(box.size.bottomRight(Offset.zero), ancestor: overlay),
-            ),
-            Offset.zero & overlay.size,
-          );
-
-          showPopover(
-            context: innerContext,
-            bodyBuilder: (context) => Material(
-              elevation: 6,
-              color: TheColors.bgColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-
+    return Builder(
+      builder: (innerContext) {
+        return IconButton(
+          icon: Icon(
+            Icons.more_vert,
+            color: theme.iconTheme.color?.withOpacity(0.8),
+          ),
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            final box = innerContext.findRenderObject() as RenderBox;
+            final overlay =
+                Overlay.of(innerContext).context.findRenderObject()
+                    as RenderBox;
+            final position = RelativeRect.fromRect(
+              Rect.fromPoints(
+                box.localToGlobal(Offset.zero, ancestor: overlay),
+                box.localToGlobal(
+                  box.size.bottomRight(Offset.zero),
+                  ancestor: overlay,
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildMenuItem(
-                    context,
-                    icon: Icons.edit,
-                    color: theme.colorScheme.primary,
-                    text: 'កែប្រែ',
-                    onTap: onEdit,
-                  ),
+              Offset.zero & overlay.size,
+            );
 
-                  // 🟢 Dynamic item based on isActive
-                  _buildMenuItem(
-                    context,
-                    icon: isActive == true ? Icons.block : Icons.check_circle,
-                    color: isActive == true
-                        ? TheColors.errorColor
-                        : TheColors.successColor,
-                    text: isActive == true ? 'បិទ' : 'បើក',
-                    onTap: () => _confirmDelete(context),
-                  ),
+            showPopover(
+              context: innerContext,
+              bodyBuilder: (context) => Material(
+                elevation: 6,
+                color: TheColors.bgColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildMenuItem(
+                      context,
+                      icon: Icons.edit,
+                      color: theme.colorScheme.primary,
+                      text: 'កែប្រែ',
+                      onTap: onEdit,
+                    ),
 
-                  _buildMenuItem(
-                    context,
-                    icon: Icons.lock,
-                    color: TheColors.errorColor,
-                    text: "ដកសិទ្ធ",
-                    onTap: deletepermission!,
-                  ),
-                ],
+                    // 🟢 Dynamic item based on isActive
+                    _buildMenuItem(
+                      context,
+                      icon: isActive == true ? Icons.block : Icons.check_circle,
+                      color: isActive == true
+                          ? TheColors.errorColor
+                          : TheColors.successColor,
+                      text: isActive == true ? 'បិទ' : 'បើក',
+                      onTap: () => _confirmDelete(context),
+                    ),
+
+                    _buildMenuItem(
+                      context,
+                      icon: Icons.lock,
+                      color: TheColors.errorColor,
+                      text: "ដកសិទ្ធ",
+                      onTap: deletepermission!,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            direction: PopoverDirection.bottom,
-            width: 140,
-            height: 125,
-            arrowHeight: 10,
-            arrowWidth: 20,
-            radius: 5,
-          );
-        },
-      );
-    },
-  );
-}
+              direction: PopoverDirection.bottom,
+              width: 140,
+              height: 125,
+              arrowHeight: 10,
+              arrowWidth: 20,
+              radius: 5,
+            );
+          },
+        );
+      },
+    );
+  }
 
   Widget _buildMenuItem(
     BuildContext context, {
@@ -210,38 +232,38 @@ Widget _buildActionMenu(BuildContext context) {
           children: [
             Icon(icon, color: color, size: 15),
             const SizedBox(width: 20),
-            Text(text, style: TextStyles.siemreap(context,fontSize: 12)),
+            Text(text, style: TextStyles.siemreap(context, fontSize: 12)),
           ],
         ),
       ),
     );
   }
 
-void _confirmDelete(BuildContext context) {
-  final actionText = isActive == true ? 'បិទ' : 'បើក';
-  final confirmMessage =
-      isActive == true ? 'តើអ្នកពិតជាចង់បិទមែនទេ?' : 'តើអ្នកពិតជាចង់បើកមែនទេ?';
+  void _confirmDelete(BuildContext context) {
+    final actionText = isActive == true ? 'បិទ' : 'បើក';
+    final confirmMessage = isActive == true
+        ? 'តើអ្នកពិតជាចង់បិទមែនទេ?'
+        : 'តើអ្នកពិតជាចង់បើកមែនទេ?';
 
-  showDialog(
-    context: context,
-    builder: (_) => AlertDialog(
-      title: Text('បញ្ជាក់', style: GoogleFonts.siemreap()),
-      content: Text(confirmMessage, style: GoogleFonts.siemreap()),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('បោះបង់', style: GoogleFonts.siemreap()),
-        ),
-        TextButton(
-          onPressed: () {
-            onDelete(); // handle API call for activate/deactivate
-           Get.back();
-          },
-          child: Text(actionText, style: GoogleFonts.siemreap()),
-        ),
-      ],
-    ),
-  );
-}
-
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('បញ្ជាក់', style: GoogleFonts.siemreap()),
+        content: Text(confirmMessage, style: GoogleFonts.siemreap()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('បោះបង់', style: GoogleFonts.siemreap()),
+          ),
+          TextButton(
+            onPressed: () {
+              onDelete(); // handle API call for activate/deactivate
+              Get.back();
+            },
+            child: Text(actionText, style: GoogleFonts.siemreap()),
+          ),
+        ],
+      ),
+    );
+  }
 }

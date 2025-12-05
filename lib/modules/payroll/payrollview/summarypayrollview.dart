@@ -502,12 +502,9 @@ Widget _buildCurrencyLabel() {
         itemCount: paycontroller.payrolldraff.length,
         itemBuilder: (context, index) {
           final payroll = paycontroller.payrolldraff[index];
-          return Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-            child: PayrollCard(
-              payrollData: payroll,
-              onLoanDeductionChanged: _onLoanDeductionChanged, // Pass the callback
-            ),
+          return PayrollCard(
+            payrollData: payroll,
+            onLoanDeductionChanged: _onLoanDeductionChanged, // Pass the callback
           );
         },
       );

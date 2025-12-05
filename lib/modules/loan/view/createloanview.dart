@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/helper/show_branch_buttonsheet.dart';
+import 'package:flutter_application_10/core/helper/showcurrencyselector.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
 import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
+import 'package:flutter_application_10/modules/currency/controller/currencycontroller.dart';
 import 'package:flutter_application_10/modules/employee/employeecontroller/employeecontroller.dart';
 import 'package:flutter_application_10/modules/loan/loancontroller/loancontroller.dart';
 import 'package:flutter_application_10/shared/widgets/app_bar.dart';
 import 'package:flutter_application_10/shared/widgets/custombuttonnav.dart';
+import 'package:flutter_application_10/shared/widgets/customoutlinebutton.dart';
 import 'package:flutter_application_10/shared/widgets/dropdown.dart';
 import 'package:flutter_application_10/shared/widgets/snackbar.dart';
 import 'package:flutter_application_10/shared/widgets/textfield.dart';
@@ -22,11 +26,14 @@ class _CreateLoanViewState extends State<CreateLoanView> {
   final loanController = Get.find<LoanController>();
   final branchController = Get.find<Branchcontroller>();
   final employeeController = Get.find<Employeecontroller>();
+  final currencycontroller = Get.find<Currencycontroller>();
 
   final selectBranchId = Rxn<int>();
   final selectEmployeeId = Rxn<int>();
+  final selectcurrencyId = Rxn<int>();
   final loanAmountController = TextEditingController();
-
+  var selectedbranchname = "ជ្រេីសរេីសសាខា".obs;
+    var selectedcurrencyname = "សូមជ្រេីសរេីសរូបិយប័ណ្ណ".obs;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +44,6 @@ class _CreateLoanViewState extends State<CreateLoanView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           
             Text(
               "សាខា",
               style: TextStyles.siemreap(
@@ -47,17 +53,29 @@ class _CreateLoanViewState extends State<CreateLoanView> {
               ),
             ),
             const SizedBox(height: 5),
-            CustomDropdown(
-              selectedValue: selectBranchId,
-              items: branchController.branch,
-              hintText: "ជ្រើសសាខា",
-              onChanged: (value) async {
-                selectBranchId.value = value;
-                employeeController.employees.clear();
-                await employeeController.fetchemployee(
-                  branchid: selectBranchId.value,
-                );
-              },
+
+            Obx(
+              () => CustomOutlinedButton(
+                text: selectedbranchname.value.isEmpty
+                    ? "រេីសសាខា"
+                    : selectedbranchname.value,
+                onPressed: () {
+                  showBranchSelectorSheet(
+                    context: context,
+                    branch: branchController.branch,
+                    onSelected: (id) {
+                      selectBranchId.value = id;
+                      selectedbranchname.value = branchController.branch
+                          .firstWhere((p) => p.id == id)
+                          .name!;
+                      employeeController.employees.clear();
+                      employeeController.fetchemployee(
+                        branchid: selectBranchId.value,
+                      );
+                    },
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 10),
             Text(
@@ -77,6 +95,40 @@ class _CreateLoanViewState extends State<CreateLoanView> {
                 selectEmployeeId.value = value;
               },
             ),
+          const SizedBox(height: 10),
+            Text(
+              "រូបិយប័ណ្ណដែលប្រី",
+              style: TextStyles.siemreap(
+                context,
+                fontSize: 12,
+                fontweight: FontWeight.bold,
+              ),
+            ),
+          SizedBox(height: 5,),
+                                                  Obx(
+                                        () => CustomOutlinedButton(
+                                          
+                                          text: selectedcurrencyname.value.isEmpty
+                                              ? "សូមជ្រេីសរេីសរុបិយប័ណ្ណ"
+                                              : selectedcurrencyname.value,
+                                          onPressed: () {
+                                            showcurrencyselector(
+                                              context: context,
+                                              currency:
+                                                  currencycontroller.currency,
+                                              onSelected: (id) {
+                                                selectcurrencyId.value = id;
+                                                selectedcurrencyname
+                                                    .value = currencycontroller
+                                                    .currency
+                                                    .firstWhere((p) => p.id == id)
+                                                    .name!;
+                                              },
+                                            );
+                                          },
+                                          
+                                        ),
+                                      ),
             const SizedBox(height: 10),
             Text(
               "ចំនួនលុយ",
@@ -90,7 +142,7 @@ class _CreateLoanViewState extends State<CreateLoanView> {
             CustomTextField(
               controller: loanAmountController,
               hintText: "ឧ. 200",
-              prefixIcon: Icons.monetization_on,
+              prefixIcon: Icons.wallet
             ),
           ],
         ),
@@ -111,6 +163,7 @@ class _CreateLoanViewState extends State<CreateLoanView> {
           }
 
           await loanController.createLoan(
+            currencyId: selectcurrencyId.value!,
             employeeId: selectEmployeeId.value!,
             loanAmount: loanAmount,
           );

@@ -36,12 +36,14 @@ class LoanController extends GetxController {
   Future<void> createLoan({
     required int employeeId,
     required double loanAmount,
+    required int currencyId,
   }) async {
     try {
       isLoading.value = true;
       bool isCreated = await loanService.createLoan(
         employeeId: employeeId,
         loanAmount: loanAmount,
+        currencyId: currencyId
       );
 
       if (isCreated) {
@@ -61,6 +63,7 @@ class LoanController extends GetxController {
     required int employeeId,
     required double loanAmount,
     required double remainingBalance,
+    required int currencyID
   }) async {
     try {
       isLoading.value = true;
@@ -69,6 +72,7 @@ class LoanController extends GetxController {
         employeeId: employeeId,
         loanAmount: loanAmount,
         remainingBalance: remainingBalance,
+        currencyId: currencyID
       );
 
       if (isUpdated) {

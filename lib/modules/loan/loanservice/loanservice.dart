@@ -8,11 +8,13 @@ class LoanService {
   Future<bool> createLoan({
     required int employeeId,
     required double loanAmount,
+    required int currencyId,
   }) async {
     try {
       final body = {
         'employee_id': employeeId,
         'loan_amount': loanAmount,
+        'currency_id': currencyId
       };
 
       final response = await apiProvider.post('addloan', body);
@@ -56,12 +58,14 @@ class LoanService {
     required int employeeId,
     required double loanAmount,
     required double remainingBalance,
+    required int currencyId,
   }) async {
     try {
       final body = {
         'employee_id': employeeId,
         'loan_amount': loanAmount,
         'remaining_balance': remainingBalance,
+        'currency_id': currencyId
       };
 
       final response = await apiProvider.put('editloan/$loanId', body);

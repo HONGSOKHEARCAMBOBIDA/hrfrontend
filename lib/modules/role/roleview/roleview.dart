@@ -11,6 +11,7 @@ import 'package:flutter_application_10/shared/widgets/app_bar.dart';
 import 'package:flutter_application_10/shared/widgets/custombuttonnav.dart';
 import 'package:flutter_application_10/shared/widgets/customrolecard.dart';
 import 'package:flutter_application_10/shared/widgets/elevated_button.dart';
+import 'package:flutter_application_10/shared/widgets/floating_buttom.dart';
 import 'package:flutter_application_10/shared/widgets/loading.dart';
 import 'package:flutter_application_10/shared/widgets/textfield.dart';
 import 'package:get/get.dart';
@@ -32,6 +33,8 @@ class _RoleviewState extends State<Roleview> {
       backgroundColor: TheColors.bgColor,
       appBar: CustomAppBar(title: "តួនាទី"),
       body: RefreshIndicator(
+           color: TheColors.errorColor,
+          backgroundColor: TheColors.bgColor,
         onRefresh: () async {
           await roleController.fetchrole();
           roleController.changedPermissionIds.clear();
@@ -110,7 +113,7 @@ class _RoleviewState extends State<Roleview> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: CustomFloatingActionButton(
         backgroundColor: TheColors.errorColor,
         heroTag: "gotocreaterole",
         onPressed: () {
@@ -122,7 +125,7 @@ class _RoleviewState extends State<Roleview> {
           );
         },
 
-        child: const Icon(Icons.add, color: TheColors.bgColor),
+       
       ),
     );
   }

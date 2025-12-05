@@ -19,8 +19,11 @@ class CurrencyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: TheColors.bgColor,
       appBar: CustomAppBar(title: "រូបបិយ្យប័ណ្ណ"),
       body: RefreshIndicator(
+           color: TheColors.errorColor,
+          backgroundColor: TheColors.bgColor,
         onRefresh: ()async{
           await controller.fetchcurrency();
         },
@@ -125,6 +128,7 @@ void _showAddCurrencyDialog(BuildContext context) {
 
   Get.dialog(
     AlertDialog(
+      backgroundColor: TheColors.bgColor,
       title: Center(
         child: Text('បន្ថែមរូបបិយ្យប័ណ្ណ',
           style: TextStyles.siemreap(context, fontSize: 13),
@@ -200,6 +204,7 @@ void _showAddCurrencyDialog(BuildContext context) {
 
     Get.dialog(
       AlertDialog(
+        backgroundColor: TheColors.bgColor,
         title: Text('កែប្រែរូបិយប័ណ្ណ',style:TextStyles.siemreap(context,),),
         content: Column(
           mainAxisSize: MainAxisSize.min,

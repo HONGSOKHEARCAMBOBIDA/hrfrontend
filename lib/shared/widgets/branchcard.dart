@@ -41,12 +41,24 @@ class CustomBranchcard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(50),
-                child: CachedNetworkImage(
-                  imageUrl:
-                      "https://cdn-icons-png.flaticon.com/128/16022/16022033.png",
-                  width: 48,
-                  height: 48,
-                  fit: BoxFit.cover,
+                child: Container(
+                                 decoration: BoxDecoration(
+      border: Border.all(
+        color: TheColors.warningColor,// Border color
+        width: 0.9,
+      ),
+      borderRadius: BorderRadius.circular(50),
+    ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://cdn-icons-png.flaticon.com/128/10601/10601172.png",
+                      width: 44,
+                      height: 44,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               Positioned(
@@ -58,7 +70,7 @@ class CustomBranchcard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isActive == 1
                         ? TheColors.successColor
-                        : TheColors.errorColor,
+                        : TheColors.red,
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: isDarkMode ? Colors.grey[850]! : Colors.white,
@@ -212,8 +224,10 @@ class CustomBranchcard extends StatelessWidget {
         isActive == true ? 'តើអ្នកពិតជាចង់បិទសាខានេះមែនទេ?' : 'តើអ្នកពិតជាចង់បើកសាខានេះមែនទេ?';
 
     showDialog(
+      
       context: context,
       builder: (_) => AlertDialog(
+        backgroundColor: TheColors.bgColor,
         title: Text('បញ្ជាក់', style: GoogleFonts.siemreap(fontWeight: FontWeight.bold)),
         content: Text(confirmMessage, style: GoogleFonts.siemreap()),
         actions: [

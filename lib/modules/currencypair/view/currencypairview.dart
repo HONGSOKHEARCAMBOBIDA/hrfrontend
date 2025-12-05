@@ -17,6 +17,8 @@ class Currencypairview extends StatelessWidget {
       backgroundColor: TheColors.bgColor,
       appBar: CustomAppBar(title: "ការប្ដូប្រាក់"),
       body: RefreshIndicator(
+           color: TheColors.errorColor,
+          backgroundColor: TheColors.bgColor,
         onRefresh: ()async{
           await controller.fetchcurrencypair();
         },

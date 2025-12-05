@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/helper/show_branch_buttonsheet.dart';
 import 'package:flutter_application_10/core/helper/show_communce_buttonsheet.dart';
 import 'package:flutter_application_10/core/helper/show_district_buttonsheet.dart';
 import 'package:flutter_application_10/core/helper/show_province_buttonsheet.dart';
+import 'package:flutter_application_10/core/helper/show_role_buttonsheet.dart';
 import 'package:flutter_application_10/core/helper/show_village_buttonsheet.dart';
 import 'package:flutter_application_10/core/theme/constants/constants.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
@@ -70,6 +72,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
   final bankaccountcontroller = TextEditingController();
   final notecontroller = TextEditingController();
   final nationalidnumbercontroller = TextEditingController();
+
   final selectvillageidofbirth = Rxn<int>();
   final selectprovinceidofbirth = Rxn<int>();
   final selectdistrictidofbirth = Rxn<int>();
@@ -88,7 +91,8 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
   var selectedDistrictNameofcurrenctadrress = "ជ្រើសរើសស្រុក".obs;
   var selectedCommunceNameofcurrenctadrress = "ជ្រើសរើសឃុំ".obs;
   var selectedVillageNameofcurrenctadrress = "ជ្រើសរើសភូមិ".obs;
-
+  var selectedrolename = "រេីសតួនាទី".obs;
+  var selectedbranchname = "រេីសសាខា".obs;
   final List<Map<String, dynamic>> genders = [
     {"id": 1, "name": "ប្រុស"},
     {"id": 2, "name": "ស្រី"},
@@ -130,6 +134,8 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
     namekhcontroller.text = employee.name ?? "";
     nameencontroller.text = employee.nameEn ?? "";
     contactcontroller.text = employee.contact ?? "";
+    selectedrolename.value = employee.roleName ?? "";
+    selectedbranchname.value = employee.branchName ?? "";
     previouscompanycontroller.text = employee.previousCompany!;
     nationalidnumbercontroller.text = employee.nationalIdNumber ?? "";
     selecttype.value = employee.type;
@@ -402,7 +408,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                             style: ButtonStyle(
                               side: MaterialStateProperty.all(
                                 BorderSide(
-                                  color: TheColors.errorColor,
+                                  color: TheColors.warningColor,
                                   width: 0.5,
                                 ), // 👈 border color & width
                               ),
@@ -518,6 +524,23 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                           onChanged: (Value) {
                                             selectgender.value = Value;
                                           },
+                                                dropdownColor: TheColors.bgColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                icon: const Icon(
+                                                  Icons.arrow_drop_down,
+                                                  color: TheColors.orange,
+                                                ),
+                                                iconSize: 15,
+                                                elevation: 2,
+                                                menuMaxHeight: 180,
+      
+                                                // Button styling
+                                                style: TextStyles.siemreap(
+                                                  context,
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                ),
                                         ),
                                       ),
                                     ],
@@ -627,6 +650,23 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                     onChanged: (Value) {
                                       selectgender.value = Value;
                                     },
+                                               dropdownColor: TheColors.bgColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                icon: const Icon(
+                                                  Icons.arrow_drop_down,
+                                                  color: TheColors.orange,
+                                                ),
+                                                iconSize: 15,
+                                                elevation: 2,
+                                                menuMaxHeight: 180,
+      
+                                                // Button styling
+                                                style: TextStyles.siemreap(
+                                                  context,
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                ),
                                   ),
                                 ),
                               ],
@@ -659,24 +699,68 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildLabel("តួនាទី"),
-                                CustomDropdown(
-                                  selectedValue: selectroleid,
-                                  items: rolecontroller.role,
-                                  hintText: "រេីសតួនាទី",
-                                  onChanged: (Value) {
-                                    selectroleid.value = Value;
-                                  },
-                                ),
+                                // CustomDropdown(
+                                //   selectedValue: selectroleid,
+                                //   items: rolecontroller.role,
+                                //   hintText: "រេីសតួនាទី",
+                                //   onChanged: (Value) {
+                                //     selectroleid.value = Value;
+                                //   },
+                                // ),
+                                                                  Obx(
+                                    () => CustomOutlinedButton(
+                                      text: selectedrolename.value.isEmpty
+                                          ? "រេីសតួនាទី"
+                                          : selectedrolename.value,
+                                      
+                                      onPressed: () {
+                                        showRoleSelectorsheet(
+                                          context: context,
+                                          role: rolecontroller.role,
+                                          selectedSelectId: selectroleid.value,
+                                          onSelected: (id) {
+                                            selectroleid.value = id;
+                                            selectedrolename.value =
+                                                rolecontroller.role
+                                                    .firstWhere((p) => p.id == id)
+                                                    .displayName!;
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
                                 SizedBox(height: 8),
                                 _buildLabel("សាខា"),
-                                CustomDropdown(
-                                  selectedValue: selectbranchid,
-                                  items: branchcontroller.branch,
-                                  hintText: "រេីសសាខា",
-                                  onChanged: (Value) {
-                                    selectbranchid.value = Value;
-                                  },
-                                ),
+                                // CustomDropdown(
+                                //   selectedValue: selectbranchid,
+                                //   items: branchcontroller.branch,
+                                //   hintText: "រេីសសាខា",
+                                //   onChanged: (Value) {
+                                //     selectbranchid.value = Value;
+                                //   },
+                                // ),
+                                                                  Obx(
+                                    () => CustomOutlinedButton(
+                                      text: selectedbranchname.value.isEmpty
+                                          ? "រេីសសាខា"
+                                          : selectedbranchname.value,
+                                      onPressed: () {
+                                        showBranchSelectorSheet(
+                                          context: context,
+                                          branch: branchcontroller.branch,
+                                          selectedBranchId: selectbranchid.value,
+                                          onSelected: (id) {
+                                            selectbranchid.value = id;
+                                            selectedbranchname.value =
+                                                branchcontroller.branch
+                                                    .firstWhere((p) => p.id == id)
+                                                    .name!;
+                                       
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
                                 SizedBox(height: 8),
 
                                 Row(
@@ -753,6 +837,24 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                               onChanged: (Value) {
                                                 selecttype.value = Value;
                                               },
+                                              dropdownColor: TheColors.bgColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                icon: const Icon(
+                                                  Icons.arrow_drop_down,
+                                                  color: TheColors.orange,
+                                                ),
+                                                iconSize: 15,
+                                                elevation: 2,
+                                                menuMaxHeight: 180,
+                                                
+                                                
+                                                // Button styling
+                                                style: TextStyles.siemreap(
+                                                  context,
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                ),
                                             ),
                                           ),
                                         ],
@@ -855,6 +957,23 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                 onChanged: (Value) {
                                   selectpositionlevel.value = Value;
                                 },
+                                                                               dropdownColor: TheColors.bgColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                icon: const Icon(
+                                                  Icons.arrow_drop_down,
+                                                  color: TheColors.orange,
+                                                ),
+                                                iconSize: 15,
+                                                elevation: 2,
+                                                menuMaxHeight: 180,
+      
+                                                // Button styling
+                                                style: TextStyles.siemreap(
+                                                  context,
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                ),
                               ),
                             ),
                           ],
@@ -1032,6 +1151,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                 Expanded(
                                   child: Obx(
                                     () => CustomOutlinedButton(
+                                      alignment: MainAxisAlignment.center,
                                       text:
                                           selectedProvinceNameofbirth
                                               .value
@@ -1043,6 +1163,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                           context: context,
                                           provinces:
                                               provincecontroller.provinces,
+                                          selectedProvince: selectprovinceidofbirth.value,
                                           onSelected: (id) {
                                             selectprovinceidofbirth.value = id;
                                             selectedProvinceNameofbirth
@@ -1078,6 +1199,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                 Expanded(
                                   child: Obx(
                                     () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                       text:
                                           selectedDistrictNameofbirth
                                               .value
@@ -1092,6 +1214,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                                 context: context,
                                                 district:
                                                     districtcontroller.district,
+                                                selecteddistrict: selectdistrictidofbirth.value,
                                                 onSelected: (id) {
                                                   selectdistrictidofbirth
                                                           .value =
@@ -1133,6 +1256,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                 Expanded(
                                   child: Obx(
                                     () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                       text:
                                           selectedCommunceNameofbirth
                                               .value
@@ -1147,6 +1271,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                                 context: context,
                                                 communce: commmuncecontroller
                                                     .communce,
+                                                selectedCommunce: selectcommunceidofbirth.value,
                                                 onSelected: (id) {
                                                   selectcommunceidofbirth
                                                           .value =
@@ -1179,6 +1304,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                 Expanded(
                                   child: Obx(
                                     () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                       text:
                                           selectedVillageNameofbirth
                                               .value
@@ -1193,6 +1319,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                                 context: context,
                                                 village:
                                                     villagecontroller.village,
+                                                selectedVillageId: selectvillageidofbirth.value,
                                                 onSelected: (id) {
                                                   selectvillageidofbirth.value =
                                                       id;
@@ -1240,6 +1367,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                 Expanded(
                                   child: Obx(
                                     () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                       text:
                                           selectedProvinceNameofcurrenctadrress
                                               .value
@@ -1252,6 +1380,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                           context: context,
                                           provinces:
                                               provincecontroller.provinces,
+                                          selectedProvince: selectprovinceidofcurrenctadrress.value,
                                           onSelected: (id) {
                                             selectprovinceidofcurrenctadrress
                                                     .value =
@@ -1296,6 +1425,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                 Expanded(
                                   child: Obx(
                                     () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                       text:
                                           selectedDistrictNameofcurrenctadrress
                                               .value
@@ -1313,6 +1443,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                                 context: context,
                                                 district:
                                                     districtcontroller.district,
+                                                selecteddistrict: selectdistrictidofcurrenctadrress.value,
                                                 onSelected: (id) {
                                                   selectdistrictidofcurrenctadrress
                                                           .value =
@@ -1355,6 +1486,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                 Expanded(
                                   child: Obx(
                                     () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                       text:
                                           selectedCommunceNameofcurrenctadrress
                                               .value
@@ -1372,6 +1504,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                                 context: context,
                                                 communce: commmuncecontroller
                                                     .communce,
+                                                selectedCommunce: selectcommunceidofcurrenctadrress.value,
                                                 onSelected: (id) {
                                                   selectcommunceidofcurrenctadrress
                                                           .value =
@@ -1405,6 +1538,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                 Expanded(
                                   child: Obx(
                                     () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                       text:
                                           selectedVillageNameofcurrenctadrress
                                               .value
@@ -1422,6 +1556,7 @@ class _UpdateemployeeviewState extends State<Updateemployeeview> {
                                                 context: context,
                                                 village:
                                                     villagecontroller.village,
+                                                selectedVillageId: selectvillageidofcurrenctadrress.value,
                                                 onSelected: (id) {
                                                   selectvillageidofcurrenctadrress
                                                           .value =

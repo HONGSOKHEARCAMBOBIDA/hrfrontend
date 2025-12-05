@@ -126,7 +126,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/loan',
           page: () => LoanView(),
-          bindings: [Loanbinding(), Branchbinding(), Employeebinding()],
+          bindings: [Loanbinding(), Branchbinding(), Employeebinding(),Currencybinding()],
         ),
         GetPage(
           name: '/leave',

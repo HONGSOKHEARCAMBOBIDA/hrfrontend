@@ -12,7 +12,7 @@ class CustomOutlinedButton extends StatelessWidget {
   final double width;
   final double height;
   final IconData? icon;
-
+  final MainAxisAlignment alignment;
   const CustomOutlinedButton({
     Key? key,
     required this.text,
@@ -24,6 +24,7 @@ class CustomOutlinedButton extends StatelessWidget {
     this.width = double.infinity,
     this.height = 50.0,
     this.icon,
+    this.alignment = MainAxisAlignment.start, 
   }) : super(key: key);
 
   @override
@@ -33,16 +34,19 @@ class CustomOutlinedButton extends StatelessWidget {
       height: height,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: TheColors.orange, width: 0.5),
+           side: BorderSide(color: borderColor!, width: 0.5),
           foregroundColor: textColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         ),
+
         onPressed: onPressed,
+
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+         mainAxisAlignment: alignment, 
+
           children: [
             if (icon != null) ...[
               Icon(icon, color: textColor, size: 20),
@@ -50,10 +54,7 @@ class CustomOutlinedButton extends StatelessWidget {
             ],
             Text(
               text,
-              style: GoogleFonts.siemreap(
-                fontSize: fontSize,
-                color: textColor,
-              ),
+              style: GoogleFonts.siemreap(fontSize: fontSize, color: textColor),
             ),
           ],
         ),

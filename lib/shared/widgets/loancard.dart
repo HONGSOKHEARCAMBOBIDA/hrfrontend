@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/helper/showcurrencyselector.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
+import 'package:flutter_application_10/modules/currency/controller/currencycontroller.dart';
 import 'package:flutter_application_10/modules/loan/loancontroller/loancontroller.dart';
+import 'package:flutter_application_10/shared/widgets/customoutlinebutton.dart';
 import 'package:flutter_application_10/shared/widgets/textfield.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoanCard extends StatelessWidget {
+class LoanCard extends StatefulWidget {
   final int loanId;
   final int employeeId;
+  final int currencyId;
   final String employeeName;
   final String branchName;
   final double loanAmount;
   final double remainingBalance;
   final int status;
+  final String currencyname;
 
   const LoanCard({
     Key? key,
@@ -24,16 +29,24 @@ class LoanCard extends StatelessWidget {
     required this.loanAmount,
     required this.remainingBalance,
     required this.status,
+    required this.currencyId,
+    required this.currencyname
   }) : super(key: key);
 
   @override
+  State<LoanCard> createState() => _LoanCardState();
+}
+
+class _LoanCardState extends State<LoanCard> {
+  @override
   Widget build(BuildContext context) {
     final loanController = Get.find<LoanController>();
-    final bool isPaid = status == 0; // 1 = Paid, 0 = Unpaid
+    final currencycontroller = Get.find<Currencycontroller>();
+    final bool isPaid = widget.status == 0; // 1 = Paid, 0 = Unpaid
 
     return GestureDetector(
       onTap: () {
-        _showUpdateBottomSheet(context, loanController);
+        _showUpdateBottomSheet(context, loanController,currencycontroller);
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 11, right: 11),
@@ -52,7 +65,7 @@ class LoanCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      employeeName,
+                      widget.employeeName,
                       style: TextStyles.siemreap(
                         context,
                         fontSize: 14,
@@ -84,7 +97,7 @@ class LoanCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  branchName,
+                  widget.branchName,
                   style: TextStyles.siemreap(
                     context,
                     fontSize: 12,
@@ -96,9 +109,9 @@ class LoanCard extends StatelessWidget {
                   thickness: 0.6,
                   color: TheColors.errorColor,
                 ),
-                _infoRow('ចំនួនប្រាក់កម្ចី:', '$loanAmount ដុល្លា'),
+                _infoRow('ចំនួនប្រាក់កម្ចី:', '${widget.loanAmount} ${widget.currencyname}'),
                 const SizedBox(height: 6),
-                _infoRow('ប្រាក់នៅសល់:', '$remainingBalance ដុល្លា'),
+                _infoRow('ប្រាក់នៅសល់:', '${widget.remainingBalance} ${widget.currencyname}'),
               ],
             ),
           ),
@@ -126,12 +139,16 @@ class LoanCard extends StatelessWidget {
   void _showUpdateBottomSheet(
     BuildContext context,
     LoanController loanController,
+    Currencycontroller currencycontroller
   ) {
-    final TextEditingController loanAmountController = TextEditingController(
-      text: loanAmount.toString(),
+    final TextEditingController loanAmountController = TextEditingController(text: widget.loanAmount.toString(),
     );
-    final TextEditingController remainingBalanceController =
-        TextEditingController(text: remainingBalance.toString());
+    final TextEditingController remainingBalanceController =TextEditingController(text: widget.remainingBalance.toString());
+    final selectcurrencyId = Rxn<int>();
+    var selectedcurrencyname = "សូមជ្រេីសរេីសរូបិយប័ណ្ណ".obs;
+    selectcurrencyId.value = widget.currencyId!;
+    selectedcurrencyname.value = widget.currencyname!;
+
 
     showModalBottomSheet(
       context: context,
@@ -163,6 +180,44 @@ class LoanCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
+              Text(
+                "រូបិយប័ណ្ណដែលប្រេី",
+                style: TextStyles.siemreap(
+                  context,
+                  fontSize: 12,
+                  fontweight: FontWeight.bold,
+                ),
+              ),
+                 const SizedBox(height: 5),
+                 
+                                  Obx(
+                                    () => CustomOutlinedButton(
+                                      text:
+                                          selectedcurrencyname
+                                              .value
+                                              .isEmpty
+                                          ? "សូមជ្រេីសរេីសរុបិយប័ណ្ណ"
+                                          : selectedcurrencyname.value,
+                                      onPressed: () {
+                                        showcurrencyselector(
+                                          context: context,
+                                          currency:
+                                              currencycontroller.currency,
+                                          onSelected: (id) {
+                                            selectcurrencyId.value = id;
+                                            selectedcurrencyname
+                                                .value = currencycontroller
+                                                .currency
+                                                .firstWhere((p) => p.id == id)
+                                                .name!;
+                                          
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(height: 10,),
+
               Text(
                 "លុយខ្ចី",
                 style: TextStyles.siemreap(
@@ -211,8 +266,9 @@ class LoanCard extends StatelessWidget {
                 ),
                 onPressed: () async {
                   await loanController.updateLoan(
-                    loanId: loanId,
-                    employeeId: employeeId,
+                    currencyID: selectcurrencyId.value!,
+                    loanId: widget.loanId,
+                    employeeId: widget.employeeId,
                     loanAmount:
                         double.tryParse(loanAmountController.text) ?? 0.0,
                     remainingBalance:

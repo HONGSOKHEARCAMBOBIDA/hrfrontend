@@ -115,43 +115,49 @@ class Attendancecontroller extends GetxController {
   }
 
   // New method: get current location and update reactive values
-  Future<void> getCurrentLocation() async {
-    try {
-      isLoading.value = true;
+Future<void> getCurrentLocation() async {
+  try {
+    isLoading.value = true;
 
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        Get.snackbar("កំហុស", "សូមបើក Location Service មុនពេលធ្វើការចូលឬចេញការងារ");
-        isLoading.value = false;
-        return;
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
+    // 1. Check permission quickly
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          Get.snackbar("ការព្រមាន", "សូមអនុញ្ញាតឱ្យកម្មវិធីប្រើទីតាំង។");
-          isLoading.value = false;
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        Get.snackbar("បដិសេធ", "សូមបើកការអនុញ្ញាតទីតាំងក្នុងការកំណត់។");
-        isLoading.value = false;
+        Get.snackbar("ការព្រមាន", "សូមអនុញ្ញាតឱ្យកម្មវិធីប្រើទីតាំង។");
         return;
       }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      Get.snackbar("បដិសេធ", "សូមបើកការអនុញ្ញាតទីតាំងក្នុងការកំណត់។");
+      return;
+    }
 
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+    // 2. Very fast: get cached location
+    Position? position = await Geolocator.getLastKnownPosition();
 
+    if (position != null) {
       latitude.value = position.latitude;
       longitude.value = position.longitude;
-    } catch (e) {
-      CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
-    } finally {
-      isLoading.value = false;
+      return;
     }
+
+    // 3. If no cache → get GPS fast with low accuracy + timeout
+    position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.low, // fastest
+    ).timeout(
+      const Duration(seconds: 3),
+      onTimeout: () => throw "Location timeout",
+    );
+
+    latitude.value = position.latitude;
+    longitude.value = position.longitude;
+
+  } catch (e) {
+    CustomSnackbar.error(title: "មានបញ្ហា", message: e.toString());
+  } finally {
+    isLoading.value = false;
   }
+}
+
 }

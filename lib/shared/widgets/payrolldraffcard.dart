@@ -31,7 +31,7 @@ class _PayrollCardState extends State<PayrollCard> {
   final RxBool _isWorkInfoExpanded = false.obs;
   final RxBool _isSalaryInfoExpanded = true.obs;
   final RxBool _isDeductionsExpanded = false.obs;
-  final RxBool _isLoanInfoExpanded = false.obs;
+  final RxBool _isLoanInfoExpanded = true.obs;
 
   @override
   void initState() {

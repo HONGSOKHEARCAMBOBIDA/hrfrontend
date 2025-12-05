@@ -62,10 +62,11 @@ class IsActiveSelector extends StatelessWidget {
       selected: isSelected,
       backgroundColor: TheColors.lightGreyColor,
       selectedColor: TheColors.orange,
-      side: BorderSide.none,
+       side: BorderSide(color: TheColors.warningColor,width: 0.3),
       onSelected: (_) {
         onSelected(value);
         Navigator.pop(context);
+         FocusScope.of(context).unfocus();
       },
     );
   }

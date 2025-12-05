@@ -125,6 +125,8 @@ void _openCheckOutLocation(String latitude, String longitude) {
         appBar: CustomAppBar(title: "របាយការណ៍ម៉ោងចូលនិងម៉ោងចេញ"),
         backgroundColor: TheColors.bgColor,
         body: RefreshIndicator(
+          color: TheColors.errorColor,
+          backgroundColor: TheColors.bgColor,
           onRefresh: () async {
             searchController.clear();
             selectBranchId.value = null;

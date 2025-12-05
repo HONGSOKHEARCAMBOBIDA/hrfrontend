@@ -274,8 +274,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-     behavior: HitTestBehavior.translucent,
-            onTap: () {
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
@@ -301,16 +301,41 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                           children: [
                             Obx(() {
                               if (newProfileImage.value != null) {
-                                return CircleAvatar(
-                                  radius: 60,
-                                  backgroundImage: FileImage(
-                                    newProfileImage.value!,
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: TheColors
+                                          .warningColor, // Border color
+                                      width: 0.9,
+                                    ),
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      backgroundImage: FileImage(
+                                        newProfileImage.value!,
+                                      ),
+                                    ),
                                   ),
                                 );
                               } else {
-                                return CircleAvatar(
-                                  radius: 60,
-                                  child: Icon(Icons.person, size: 40),
+                                return Container(
+                                        decoration: BoxDecoration(
+      border: Border.all(
+        color: TheColors.warningColor,// Border color
+        width: 0.9,
+      ),
+      borderRadius: BorderRadius.circular(50),
+    ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      child: Icon(Icons.person, size: 40,color: TheColors.errorColor,),
+                                    ),
+                                  ),
                                 );
                               }
                             }),
@@ -319,8 +344,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                               style: ButtonStyle(
                                 side: MaterialStateProperty.all(
                                   BorderSide(
-                                    color: TheColors.errorColor,
-                                    width: 0.5,
+                                    color: TheColors.warningColor,
+                                    width: 1,
                                   ),
                                 ),
                                 shape: MaterialStateProperty.all(
@@ -330,7 +355,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                 ),
                               ),
                               onPressed: () async {
-                                final image = await authcontroller.pickProfile();
+                                final image = await authcontroller
+                                    .pickProfile();
                                 if (image != null) {
                                   newProfileImage.value = image;
                                 }
@@ -347,13 +373,16 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                           ],
                         ),
                       ),
-      
+
                       SizedBox(height: 20),
-      
+
                       // Account Information Section
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: TheColors.orange, width: 0.5),
+                          border: Border.all(
+                            color: TheColors.orange,
+                            width: 0.5,
+                          ),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
@@ -417,13 +446,16 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                           ),
                         ),
                       ),
-      
+
                       SizedBox(height: 15),
-      
+
                       // Personal Information Section
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: TheColors.orange, width: 0.5),
+                          border: Border.all(
+                            color: TheColors.orange,
+                            width: 0.5,
+                          ),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
@@ -501,6 +533,21 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                 ),
                                               );
                                             }).toList(),
+                                            dropdownColor: TheColors.bgColor,
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            icon: const Icon(
+                                              Icons.arrow_drop_down,
+                                              color: TheColors.orange,
+                                            ),
+                                            iconSize: 17,
+                                            elevation: 2,
+                                            menuMaxHeight: 140,
+                                            style: TextStyles.siemreap(
+                                              context,
+                                              fontSize: 12,
+                                            ),
                                             onChanged: (Value) {
                                               selectgender.value = Value;
                                             },
@@ -535,7 +582,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                       children: [
                                         _buildLabel("លេខអត្តសញ្ញាណប័ណ្ណ"),
                                         CustomTextField(
-                                          controller: nationalidnumbercontroller,
+                                          controller:
+                                              nationalidnumbercontroller,
                                           hintText: "A123456",
                                           prefixIcon: Icons.credit_card,
                                         ),
@@ -575,14 +623,18 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                           fontSize: 12,
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                           borderSide: BorderSide(
                                             color: TheColors.orange,
                                             width: 0.5,
                                           ),
                                         ),
                                         errorBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                           borderSide: BorderSide(
                                             color: TheColors.errorColor,
                                             width: 0.5,
@@ -593,7 +645,9 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                             color: TheColors.orange,
                                             width: 0.5,
                                           ),
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                         ),
                                       ),
                                       items: materialstatus.map((material) {
@@ -641,13 +695,16 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                           ),
                         ),
                       ),
-      
+
                       SizedBox(height: 15),
-      
+
                       // Work Information Section
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: TheColors.orange, width: 0.5),
+                          border: Border.all(
+                            color: TheColors.orange,
+                            width: 0.5,
+                          ),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
@@ -660,7 +717,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   _buildLabel("តួនាទី"),
-      
+
                                   Obx(
                                     () => CustomOutlinedButton(
                                       text: selectedrolename.value.isEmpty
@@ -670,12 +727,13 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                         showRoleSelectorsheet(
                                           context: context,
                                           role: rolecontroller.role,
+                                          selectedSelectId: selectroleid.value,
                                           onSelected: (id) {
                                             selectroleid.value = id;
-                                            selectedrolename.value =
-                                                rolecontroller.role
-                                                    .firstWhere((p) => p.id == id)
-                                                    .displayName!;
+                                            selectedrolename
+                                                .value = rolecontroller.role
+                                                .firstWhere((p) => p.id == id)
+                                                .displayName!;
                                           },
                                         );
                                       },
@@ -683,7 +741,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   ),
                                   SizedBox(height: 8),
                                   _buildLabel("សាខា"),
-      
+
                                   // CustomDropdown(
                                   //   selectedValue: selectbranchid,
                                   //   items: branchcontroller.branch,
@@ -705,12 +763,13 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                         showBranchSelectorSheet(
                                           context: context,
                                           branch: branchcontroller.branch,
+                                          selectedBranchId: selectbranchid.value,
                                           onSelected: (id) {
                                             selectbranchid.value = id;
-                                            selectedbranchname.value =
-                                                branchcontroller.branch
-                                                    .firstWhere((p) => p.id == id)
-                                                    .name!;
+                                            selectedbranchname
+                                                .value = branchcontroller.branch
+                                                .firstWhere((p) => p.id == id)
+                                                .name!;
                                             shiftcontroller.shift.clear();
                                             shiftcontroller.fetchshift(
                                               selectbranchid.value,
@@ -720,7 +779,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                       },
                                     ),
                                   ),
-      
+
                                   SizedBox(height: 8),
                                   Row(
                                     children: [
@@ -745,29 +804,32 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                           children: [
                                             // Label (optional)
                                             _buildLabel("ប្រភេទការងារ"),
-      
+
                                             Obx(
                                               () => DropdownButtonFormField<int>(
                                                 // Value and items
                                                 value: selecttype.value,
                                                 items: types.map((typework) {
                                                   return DropdownMenuItem<int>(
-                                                    value: typework['id'] as int,
+                                                    value:
+                                                        typework['id'] as int,
                                                     child: Text(
                                                       typework['name'],
-                                                      style: TextStyles.siemreap(
-                                                        context,
-                                                        fontSize: 12,
-                                                      ),
+                                                      style:
+                                                          TextStyles.siemreap(
+                                                            context,
+                                                            fontSize: 12,
+                                                          ),
                                                     ),
                                                   );
                                                 }).toList(),
                                                 onChanged: (Value) {
                                                   selecttype.value = Value;
                                                 },
-      
+
                                                 // Dropdown styling
-                                                dropdownColor: TheColors.bgColor,
+                                                dropdownColor:
+                                                    TheColors.bgColor,
                                                 borderRadius:
                                                     BorderRadius.circular(12),
                                                 icon: const Icon(
@@ -777,7 +839,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                 iconSize: 30,
                                                 elevation: 2,
                                                 menuMaxHeight: 250,
-      
+
                                                 // Button styling
                                                 style: TextStyles.siemreap(
                                                   context,
@@ -791,7 +853,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                         horizontal: 16,
                                                         vertical: 14,
                                                       ),
-      
+
                                                   // Label (if you want it inside the field)
                                                   // labelText: "ប្រភេទការងារ",
                                                   // labelStyle: TextStyles.siemreap(
@@ -799,19 +861,22 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                   //   fontSize: 12,
                                                   //   color: TheColors.gray,
                                                   // ),
-      
+
                                                   // Hint when no value is selected
                                                   hintText: "ប្រភេទការងារ",
-                                                  hintStyle: TextStyles.siemreap(
-                                                    context,
-                                                    fontSize: 12,
-                                                    color: TheColors.gray,
-                                                  ),
-      
+                                                  hintStyle:
+                                                      TextStyles.siemreap(
+                                                        context,
+                                                        fontSize: 12,
+                                                        color: TheColors.gray,
+                                                      ),
+
                                                   // Border styling
                                                   border: OutlineInputBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(12),
+                                                        BorderRadius.circular(
+                                                          12,
+                                                        ),
                                                     borderSide: BorderSide(
                                                       color: TheColors.orange,
                                                       width: 0.5,
@@ -824,7 +889,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                               12,
                                                             ),
                                                         borderSide: BorderSide(
-                                                          color: TheColors.orange,
+                                                          color:
+                                                              TheColors.orange,
                                                           width: 0.5,
                                                         ),
                                                       ),
@@ -835,15 +901,19 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                               12,
                                                             ),
                                                         borderSide: BorderSide(
-                                                          color: TheColors.orange,
+                                                          color:
+                                                              TheColors.orange,
                                                           width: 1,
                                                         ),
                                                       ),
                                                   errorBorder: OutlineInputBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(12),
+                                                        BorderRadius.circular(
+                                                          12,
+                                                        ),
                                                     borderSide: BorderSide(
-                                                      color: TheColors.errorColor,
+                                                      color:
+                                                          TheColors.errorColor,
                                                       width: 0.5,
                                                     ),
                                                   ),
@@ -859,11 +929,11 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                           width: 1,
                                                         ),
                                                       ),
-      
+
                                                   // Fill color
                                                   filled: true,
                                                   fillColor: TheColors.bgColor,
-      
+
                                                   // Optional: Add prefix icon
                                                   // prefixIcon: Icon(
                                                   //   Icons.work,
@@ -871,7 +941,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                   //   size: 20,
                                                   // ),
                                                 ),
-      
+
                                                 // Custom dropdown item height
                                                 itemHeight: 50,
                                               ),
@@ -883,10 +953,11 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   ),
                                   SizedBox(height: 8),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       _buildLabel("រូបិយប័ណ្ណដែលប្រេី"),
-      
+
                                       // CustomDropdown(
                                       //   selectedValue: selectcorrencyID,
                                       //   items: currencycontroller.currency,
@@ -897,21 +968,25 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                       // ),
                                       Obx(
                                         () => CustomOutlinedButton(
-                                          text: selectedcurrencyname.value.isEmpty
+                                          text:
+                                              selectedcurrencyname.value.isEmpty
                                               ? "សូមជ្រេីសរេីសរុបិយប័ណ្ណ"
                                               : selectedcurrencyname.value,
+       
                                           onPressed: () {
                                             showcurrencyselector(
                                               context: context,
                                               currency:
                                                   currencycontroller.currency,
+                                              selectedCurrencyId: selectcorrencyID.value,
                                               onSelected: (id) {
                                                 selectcorrencyID.value = id;
-                                                selectedcurrencyname
-                                                    .value = currencycontroller
-                                                    .currency
-                                                    .firstWhere((p) => p.id == id)
-                                                    .name!;
+                                                selectedcurrencyname.value =
+                                                    currencycontroller.currency
+                                                        .firstWhere(
+                                                          (p) => p.id == id,
+                                                        )
+                                                        .name!;
                                               },
                                             );
                                           },
@@ -940,7 +1015,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                           ],
                                         ),
                                       ),
-      
+
                                       SizedBox(width: 10),
                                       Expanded(
                                         child: Column(
@@ -952,7 +1027,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                               controller: workdayController,
                                               hintText: "26",
                                               prefixIcon: Icons.calendar_today,
-                                              keyboardType: TextInputType.number,
+                                              keyboardType:
+                                                  TextInputType.number,
                                             ),
                                           ],
                                         ),
@@ -961,7 +1037,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   ),
                                   SizedBox(height: 10),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       _buildLabel("វេនការងារ"),
                                       CustomDropdown(
@@ -974,22 +1051,24 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                       ),
                                     ],
                                   ),
-      
+
                                   SizedBox(height: 10),
-                              
                                 ],
                               ),
                             ],
                           ),
                         ),
                       ),
-      
+
                       SizedBox(height: 15),
-      
+
                       // Financial Information Section
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: TheColors.orange, width: 0.5),
+                          border: Border.all(
+                            color: TheColors.orange,
+                            width: 0.5,
+                          ),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
@@ -1072,13 +1151,16 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                           ),
                         ),
                       ),
-      
+
                       SizedBox(height: 15),
-      
+
                       // Education and Experience Section
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: TheColors.orange, width: 0.5),
+                          border: Border.all(
+                            color: TheColors.orange,
+                            width: 0.5,
+                          ),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
@@ -1112,7 +1194,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        _buildLabel("បទពិសោធន៍"),
+                                        _buildLabel("បទពិសោធន៍គិតជាឆ្នាំ"),
                                         CustomTextField(
                                           controller: experienceyearcontroller,
                                           hintText: "2",
@@ -1137,86 +1219,83 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                 hintText: "..",
                                 prefixIcon: Icons.sticky_note_2,
                               ),
-                              SizedBox(height: 8,),
-                                    _buildLabel("កម្រិតតួនាទី"),
-                                      Obx(
-                                        () => DropdownButtonFormField<int>(
-                                          value: selectpositionlevel.value,
-                                          decoration: InputDecoration(
-                                            labelText: "កម្រិត",
-                                            labelStyle: TextStyles.siemreap(
-                                              context,
-                                              fontSize: 12,
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(
-                                                12,
-                                              ),
-                                              borderSide: BorderSide(
-                                                color: TheColors.orange,
-                                                width: 0.5,
-                                              ),
-                                            ),
-                                            errorBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(
-                                                12,
-                                              ),
-                                              borderSide: BorderSide(
-                                                color: TheColors.errorColor,
-                                                width: 0.5,
-                                              ),
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: TheColors.orange,
-                                                width: 0.5,
-                                              ),
-                                              borderRadius: BorderRadius.circular(
-                                                12,
-                                              ),
-                                            ),
-                                          ),
-                                          items: positionLevel.map((position) {
-                                            return DropdownMenuItem<int>(
-                                              value: position['id'] as int,
-                                              child: Text(
-                                                position['name'],
-                                                style: TextStyles.siemreap(
-                                                  context,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                          dropdownColor: TheColors.bgColor,
-                                          borderRadius: BorderRadius.circular(12),
-                                          icon: const Icon(
-                                            Icons.arrow_drop_down,
-                                            color: TheColors.orange,
-                                          ),
-                                          iconSize: 15,
-                                          elevation: 2,
-                                          menuMaxHeight: 140,
-                                          style: TextStyles.siemreap(
-                                            context,
-                                            fontSize: 12,
-                                          ),
-                                          onChanged: (Value) {
-                                            selectpositionlevel.value = Value;
-                                          },
+                              SizedBox(height: 8),
+                              _buildLabel("កម្រិតតួនាទី"),
+                              Obx(
+                                () => DropdownButtonFormField<int>(
+                                  value: selectpositionlevel.value,
+                                  decoration: InputDecoration(
+                                    labelText: "កម្រិត",
+                                    labelStyle: TextStyles.siemreap(
+                                      context,
+                                      fontSize: 12,
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: BorderSide(
+                                        color: TheColors.orange,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: BorderSide(
+                                        color: TheColors.errorColor,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: TheColors.orange,
+                                        width: 0.5,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  items: positionLevel.map((position) {
+                                    return DropdownMenuItem<int>(
+                                      value: position['id'] as int,
+                                      child: Text(
+                                        position['name'],
+                                        style: TextStyles.siemreap(
+                                          context,
+                                          fontSize: 12,
                                         ),
                                       ),
+                                    );
+                                  }).toList(),
+                                  dropdownColor: TheColors.bgColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  icon: const Icon(
+                                    Icons.arrow_drop_down,
+                                    color: TheColors.orange,
+                                  ),
+                                  iconSize: 15,
+                                  elevation: 2,
+                                  menuMaxHeight: 140,
+                                  style: TextStyles.siemreap(
+                                    context,
+                                    fontSize: 12,
+                                  ),
+                                  onChanged: (Value) {
+                                    selectpositionlevel.value = Value;
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ),
-      
+
                       SizedBox(height: 15),
-      
+
                       // Birth Place Section
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: TheColors.orange, width: 0.5),
+                          border: Border.all(
+                            color: TheColors.orange,
+                            width: 0.5,
+                          ),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
@@ -1234,6 +1313,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   Expanded(
                                     child: Obx(
                                       () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                         text:
                                             selectedProvinceNameofbirth
                                                 .value
@@ -1243,10 +1323,11 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                         onPressed: () {
                                           showProvinceSelectorSheet(
                                             context: context,
-                                            provinces:
-                                                provincecontroller.provinces,
+                                            provinces:provincecontroller.provinces,
+                                            selectedProvince: selectprovinceidofbirth.value,
                                             onSelected: (id) {
-                                              selectprovinceidofbirth.value = id;
+                                              selectprovinceidofbirth.value =
+                                                  id;
                                               selectedProvinceNameofbirth
                                                   .value = provincecontroller
                                                   .provinces
@@ -1254,16 +1335,20 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                   .name!;
                                               selectdistrictidofbirth.value =
                                                   null;
-                                              selectedDistrictNameofbirth.value =
+                                              selectedDistrictNameofbirth
+                                                      .value =
                                                   "ជ្រើសរើសស្រុក";
                                               selectcommunceidofbirth.value =
                                                   null;
-                                              selectedCommunceNameofbirth.value =
+                                              selectedCommunceNameofbirth
+                                                      .value =
                                                   "ជ្រើសរើសឃុំ";
-                                              selectvillageidofbirth.value = null;
+                                              selectvillageidofbirth.value =
+                                                  null;
                                               selectedVillageNameofbirth.value =
                                                   "ជ្រើសរើសភូមិ";
-                                              districtcontroller.district.clear();
+                                              districtcontroller.district
+                                                  .clear();
                                               commmuncecontroller.communce
                                                   .clear();
                                               villagecontroller.village.clear();
@@ -1271,6 +1356,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                 id,
                                               );
                                             },
+                                            
                                           );
                                         },
                                       ),
@@ -1280,6 +1366,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   Expanded(
                                     child: Obx(
                                       () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                         text:
                                             selectedDistrictNameofbirth
                                                 .value
@@ -1287,13 +1374,15 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                             ? "ជ្រើសរើសស្រុក"
                                             : selectedDistrictNameofbirth.value,
                                         onPressed:
-                                            selectprovinceidofbirth.value == null
+                                            selectprovinceidofbirth.value ==
+                                                null
                                             ? null
                                             : () {
                                                 showDistrictSelectorSheet(
                                                   context: context,
-                                                  district:
-                                                      districtcontroller.district,
+                                                  district: districtcontroller
+                                                      .district,
+                                                  selecteddistrict: selectdistrictidofbirth.value,
                                                   onSelected: (id) {
                                                     selectdistrictidofbirth
                                                             .value =
@@ -1312,7 +1401,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                     selectedCommunceNameofbirth
                                                             .value =
                                                         "ជ្រើសរើសឃុំ";
-                                                    selectvillageidofbirth.value =
+                                                    selectvillageidofbirth
+                                                            .value =
                                                         null;
                                                     selectedVillageNameofbirth
                                                             .value =
@@ -1335,6 +1425,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   Expanded(
                                     child: Obx(
                                       () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                         text:
                                             selectedCommunceNameofbirth
                                                 .value
@@ -1342,13 +1433,15 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                             ? "ជ្រើសរើសឃុំ"
                                             : selectedCommunceNameofbirth.value,
                                         onPressed:
-                                            selectdistrictidofbirth.value == null
+                                            selectdistrictidofbirth.value ==
+                                                null
                                             ? null
                                             : () {
                                                 showCommunceSelectorSheet(
                                                   context: context,
                                                   communce: commmuncecontroller
                                                       .communce,
+                                                  selectedCommunce: selectcommunceidofbirth.value,
                                                   onSelected: (id) {
                                                     selectcommunceidofbirth
                                                             .value =
@@ -1361,16 +1454,16 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                               (p) => p.id == id,
                                                             )
                                                             .name!;
-                                                    selectvillageidofbirth.value =
+                                                    selectvillageidofbirth
+                                                            .value =
                                                         null;
                                                     selectedVillageNameofbirth
                                                             .value =
                                                         "ជ្រើសរើសភូមិ";
                                                     villagecontroller.village
                                                         .clear();
-                                                    villagecontroller.fetvillage(
-                                                      id,
-                                                    );
+                                                    villagecontroller
+                                                        .fetvillage(id);
                                                   },
                                                 );
                                               },
@@ -1381,6 +1474,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   Expanded(
                                     child: Obx(
                                       () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                         text:
                                             selectedVillageNameofbirth
                                                 .value
@@ -1388,23 +1482,27 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                             ? "ជ្រើសរើសភូមិ"
                                             : selectedVillageNameofbirth.value,
                                         onPressed:
-                                            selectcommunceidofbirth.value == null
+                                            selectcommunceidofbirth.value ==
+                                                null
                                             ? null
                                             : () {
                                                 showVillageSelectorsheet(
                                                   context: context,
                                                   village:
                                                       villagecontroller.village,
+                                                  selectedVillageId: selectvillageidofbirth.value,
                                                   onSelected: (id) {
-                                                    selectvillageidofbirth.value =
+                                                    selectvillageidofbirth
+                                                            .value =
                                                         id;
                                                     selectedVillageNameofbirth
-                                                        .value = villagecontroller
-                                                        .village
-                                                        .firstWhere(
-                                                          (p) => p.id == id,
-                                                        )
-                                                        .name!;
+                                                            .value =
+                                                        villagecontroller
+                                                            .village
+                                                            .firstWhere(
+                                                              (p) => p.id == id,
+                                                            )
+                                                            .name!;
                                                   },
                                                 );
                                               },
@@ -1417,13 +1515,16 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                           ),
                         ),
                       ),
-      
+
                       SizedBox(height: 15),
-      
+
                       // Current Address Section
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: TheColors.orange, width: 0.5),
+                          border: Border.all(
+                            color: TheColors.orange,
+                            width: 0.5,
+                          ),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
@@ -1441,6 +1542,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   Expanded(
                                     child: Obx(
                                       () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                         text:
                                             selectedProvinceNameofcurrenctadrress
                                                 .value
@@ -1453,6 +1555,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                             context: context,
                                             provinces:
                                                 provincecontroller.provinces,
+                                            selectedProvince: selectprovinceidofcurrenctadrress.value,
                                             onSelected: (id) {
                                               selectprovinceidofcurrenctadrress
                                                       .value =
@@ -1480,7 +1583,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                               selectedVillageNameofcurrenctadrress
                                                       .value =
                                                   "ជ្រើសរើសភូមិ";
-                                              districtcontroller.district.clear();
+                                              districtcontroller.district
+                                                  .clear();
                                               commmuncecontroller.communce
                                                   .clear();
                                               villagecontroller.village.clear();
@@ -1497,6 +1601,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   Expanded(
                                     child: Obx(
                                       () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                         text:
                                             selectedDistrictNameofcurrenctadrress
                                                 .value
@@ -1512,8 +1617,9 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                             : () {
                                                 showDistrictSelectorSheet(
                                                   context: context,
-                                                  district:
-                                                      districtcontroller.district,
+                                                  district: districtcontroller
+                                                      .district,
+                                                  selecteddistrict: selectdistrictidofcurrenctadrress.value,
                                                   onSelected: (id) {
                                                     selectdistrictidofcurrenctadrress
                                                             .value =
@@ -1556,6 +1662,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   Expanded(
                                     child: Obx(
                                       () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                         text:
                                             selectedCommunceNameofcurrenctadrress
                                                 .value
@@ -1573,6 +1680,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                   context: context,
                                                   communce: commmuncecontroller
                                                       .communce,
+                                                  selectedCommunce: selectcommunceidofcurrenctadrress.value,
                                                   onSelected: (id) {
                                                     selectcommunceidofcurrenctadrress
                                                             .value =
@@ -1593,9 +1701,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                         "ជ្រើសរើសភូមិ";
                                                     villagecontroller.village
                                                         .clear();
-                                                    villagecontroller.fetvillage(
-                                                      id,
-                                                    );
+                                                    villagecontroller
+                                                        .fetvillage(id);
                                                   },
                                                 );
                                               },
@@ -1606,6 +1713,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                   Expanded(
                                     child: Obx(
                                       () => CustomOutlinedButton(
+                                        alignment: MainAxisAlignment.center,
                                         text:
                                             selectedVillageNameofcurrenctadrress
                                                 .value
@@ -1623,17 +1731,19 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                                   context: context,
                                                   village:
                                                       villagecontroller.village,
+                                                  selectedVillageId: selectvillageidofcurrenctadrress.value,
                                                   onSelected: (id) {
                                                     selectvillageidofcurrenctadrress
                                                             .value =
                                                         id;
                                                     selectedVillageNameofcurrenctadrress
-                                                        .value = villagecontroller
-                                                        .village
-                                                        .firstWhere(
-                                                          (p) => p.id == id,
-                                                        )
-                                                        .name!;
+                                                            .value =
+                                                        villagecontroller
+                                                            .village
+                                                            .firstWhere(
+                                                              (p) => p.id == id,
+                                                            )
+                                                            .name!;
                                                   },
                                                 );
                                               },
@@ -1646,7 +1756,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                           ),
                         ),
                       ),
-      
+
                       SizedBox(height: 20),
                     ],
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/helper/showcurrencyselector.dart';
+import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
 import 'package:flutter_application_10/data/models/employeemodel.dart';
 import 'package:flutter_application_10/modules/currency/controller/currencycontroller.dart';
@@ -51,7 +52,7 @@ class _EditSalaryViewState extends State<EditSalaryView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = TheColors.bgColor;
 
     return DraggableScrollableSheet(
       expand: false,
@@ -60,7 +61,7 @@ class _EditSalaryViewState extends State<EditSalaryView> {
       maxChildSize: 0.95,
       builder: (_, scrollController) => Container(
         decoration: BoxDecoration(
-          color: theme.cardColor,
+          color: theme,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Padding(
@@ -91,32 +92,30 @@ class _EditSalaryViewState extends State<EditSalaryView> {
 
                   
 
-                                Expanded(
-                                  child: Obx(
-                                    () => CustomOutlinedButton(
-                                      text:
+                                Obx(
+                                  () => CustomOutlinedButton(
+                                    text:
+                                        selectedcurrencyname
+                                            .value
+                                            .isEmpty
+                                        ? "សូមជ្រេីសរេីសរុបិយប័ណ្ណ"
+                                        : selectedcurrencyname.value,
+                                    onPressed: () {
+                                      showcurrencyselector(
+                                        context: context,
+                                        currency:
+                                            currencycontroller.currency,
+                                        onSelected: (id) {
+                                          selectcurrencyID.value = id;
                                           selectedcurrencyname
-                                              .value
-                                              .isEmpty
-                                          ? "សូមជ្រេីសរេីសរុបិយប័ណ្ណ"
-                                          : selectedcurrencyname.value,
-                                      onPressed: () {
-                                        showcurrencyselector(
-                                          context: context,
-                                          currency:
-                                              currencycontroller.currency,
-                                          onSelected: (id) {
-                                            selectcurrencyID.value = id;
-                                            selectedcurrencyname
-                                                .value = currencycontroller
-                                                .currency
-                                                .firstWhere((p) => p.id == id)
-                                                .name!;
-                                          
-                                          },
-                                        );
-                                      },
-                                    ),
+                                              .value = currencycontroller
+                                              .currency
+                                              .firstWhere((p) => p.id == id)
+                                              .name!;
+                                        
+                                        },
+                                      );
+                                    },
                                   ),
                                 ),
 

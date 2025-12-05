@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
 import 'package:flutter_application_10/data/models/employeemodel.dart';
 import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
@@ -66,8 +67,7 @@ shiftcontroller.fetchshift(selectbranchid.value);
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
+    final theme = TheColors.bgColor;
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.8,
@@ -75,7 +75,7 @@ shiftcontroller.fetchshift(selectbranchid.value);
       maxChildSize: 0.95,
       builder: (_, controller) => Container(
         decoration: BoxDecoration(
-          color: theme.cardColor,
+          color: theme,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Padding(

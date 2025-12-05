@@ -204,7 +204,7 @@ class _PayrollviewState extends State<Payrollview> {
 
   Widget _buildFilters(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 7, right: 7),
+      padding: const EdgeInsets.only(left: 14, right: 14),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -385,13 +385,10 @@ class _PayrollviewState extends State<Payrollview> {
         itemCount: paycontroller.payroll.length,
         itemBuilder: (context, index) {
           final payroll = paycontroller.payroll[index];
-          return Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-            child: Payrollmaincard(
-              payrollData: payroll,
-              onLoanDeductionChanged:
-                  _onLoanDeductionChanged, // Pass the callback
-            ),
+          return Payrollmaincard(
+            payrollData: payroll,
+            onLoanDeductionChanged:
+                _onLoanDeductionChanged, // Pass the callback
           );
         },
       );

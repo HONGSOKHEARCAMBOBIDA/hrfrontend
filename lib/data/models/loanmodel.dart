@@ -24,6 +24,10 @@ class LoanModel {
 class Data {
   int? id;
   int? employeeId;
+  int? currencyId;
+  String? currencyName;
+  String? currencyCode;
+  String? currencySymbol;
   String? employeeName;
   int? branchId;
   String? branchName;
@@ -34,6 +38,10 @@ class Data {
   Data(
       {this.id,
       this.employeeId,
+      this.currencyId,
+      this.currencyName,
+      this.currencyCode,
+      this.currencySymbol,
       this.employeeName,
       this.branchId,
       this.branchName,
@@ -44,6 +52,10 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     employeeId = json['employee_id'];
+    currencyId = json['currency_id'];
+    currencyName = json['currency_name'];
+    currencyCode = json['currency_code'];
+    currencySymbol = json['currency_symbol'];
     employeeName = json['employee_name'];
     branchId = json['branch_id'];
     branchName = json['branch_name'];
@@ -56,6 +68,10 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['employee_id'] = this.employeeId;
+    data['currency_id'] = this.currencyId;
+    data['currency_name'] = this.currencyName;
+    data['currency_code'] = this.currencyCode;
+    data['currency_symbol'] = this.currencySymbol;
     data['employee_name'] = this.employeeName;
     data['branch_id'] = this.branchId;
     data['branch_name'] = this.branchName;

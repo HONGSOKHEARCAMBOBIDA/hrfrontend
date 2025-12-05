@@ -17,8 +17,7 @@ class Createattendanceview extends StatefulWidget {
 }
 
 class _CreateattendanceviewState extends State<Createattendanceview> {
-  final Attendancecontroller attendancecontroller =
-      Get.find<Attendancecontroller>();
+  final Attendancecontroller attendancecontroller =Get.find<Attendancecontroller>();
 
   Future<void> handleCheckIn() async {
     final selectedId = attendancecontroller.selectedShiftId.value;
@@ -28,7 +27,7 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
     }
 
     // Get location first
-    await attendancecontroller.getCurrentLocation();
+     attendancecontroller.getCurrentLocation();
 
     // Make sure location was fetched
     if (attendancecontroller.latitude.value == 0.0 &&
@@ -154,73 +153,82 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
         ),
       ),
       appBar: CustomAppBar(title: "បង្កើតវត្តមាន"),
-      body: Obx(() {
-        if (attendancecontroller.isLoading.value) {
-          return const Center(child: CustomLoading());
-        }
-
-        if (attendancecontroller.employeeshift.isEmpty) {
-          return const Center(child: Text("មិនមានវេនការងារទេ"));
-        }
-
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 8, left: 14, bottom: 8),
-                child: Text(
-                  "សូមជ្រេីសរេីសម៉ោងធ្វេីការ",
-                  style: TextStyles.siemreap(
-                    context,
-                    fontSize: 14,
-                    fontweight: FontWeight.bold,
+      body: RefreshIndicator(
+        color: TheColors.errorColor,
+        backgroundColor: TheColors.bgColor,
+        onRefresh: ()async{
+            attendancecontroller.latitude.value = 0.0;
+            attendancecontroller.longitude.value = 0.0;
+          attendancecontroller.getCurrentLocation();
+        },
+        child: Obx(() {
+          if (attendancecontroller.isLoading.value) {
+            return const Center(child: CustomLoading());
+          }
+        
+          if (attendancecontroller.employeeshift.isEmpty) {
+            return const Center(child: Text("មិនមានវេនការងារទេ"));
+          }
+        
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, left: 14, bottom: 8),
+                  child: Text(
+                    "សូមជ្រេីសរេីសម៉ោងធ្វេីការ",
+                    style: TextStyles.siemreap(
+                      context,
+                      fontSize: 14,
+                      fontweight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: attendancecontroller.employeeshift.length,
-                  itemBuilder: (context, index) {
-                    final shift = attendancecontroller.employeeshift[index];
-                    return Obx(() {
-                      final isSelected =
-                          attendancecontroller.selectedShiftId.value ==
-                          shift.id;
-                      return Employeeshiftcard(
-                        employeeshiftmodel: shift,
-                        isSelected: isSelected,
-                        onTap: () =>
-                            attendancecontroller.selectShift(shift.id!),
-                      );
-                    });
-                  },
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: attendancecontroller.employeeshift.length,
+                    itemBuilder: (context, index) {
+                      final shift = attendancecontroller.employeeshift[index];
+                      return Obx(() {
+                        final isSelected =
+                            attendancecontroller.selectedShiftId.value ==
+                            shift.id;
+                        return Employeeshiftcard(
+                          employeeshiftmodel: shift,
+                          isSelected: isSelected,
+                          onTap: () =>
+                              attendancecontroller.selectShift(shift.id!),
+                        );
+                      });
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    CustomElevatedButton(
-                      text: "ចូលធ្វេីការ",
-                      onPressed: handleCheckIn,
-                    ),
-                    const SizedBox(height: 15),
-                    CustomElevatedButton(
-                      text: "ចេញធ្វេីការ",
-                      onPressed: handleCheckOut,
-                    ),
-                  ],
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      CustomElevatedButton(
+                        text: "ចូលធ្វេីការ",
+                        onPressed: handleCheckIn,
+                      ),
+                      const SizedBox(height: 15),
+                      CustomElevatedButton(
+                        text: "ចេញធ្វេីការ",
+                        onPressed: handleCheckOut,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
-        );
-      }),
+                const SizedBox(height: 16),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 }

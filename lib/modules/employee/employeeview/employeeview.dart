@@ -105,6 +105,8 @@ class _EmployeeviewState extends State<Employeeview> {
         appBar: CustomAppBar(title: "បុគ្គលិក"),
         backgroundColor: TheColors.bgColor,
         body: RefreshIndicator(
+          backgroundColor: TheColors.bgColor,
+          color: TheColors.errorColor,
           onRefresh: _refreshData,
           child: CustomScrollView(
             controller: _scrollController,
@@ -317,12 +319,13 @@ class _EmployeeviewState extends State<Employeeview> {
                       return Center(
                         child: Padding(
                           padding: const EdgeInsets.only(
-                            left: 10,
-                            right: 10,
+                            left: 13,
+                            right: 13,
                           
                            
                           ),
                           child: CustomEmployeeCard(
+                            
                             currencycode: employee.currencyCode!,
                             currencysymbol: employee.currencySymbol!,
                             currencyname: employee.currencyName!,
@@ -369,6 +372,7 @@ class _EmployeeviewState extends State<Employeeview> {
                             },
                             chnagesalary: () {
                               Get.bottomSheet(
+                               
                                 EditSalaryView(
                                   employeemodel: employee,
                                   salaryID: employee.salaryId!,

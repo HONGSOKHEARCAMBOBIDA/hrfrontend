@@ -52,12 +52,13 @@ class _RoleSelectorState extends State<RoleSelector> {
                        style: TextStyles.siemreap(context,fontSize: 12,color: isSelected ? TheColors.bgColor : TheColors.black)
                     ),
                     selected: isSelected,
-                    backgroundColor: TheColors.lightGreyColor,
+                    backgroundColor: TheColors.warningColor,
                     selectedColor: TheColors.orange,
-                    side: BorderSide.none,
+                     side: BorderSide(color: TheColors.warningColor,width: 0.3),
                     onSelected: (_) {
                       widget.onSelected(roles.id!);
                       Navigator.pop(context);
+                       FocusScope.of(context).unfocus();
                     },
                   );
                 }).toList(),

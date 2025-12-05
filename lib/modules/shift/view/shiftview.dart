@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/core/helper/show_branch_buttonsheet.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
 import 'package:flutter_application_10/data/models/shftmodel.dart';
 import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
 import 'package:flutter_application_10/modules/shift/shiftcontroller/shiftcontroller.dart';
 import 'package:flutter_application_10/shared/widgets/app_bar.dart';
+import 'package:flutter_application_10/shared/widgets/customoutlinebutton.dart';
 import 'package:flutter_application_10/shared/widgets/dropdown.dart';
+import 'package:flutter_application_10/shared/widgets/floating_buttom.dart';
 import 'package:flutter_application_10/shared/widgets/loading.dart';
 import 'package:flutter_application_10/shared/widgets/shiftcard.dart';
 import 'package:flutter_application_10/shared/widgets/textfield.dart';
@@ -21,7 +24,7 @@ class Shiftview extends StatefulWidget {
 class _ShiftviewState extends State<Shiftview> {
   final shiftcontroller = Get.find<Shiftcontroller>();
   final branchcontroller = Get.find<Branchcontroller>();
-
+  var selectedbranchname = "រេីសសាខា".obs;
   // Rxn<int> allows null and reactive change tracking
   final selectbranchid = Rxn<int>();
 
@@ -39,18 +42,35 @@ class _ShiftviewState extends State<Shiftview> {
           child: Column(
             children: [
               // ✅ Branch selector dropdown
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                child: CustomDropdown(
-                  selectedValue: selectbranchid,
-                  items: branchcontroller.branch,
-                  hintText: "ជ្រើសសាខា",
-                  onChanged: (value) {
-                    selectbranchid.value = value;
-                    shiftcontroller.fetchshift(selectbranchid.value);
-                  },
-                ),
-              ),
+
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 16,right: 16),
+                                                  child: Obx(
+                                                                                      () => CustomOutlinedButton(
+                                                                                        text: selectedbranchname.value.isEmpty
+                                                                                            ? "រេីសសាខា"
+                                                                                            : selectedbranchname.value,
+                                                                                        onPressed: () {
+                                                                                          showBranchSelectorSheet(
+                                                                                            context: context,
+                                                                                            branch: branchcontroller.branch,
+                                                                                            selectedBranchId: selectbranchid.value,
+                                                                                            onSelected: (id) {
+                                                                                              selectbranchid.value = id;
+                                                                                              selectedbranchname.value =
+                                                  branchcontroller.branch
+                                                      .firstWhere((p) => p.id == id)
+                                                      .name!;
+                                                                                              shiftcontroller.shift.clear();
+                                                                                              shiftcontroller.fetchshift(
+                                                                                                selectbranchid.value,
+                                                                                              );
+                                                                                            },
+                                                                                          );
+                                                                                        },
+                                                                                      ),
+                                                                                    ),
+                                                ),
 
               const SizedBox(height: 15),
 
@@ -110,12 +130,12 @@ class _ShiftviewState extends State<Shiftview> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: CustomFloatingActionButton(
         backgroundColor: TheColors.errorColor,
         onPressed: () {
           showCreateShiftBottomSheet();
         },
-        child: const Icon(Icons.add, color: Colors.white),
+       
       ),
     );
   }

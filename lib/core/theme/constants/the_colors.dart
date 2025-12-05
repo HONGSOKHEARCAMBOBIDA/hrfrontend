@@ -13,7 +13,7 @@ class TheColors{
   //status colors
   static const successColor = Color(0xFF4CAF50);
   static const infoColor = Color(0xFF00BCD4);
-  static const warningColor = Color(0xFFFFC107);
+  static const warningColor = Color(0xFFcea939);
   static const errorColor = Color(0xFF1b3351);
   static const lightGreyColor = Color(0xFFE5E5E5);
   //active color
@@ -21,4 +21,5 @@ class TheColors{
   static const lightblue = Color(0xFF1C4E9B);
   static const black = Colors.black;
   static const orange = Color(0xFF1b3351);
+  static const red = Color.fromARGB(255, 255, 13, 0);
 }
