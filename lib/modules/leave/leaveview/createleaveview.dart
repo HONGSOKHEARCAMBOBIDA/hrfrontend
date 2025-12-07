@@ -36,12 +36,22 @@ class CreateLeaveView extends StatelessWidget {
         () => leaveController.isLoading.value
             ? const Center(child: CustomLoading())
             : SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle("ជ្រើសរើសម៉ោងធ្វេិការ"),
-                    const SizedBox(height: 5),
+                    Container(
+                        decoration: BoxDecoration(
+                  border: Border.all(color: TheColors.orange, width: 0.5),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4,right: 4,top: 10,bottom: 4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionTitle("ជ្រើសរើសម៉ោងធ្វេីការ"),
+                                const SizedBox(height: 5),
                          SizedBox(
                           height: 75,
                            child: ListView.builder(
@@ -62,13 +72,29 @@ class CreateLeaveView extends StatelessWidget {
                              },
                            ),
                          ),
+                          ],
+                          
+                        ),
+                      ),
+                    ),
+                
 
                 
                     LeaveTypeCard(), // ✅ your custom card here
 
                     const SizedBox(height: 10),
-                    _buildSectionTitle("អ្នកអនុម័ត"),
-                      const SizedBox(height: 5),
+                    Container(
+                            decoration: BoxDecoration(
+                  border: Border.all(color: TheColors.orange, width: 0.5),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                      child: Padding(
+                         padding: const EdgeInsets.only(left: 4,right: 4,top: 10,bottom: 4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionTitle("អ្នកអនុម័ត"),
+                              const SizedBox(height: 5),
                     Padding(
                       padding: const EdgeInsets.only(left: 15,right: 15),
                       child: CustomDropdown(
@@ -78,7 +104,7 @@ class CreateLeaveView extends StatelessWidget {
                         onChanged: (value) => selectApproveById.value = value,
                       ),
                     ),
-
+                    
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.only(left: 15,right: 15,bottom: 10),
@@ -115,9 +141,25 @@ class CreateLeaveView extends StatelessWidget {
                         ],
                       ),
                     ),
-                     const SizedBox(width: 10),
-                     _buildSectionTitle("ចំនួនថ្ងៃឈប់សម្រាក"),
-                     SizedBox(height: 8,),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+
+                     const SizedBox(height: 10),
+                     Container(
+                              decoration: BoxDecoration(
+                  border: Border.all(color: TheColors.orange, width: 0.5),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                       child: Padding(
+   padding: const EdgeInsets.only(left: 4,right: 4,top: 10,bottom: 12),
+                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                             _buildSectionTitle("ចំនួនថ្ងៃឈប់សម្រាក"),
+                                SizedBox(height: 8,),
                     Padding(
                       padding: const EdgeInsets.only(left: 15,right: 15,bottom: 6),
                       child: CustomTextField(
@@ -135,6 +177,11 @@ class CreateLeaveView extends StatelessWidget {
                         hintText: "ឧ មានការរល់", 
                         prefixIcon: Icons.description),
                     ),
+                           ],
+                         ),
+                       ),
+                     ),
+                  
 
                
                   

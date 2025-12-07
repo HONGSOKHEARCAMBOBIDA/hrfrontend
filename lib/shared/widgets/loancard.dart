@@ -166,117 +166,133 @@ class _LoanCardState extends State<LoanCard> {
             top: 20,
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
             children: [
-              Center(
-                child: Text(
-                  'ធ្វើបច្ចុប្បន្នភាពឥណទាន',
-                  style: TextStyles.siemreap(
-                    context,
-                    fontSize: 14,
-                    fontweight: FontWeight.bold,
+              Container(
+                  decoration: BoxDecoration(
+                  border: Border.all(color: TheColors.orange, width: 0.5),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Text(
+                          'ធ្វើបច្ចុប្បន្នភាពឥណទាន',
+                          style: TextStyles.siemreap(
+                            context,
+                            fontSize: 14,
+                            fontweight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "រូបិយប័ណ្ណដែលប្រេី",
+                        style: TextStyles.siemreap(
+                          context,
+                          fontSize: 12,
+                          fontweight: FontWeight.bold,
+                        ),
+                      ),
+                         const SizedBox(height: 5),
+                         
+                                          Obx(
+                                            () => CustomOutlinedButton(
+                                              text:
+                                                  selectedcurrencyname
+                                                      .value
+                                                      .isEmpty
+                                                  ? "សូមជ្រេីសរេីសរុបិយប័ណ្ណ"
+                                                  : selectedcurrencyname.value,
+                                              onPressed: () {
+                                                showcurrencyselector(
+                                                  context: context,
+                                                  currency:
+                                                      currencycontroller.currency,
+                                                  onSelected: (id) {
+                                                    selectcurrencyId.value = id;
+                                                    selectedcurrencyname
+                                                        .value = currencycontroller
+                                                        .currency
+                                                        .firstWhere((p) => p.id == id)
+                                                        .name!;
+                                                  
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(height: 10,),
+                  
+                      Text(
+                        "លុយខ្ចី",
+                        style: TextStyles.siemreap(
+                          context,
+                          fontSize: 12,
+                          fontweight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      CustomTextField(
+                        controller: loanAmountController,
+                        keyboardType: TextInputType.number,
+                        hintText: "ចំនួនប្រាក់កម្ចី",
+                        prefixIcon: Icons.monetization_on,
+                      ),
+                      const SizedBox(height: 15),
+                      Text(
+                        "លុយមិនទាន់សង",
+                        style: TextStyles.siemreap(
+                          context,
+                          fontSize: 12,
+                          fontweight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      CustomTextField(
+                        controller: remainingBalanceController,
+                        keyboardType: TextInputType.number,
+                        hintText: "ប្រាក់នៅសល់",
+                        prefixIcon: Icons.monetization_on,
+                      ),
+                           
+                     
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Text(
-                "រូបិយប័ណ្ណដែលប្រេី",
-                style: TextStyles.siemreap(
-                  context,
-                  fontSize: 12,
-                  fontweight: FontWeight.bold,
-                ),
-              ),
-                 const SizedBox(height: 5),
-                 
-                                  Obx(
-                                    () => CustomOutlinedButton(
-                                      text:
-                                          selectedcurrencyname
-                                              .value
-                                              .isEmpty
-                                          ? "សូមជ្រេីសរេីសរុបិយប័ណ្ណ"
-                                          : selectedcurrencyname.value,
-                                      onPressed: () {
-                                        showcurrencyselector(
-                                          context: context,
-                                          currency:
-                                              currencycontroller.currency,
-                                          onSelected: (id) {
-                                            selectcurrencyId.value = id;
-                                            selectedcurrencyname
-                                                .value = currencycontroller
-                                                .currency
-                                                .firstWhere((p) => p.id == id)
-                                                .name!;
-                                          
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: 10,),
-
-              Text(
-                "លុយខ្ចី",
-                style: TextStyles.siemreap(
-                  context,
-                  fontSize: 12,
-                  fontweight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 6),
-              CustomTextField(
-                controller: loanAmountController,
-                keyboardType: TextInputType.number,
-                hintText: "ចំនួនប្រាក់កម្ចី",
-                prefixIcon: Icons.monetization_on,
-              ),
-              const SizedBox(height: 15),
-              Text(
-                "លុយមិនទាន់សង",
-                style: TextStyles.siemreap(
-                  context,
-                  fontSize: 12,
-                  fontweight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 6),
-              CustomTextField(
-                controller: remainingBalanceController,
-                keyboardType: TextInputType.number,
-                hintText: "ប្រាក់នៅសល់",
-                prefixIcon: Icons.monetization_on,
-              ),
-              const SizedBox(height: 20),
-
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: TheColors.errorColor,
-                  minimumSize: const Size.fromHeight(45),
-                ),
-                icon: const Icon(
-                  Icons.monetization_on,
-                  color: TheColors.bgColor,
-                ),
-                label: Text(
-                  'ធ្វើបច្ចុប្បន្នភាព',
-                  style: GoogleFonts.siemreap(color: TheColors.bgColor),
-                ),
-                onPressed: () async {
-                  await loanController.updateLoan(
-                    currencyID: selectcurrencyId.value!,
-                    loanId: widget.loanId,
-                    employeeId: widget.employeeId,
-                    loanAmount:
-                        double.tryParse(loanAmountController.text) ?? 0.0,
-                    remainingBalance:
-                        double.tryParse(remainingBalanceController.text) ?? 0.0,
-                  );
-                },
-              ),
-              const SizedBox(height: 15),
+                         const SizedBox(height: 20),
+                
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: TheColors.errorColor,
+                        minimumSize: const Size.fromHeight(45),
+                      ),
+                      icon: const Icon(
+                        Icons.monetization_on,
+                        color: TheColors.bgColor,
+                      ),
+                      label: Text(
+                        'ធ្វើបច្ចុប្បន្នភាព',
+                        style: GoogleFonts.siemreap(color: TheColors.bgColor),
+                      ),
+                      onPressed: () async {
+                        await loanController.updateLoan(
+                          currencyID: selectcurrencyId.value!,
+                          loanId: widget.loanId,
+                          employeeId: widget.employeeId,
+                          loanAmount:
+                              double.tryParse(loanAmountController.text) ?? 0.0,
+                          remainingBalance:
+                              double.tryParse(remainingBalanceController.text) ?? 0.0,
+                        );
+                      },
+                    ),
+                     const SizedBox(height: 15),
             ],
           ),
         );

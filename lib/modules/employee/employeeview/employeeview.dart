@@ -358,6 +358,7 @@ class _EmployeeviewState extends State<Employeeview> {
                             onTap: () => _handleViewEmployee(employee),
                             onchangeshift: () {
                               Get.bottomSheet(
+                             
                                 Employeeshifteditview(
                                   employeemodel: employee,
                                   employeeId: employee.id!,
@@ -372,7 +373,7 @@ class _EmployeeviewState extends State<Employeeview> {
                             },
                             chnagesalary: () {
                               Get.bottomSheet(
-                               
+                               isScrollControlled: true,
                                 EditSalaryView(
                                   employeemodel: employee,
                                   salaryID: employee.salaryId!,

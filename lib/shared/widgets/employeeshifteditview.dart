@@ -55,6 +55,7 @@ void _initializeData() {
     final theme = TheColors.bgColor;
 
     return DraggableScrollableSheet(
+      
       expand: false,
       initialChildSize: 0.8,
       minChildSize: 0.4,
@@ -65,23 +66,29 @@ void _initializeData() {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 20,right: 20),
           child: Column(
             children: [
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               Container(
                 width: 50,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[400],
+                  color: TheColors.gray,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
               const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
-                  controller: controller,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+              Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: TheColors.orange, width: 0.4),
+
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("សាខា", style: TextStyles.siemreap(context, fontSize: 12)),
                     const SizedBox(height: 5),
@@ -107,15 +114,19 @@ void _initializeData() {
                         selectshiftid.value = value;
                       },
                     ),
-                    const SizedBox(height: 20),
-                    CustomElevatedButton(
+              
+                
+                  ],
+                ),
+              ),
+                  CustomElevatedButton(
                       text: "កែប្រែ",
                       onPressed: () async {
                         if (selectbranchid.value == null || selectshiftid.value == null) {
                           Get.snackbar("សូមជ្រើសរើស", "សាខា និង វេនការងារ");
                           return;
                         }
-          
+                        
                         await employeecontroller.changeshift(
                           
                           employeeID: widget.employeeId,
@@ -126,10 +137,7 @@ void _initializeData() {
                         
                       
                       },
-                    ),
-                  ],
-                ),
-              ),
+                    )
             ],
           ),
         ),

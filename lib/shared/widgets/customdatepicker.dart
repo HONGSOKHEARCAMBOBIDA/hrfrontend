@@ -44,7 +44,7 @@ class CustomDatePickerField extends StatelessWidget {
                   Text(
                     selectedDate.value != null
                         ? "${selectedDate.value!.day}/${selectedDate.value!.month}/${selectedDate.value!.year}"
-                        : "ជ្រើសរើសថ្ងៃខែឆ្នាំ",
+                        : "ថ្ងៃខែឆ្នាំ",
                     style: TextStyles.siemreap(context, fontSize: 12),
                   ),
                   const Icon(

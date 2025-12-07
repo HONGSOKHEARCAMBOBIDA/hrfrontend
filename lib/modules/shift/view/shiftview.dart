@@ -42,35 +42,31 @@ class _ShiftviewState extends State<Shiftview> {
           child: Column(
             children: [
               // ✅ Branch selector dropdown
-
-                                                Padding(
-                                                  padding: const EdgeInsets.only(left: 16,right: 16),
-                                                  child: Obx(
-                                                                                      () => CustomOutlinedButton(
-                                                                                        text: selectedbranchname.value.isEmpty
-                                                                                            ? "រេីសសាខា"
-                                                                                            : selectedbranchname.value,
-                                                                                        onPressed: () {
-                                                                                          showBranchSelectorSheet(
-                                                                                            context: context,
-                                                                                            branch: branchcontroller.branch,
-                                                                                            selectedBranchId: selectbranchid.value,
-                                                                                            onSelected: (id) {
-                                                                                              selectbranchid.value = id;
-                                                                                              selectedbranchname.value =
-                                                  branchcontroller.branch
-                                                      .firstWhere((p) => p.id == id)
-                                                      .name!;
-                                                                                              shiftcontroller.shift.clear();
-                                                                                              shiftcontroller.fetchshift(
-                                                                                                selectbranchid.value,
-                                                                                              );
-                                                                                            },
-                                                                                          );
-                                                                                        },
-                                                                                      ),
-                                                                                    ),
-                                                ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Obx(
+                  () => CustomOutlinedButton(
+                    text: selectedbranchname.value.isEmpty
+                        ? "រេីសសាខា"
+                        : selectedbranchname.value,
+                    onPressed: () {
+                      showBranchSelectorSheet(
+                        context: context,
+                        branch: branchcontroller.branch,
+                        selectedBranchId: selectbranchid.value,
+                        onSelected: (id) {
+                          selectbranchid.value = id;
+                          selectedbranchname.value = branchcontroller.branch
+                              .firstWhere((p) => p.id == id)
+                              .name!;
+                          shiftcontroller.shift.clear();
+                          shiftcontroller.fetchshift(selectbranchid.value);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
 
               const SizedBox(height: 15),
 
@@ -109,7 +105,9 @@ class _ShiftviewState extends State<Shiftview> {
                                 showEditShiftBottomSheet(shift);
                               },
                               onToggleStatus: () {
-                                shiftcontroller.changestatusshift(shiftID: shift.id ?? 0);
+                                shiftcontroller.changestatusshift(
+                                  shiftID: shift.id ?? 0,
+                                );
                               },
                             ),
                             Padding(
@@ -135,7 +133,6 @@ class _ShiftviewState extends State<Shiftview> {
         onPressed: () {
           showCreateShiftBottomSheet();
         },
-       
       ),
     );
   }
@@ -149,166 +146,190 @@ class _ShiftviewState extends State<Shiftview> {
       SingleChildScrollView(
         child: Container(
           height: Get.height * 0.6,
-          padding: const EdgeInsets.all(16),
+         
           decoration: const BoxDecoration(
             color: TheColors.bgColor,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 50,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[400],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: Text(
-                  "បង្កើតវេនថ្មី",
-                  style: TextStyles.siemreap(
-                    context,
-                    fontSize: 18,
-                    fontweight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text("ឈ្មោះវេន",
-                  style: TextStyles.siemreap(context, fontSize: 12)),
-              const SizedBox(height: 8),
-
-              CustomTextField(
-                  controller: nameController,
-                  hintText: "ឧទាហរណ៍: វេនព្រឹក",
-                  prefixIcon: Icons.access_time),
-              const SizedBox(height: 15),
-
-              // Start time picker
-              Row(
-                children: [
-                  Expanded(
-                    child: Obx(() {
-                      final start = selectedStartTime.value;
-                      return Text(
-                        start != null
-                            ? "ម៉ោងចូល: ${start.format(context)}"
-                            : "ជ្រើសម៉ោងចូល",
-                        style: TextStyles.siemreap(
-                          context,
-                          fontSize: 12,
-                          color: TheColors.gray,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20,right: 20,top: 14),
+            child: Column(
+              children: [
+                Container(
+                   margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.only(left: 14,right: 14,top: 8),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: TheColors.orange, width: 0.4),
+                
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 50,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius: BorderRadius.circular(2),
+                          ),
                         ),
-                      );
-                    }),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.schedule,
-                        color: TheColors.secondaryColor),
-                    onPressed: () async {
-                      final picked = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                      );
-                      if (picked != null) {
-                        selectedStartTime.value = picked;
-                      }
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              // End time picker
-              Row(
-                children: [
-                  Expanded(
-                    child: Obx(() {
-                      final end = selectedEndTime.value;
-                      return Text(
-                        end != null
-                            ? "ម៉ោងចេញ: ${end.format(context)}"
-                            : "ជ្រើសម៉ោងចេញ",
-                        style: TextStyles.siemreap(
-                          context,
-                          fontSize: 12,
-                          color: TheColors.gray,
+                      ),
+                      const SizedBox(height: 10),
+                      Center(
+                        child: Text(
+                          "បង្កើតវេនថ្មី",
+                          style: TextStyles.siemreap(
+                            context,
+                            fontSize: 18,
+                            fontweight: FontWeight.bold,
+                          ),
                         ),
-                      );
-                    }),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.schedule_outlined,
-                        color: TheColors.secondaryColor),
-                    onPressed: () async {
-                      final picked = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                      );
-                      if (picked != null) {
-                        selectedEndTime.value = picked;
-                      }
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 25),
-
-              // Save button
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: TheColors.errorColor,
-                  minimumSize: const Size(double.infinity, 45),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "ឈ្មោះវេន",
+                        style: TextStyles.siemreap(context, fontSize: 12),
+                      ),
+                      const SizedBox(height: 8),
+                  
+                      CustomTextField(
+                        controller: nameController,
+                        hintText: "ឧទាហរណ៍: វេនព្រឹក",
+                        prefixIcon: Icons.access_time,
+                      ),
+                      const SizedBox(height: 15),
+                  
+                      // Start time picker
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Obx(() {
+                              final start = selectedStartTime.value;
+                              return Text(
+                                start != null
+                                    ? "ម៉ោងចូល: ${start.format(context)}"
+                                    : "ជ្រើសម៉ោងចូល",
+                                style: TextStyles.siemreap(
+                                  context,
+                                  fontSize: 12,
+                                  color: TheColors.gray,
+                                ),
+                              );
+                            }),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.schedule,
+                              color: TheColors.secondaryColor,
+                            ),
+                            onPressed: () async {
+                              final picked = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              );
+                              if (picked != null) {
+                                selectedStartTime.value = picked;
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                  
+                      // End time picker
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Obx(() {
+                              final end = selectedEndTime.value;
+                              return Text(
+                                end != null
+                                    ? "ម៉ោងចេញ: ${end.format(context)}"
+                                    : "ជ្រើសម៉ោងចេញ",
+                                style: TextStyles.siemreap(
+                                  context,
+                                  fontSize: 12,
+                                  color: TheColors.gray,
+                                ),
+                              );
+                            }),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.schedule_outlined,
+                              color: TheColors.secondaryColor,
+                            ),
+                            onPressed: () async {
+                              final picked = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              );
+                              if (picked != null) {
+                                selectedEndTime.value = picked;
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                  
+                      // Save button
+            
+                    ],
                   ),
                 ),
-                onPressed: () async {
-                  if (selectbranchid.value == null) {
-                    Get.snackbar("កំហុស", "សូមជ្រើសសាខាមុន");
-                    return;
-                  }
-
-                  if (nameController.text.isEmpty) {
-                    Get.snackbar("កំហុស", "សូមបញ្ចូលឈ្មោះវេន");
-                    return;
-                  }
-
-                  if (selectedStartTime.value == null ||
-                      selectedEndTime.value == null) {
-                    Get.snackbar("កំហុស", "សូមជ្រើសម៉ោងចូលនិងចេញ");
-                    return;
-                  }
-
-                  // Convert time to 24-hour format string (e.g. "13:00")
-                  String formatTime(TimeOfDay time) {
-                    final hour = time.hour.toString().padLeft(2, '0');
-                    final minute = time.minute.toString().padLeft(2, '0');
-                    return "$hour:$minute";
-                  }
-
-                  await shiftcontroller.createshift(
-                    name: nameController.text.trim(),
-                    start_time: formatTime(selectedStartTime.value!),
-                    end_time: formatTime(selectedEndTime.value!),
-                    branchid: selectbranchid.value!,
-                  );
-                },
-                child: Text(
-                  "រក្សាទុក",
-                  style: TextStyles.siemreap(
-                    context,
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
+                                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: TheColors.errorColor,
+                          minimumSize: const Size(double.infinity, 45),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (selectbranchid.value == null) {
+                            Get.snackbar("កំហុស", "សូមជ្រើសសាខាមុន");
+                            return;
+                          }
+                  
+                          if (nameController.text.isEmpty) {
+                            Get.snackbar("កំហុស", "សូមបញ្ចូលឈ្មោះវេន");
+                            return;
+                          }
+                  
+                          if (selectedStartTime.value == null ||
+                              selectedEndTime.value == null) {
+                            Get.snackbar("កំហុស", "សូមជ្រើសម៉ោងចូលនិងចេញ");
+                            return;
+                          }
+                  
+                          // Convert time to 24-hour format string (e.g. "13:00")
+                          String formatTime(TimeOfDay time) {
+                            final hour = time.hour.toString().padLeft(2, '0');
+                            final minute = time.minute.toString().padLeft(2, '0');
+                            return "$hour:$minute";
+                          }
+                  
+                          await shiftcontroller.createshift(
+                            name: nameController.text.trim(),
+                            start_time: formatTime(selectedStartTime.value!),
+                            end_time: formatTime(selectedEndTime.value!),
+                            branchid: selectbranchid.value!,
+                          );
+                        },
+                        child: Text(
+                          "រក្សាទុក",
+                          style: TextStyles.siemreap(
+                            context,
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+              ],
+            ),
           ),
         ),
       ),
@@ -346,172 +367,195 @@ class _ShiftviewState extends State<Shiftview> {
       SingleChildScrollView(
         child: Container(
           height: Get.height * 0.6,
-          padding: const EdgeInsets.all(16),
+          
           decoration: const BoxDecoration(
             color: TheColors.bgColor,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 50,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[400],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: Text(
-                  "កែប្រែវេន",
-                  style: TextStyles.siemreap(
-                    context,
-                    fontSize: 18,
-                    fontweight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text("ឈ្មោះវេន",
-                  style: TextStyles.siemreap(context, fontSize: 12)),
-              const SizedBox(height: 8),
-
-              CustomTextField(
-                controller: nameController,
-                hintText: "ឧទាហរណ៍: វេនព្រឹក",
-                prefixIcon: Icons.access_time,
-              ),
-              const SizedBox(height: 15),
-
-              // Start time picker
-              Row(
-                children: [
-                  Expanded(
-                    child: Obx(() {
-                      final start = selectedStartTime.value;
-                      return Text(
-                        start != null
-                            ? "ម៉ោងចូល: ${start.format(context)}"
-                            : "ជ្រើសម៉ោងចូល",
-                        style: TextStyles.siemreap(
-                          context,
-                          fontSize: 12,
-                          color: TheColors.gray,
+          child: Padding(
+          padding: const EdgeInsets.only(left: 20,right: 20,top: 14),
+            child: Column(
+              children: [
+                Container(
+                       margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.only(left: 14,right: 14,top: 8),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: TheColors.orange, width: 0.4),
+                
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 50,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius: BorderRadius.circular(2),
+                          ),
                         ),
-                      );
-                    }),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.schedule,
-                        color: TheColors.secondaryColor),
-                    onPressed: () async {
-                      final picked = await showTimePicker(
-                        context: context,
-                        initialTime: selectedStartTime.value ?? TimeOfDay.now(),
-                      );
-                      if (picked != null) {
-                        selectedStartTime.value = picked;
-                      }
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              // End time picker
-              Row(
-                children: [
-                  Expanded(
-                    child: Obx(() {
-                      final end = selectedEndTime.value;
-                      return Text(
-                        end != null
-                            ? "ម៉ោងចេញ: ${end.format(context)}"
-                            : "ជ្រើសម៉ោងចេញ",
-                        style: TextStyles.siemreap(
-                          context,
-                          fontSize: 12,
-                          color: TheColors.gray,
-                        ),
-                      );
-                    }),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.schedule_outlined,
-                        color: TheColors.secondaryColor),
-                    onPressed: () async {
-                      final picked = await showTimePicker(
-                        context: context,
-                        initialTime: selectedEndTime.value ?? TimeOfDay.now(),
-                      );
-                      if (picked != null) {
-                        selectedEndTime.value = picked;
-                      }
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 25),
-
-              // Update button
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: TheColors.secondaryColor,
-                  minimumSize: const Size(double.infinity, 45),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onPressed: () async {
-                  if (selectbranchid.value == null) {
-                    Get.snackbar("កំហុស", "សូមជ្រើសសាខាមុន");
-                    return;
-                  }
-
-                  if (nameController.text.isEmpty) {
-                    Get.snackbar("កំហុស", "សូមបញ្ចូលឈ្មោះវេន");
-                    return;
-                  }
-
-                  if (selectedStartTime.value == null ||
-                      selectedEndTime.value == null) {
-                    Get.snackbar("កំហុស", "សូមជ្រើសម៉ោងចូលនិងចេញ");
-                    return;
-                  }
-
-                  // Convert time to 24-hour format string (e.g. "13:00")
-                  String formatTime(TimeOfDay time) {
-                    final hour = time.hour.toString().padLeft(2, '0');
-                    final minute = time.minute.toString().padLeft(2, '0');
-                    return "$hour:$minute";
-                  }
-
-                  await shiftcontroller.updateshift(
-                    shiftID: shift.id ?? 0,
-                    name: nameController.text.trim(),
-                    start_time: formatTime(selectedStartTime.value!),
-                    end_time: formatTime(selectedEndTime.value!),
-                    branchid: selectbranchid.value!,
-                  );
-                },
-                child: Obx(() {
-                  return shiftcontroller.isLoading.value
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                          "ធ្វើបច្ចុប្បន្នភាព",
+                      ),
+                      const SizedBox(height: 10),
+                      Center(
+                        child: Text(
+                          "កែប្រែវេន",
                           style: TextStyles.siemreap(
                             context,
-                            fontSize: 14,
-                            color: Colors.white,
+                            fontSize: 18,
+                            fontweight: FontWeight.bold,
                           ),
-                        );
-                }),
-              ),
-            ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "ឈ្មោះវេន",
+                        style: TextStyles.siemreap(context, fontSize: 12),
+                      ),
+                      const SizedBox(height: 8),
+                  
+                      CustomTextField(
+                        controller: nameController,
+                        hintText: "ឧទាហរណ៍: វេនព្រឹក",
+                        prefixIcon: Icons.access_time,
+                      ),
+                      const SizedBox(height: 15),
+                  
+                      // Start time picker
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Obx(() {
+                              final start = selectedStartTime.value;
+                              return Text(
+                                start != null
+                                    ? "ម៉ោងចូល: ${start.format(context)}"
+                                    : "ជ្រើសម៉ោងចូល",
+                                style: TextStyles.siemreap(
+                                  context,
+                                  fontSize: 12,
+                                  color: TheColors.gray,
+                                ),
+                              );
+                            }),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.schedule,
+                              color: TheColors.secondaryColor,
+                            ),
+                            onPressed: () async {
+                              final picked = await showTimePicker(
+                                context: context,
+                                initialTime: selectedStartTime.value ?? TimeOfDay.now(),
+                              );
+                              if (picked != null) {
+                                selectedStartTime.value = picked;
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                  
+                      // End time picker
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Obx(() {
+                              final end = selectedEndTime.value;
+                              return Text(
+                                end != null
+                                    ? "ម៉ោងចេញ: ${end.format(context)}"
+                                    : "ជ្រើសម៉ោងចេញ",
+                                style: TextStyles.siemreap(
+                                  context,
+                                  fontSize: 12,
+                                  color: TheColors.gray,
+                                ),
+                              );
+                            }),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.schedule_outlined,
+                              color: TheColors.secondaryColor,
+                            ),
+                            onPressed: () async {
+                              final picked = await showTimePicker(
+                                context: context,
+                                initialTime: selectedEndTime.value ?? TimeOfDay.now(),
+                              );
+                              if (picked != null) {
+                                selectedEndTime.value = picked;
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                  
+                      // Update button
+            
+                    ],
+                  ),
+                ),
+                                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: TheColors.errorColor,
+                          minimumSize: const Size(double.infinity, 45),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (selectbranchid.value == null) {
+                            Get.snackbar("កំហុស", "សូមជ្រើសសាខាមុន");
+                            return;
+                          }
+                  
+                          if (nameController.text.isEmpty) {
+                            Get.snackbar("កំហុស", "សូមបញ្ចូលឈ្មោះវេន");
+                            return;
+                          }
+                  
+                          if (selectedStartTime.value == null ||
+                              selectedEndTime.value == null) {
+                            Get.snackbar("កំហុស", "សូមជ្រើសម៉ោងចូលនិងចេញ");
+                            return;
+                          }
+                  
+                          // Convert time to 24-hour format string (e.g. "13:00")
+                          String formatTime(TimeOfDay time) {
+                            final hour = time.hour.toString().padLeft(2, '0');
+                            final minute = time.minute.toString().padLeft(2, '0');
+                            return "$hour:$minute";
+                          }
+                  
+                          await shiftcontroller.updateshift(
+                            shiftID: shift.id ?? 0,
+                            name: nameController.text.trim(),
+                            start_time: formatTime(selectedStartTime.value!),
+                            end_time: formatTime(selectedEndTime.value!),
+                            branchid: selectbranchid.value!,
+                          );
+                        },
+                        child: Obx(() {
+                          return shiftcontroller.isLoading.value
+                              ? const CircularProgressIndicator(color: Colors.white)
+                              : Text(
+                                  "ធ្វើបច្ចុប្បន្នភាព",
+                                  style: TextStyles.siemreap(
+                                    context,
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                  ),
+                                );
+                        }),
+                      ),
+              ],
+            ),
           ),
         ),
       ),

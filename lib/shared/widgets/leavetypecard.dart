@@ -34,7 +34,7 @@ class LeaveTypeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 15,right: 15,top: 8),
+      padding: const EdgeInsets.only(left: 2,right: 2,top: 8),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: TheColors.orange,width: 0.5),

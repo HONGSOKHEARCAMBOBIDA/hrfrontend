@@ -42,107 +42,120 @@ class _CreateLoanViewState extends State<CreateLoanView> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "សាខា",
-              style: TextStyles.siemreap(
-                context,
-                fontSize: 12,
-                fontweight: FontWeight.bold,
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: TheColors.orange, width: 0.5),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "សាខា",
+                      style: TextStyles.siemreap(
+                        context,
+                        fontSize: 12,
+                        fontweight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                
+                    Obx(
+                      () => CustomOutlinedButton(
+                        text: selectedbranchname.value.isEmpty
+                            ? "រេីសសាខា"
+                            : selectedbranchname.value,
+                        onPressed: () {
+                          showBranchSelectorSheet(
+                            context: context,
+                            branch: branchController.branch,
+                            onSelected: (id) {
+                              selectBranchId.value = id;
+                              selectedbranchname.value = branchController.branch
+                                  .firstWhere((p) => p.id == id)
+                                  .name!;
+                              employeeController.employees.clear();
+                              employeeController.fetchemployee(
+                                branchid: selectBranchId.value,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "បុគ្គលិក",
+                      style: TextStyles.siemreap(
+                        context,
+                        fontSize: 12,
+                        fontweight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    CustomDropdown(
+                      selectedValue: selectEmployeeId,
+                      items: employeeController.employees,
+                      hintText: "ជ្រើសបុគ្គលិក",
+                      onChanged: (value) async {
+                        selectEmployeeId.value = value;
+                      },
+                    ),
+                  const SizedBox(height: 10),
+                    Text(
+                      "រូបិយប័ណ្ណដែលប្រី",
+                      style: TextStyles.siemreap(
+                        context,
+                        fontSize: 12,
+                        fontweight: FontWeight.bold,
+                      ),
+                    ),
+                  SizedBox(height: 5,),
+                                                          Obx(
+                                                () => CustomOutlinedButton(
+                                                  
+                                                  text: selectedcurrencyname.value.isEmpty
+                                                      ? "សូមជ្រេីសរេីសរុបិយប័ណ្ណ"
+                                                      : selectedcurrencyname.value,
+                                                  onPressed: () {
+                                                    showcurrencyselector(
+                                                      context: context,
+                                                      currency:
+                                                          currencycontroller.currency,
+                                                      onSelected: (id) {
+                                                        selectcurrencyId.value = id;
+                                                        selectedcurrencyname
+                                                            .value = currencycontroller
+                                                            .currency
+                                                            .firstWhere((p) => p.id == id)
+                                                            .name!;
+                                                      },
+                                                    );
+                                                  },
+                                                  
+                                                ),
+                                              ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "ចំនួនលុយ",
+                      style: TextStyles.siemreap(
+                        context,
+                        fontSize: 12,
+                        fontweight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    CustomTextField(
+                      controller: loanAmountController,
+                      hintText: "ឧ. 200",
+                      prefixIcon: Icons.wallet
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 5),
-
-            Obx(
-              () => CustomOutlinedButton(
-                text: selectedbranchname.value.isEmpty
-                    ? "រេីសសាខា"
-                    : selectedbranchname.value,
-                onPressed: () {
-                  showBranchSelectorSheet(
-                    context: context,
-                    branch: branchController.branch,
-                    onSelected: (id) {
-                      selectBranchId.value = id;
-                      selectedbranchname.value = branchController.branch
-                          .firstWhere((p) => p.id == id)
-                          .name!;
-                      employeeController.employees.clear();
-                      employeeController.fetchemployee(
-                        branchid: selectBranchId.value,
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "បុគ្គលិក",
-              style: TextStyles.siemreap(
-                context,
-                fontSize: 12,
-                fontweight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 5),
-            CustomDropdown(
-              selectedValue: selectEmployeeId,
-              items: employeeController.employees,
-              hintText: "ជ្រើសបុគ្គលិក",
-              onChanged: (value) async {
-                selectEmployeeId.value = value;
-              },
-            ),
-          const SizedBox(height: 10),
-            Text(
-              "រូបិយប័ណ្ណដែលប្រី",
-              style: TextStyles.siemreap(
-                context,
-                fontSize: 12,
-                fontweight: FontWeight.bold,
-              ),
-            ),
-          SizedBox(height: 5,),
-                                                  Obx(
-                                        () => CustomOutlinedButton(
-                                          
-                                          text: selectedcurrencyname.value.isEmpty
-                                              ? "សូមជ្រេីសរេីសរុបិយប័ណ្ណ"
-                                              : selectedcurrencyname.value,
-                                          onPressed: () {
-                                            showcurrencyselector(
-                                              context: context,
-                                              currency:
-                                                  currencycontroller.currency,
-                                              onSelected: (id) {
-                                                selectcurrencyId.value = id;
-                                                selectedcurrencyname
-                                                    .value = currencycontroller
-                                                    .currency
-                                                    .firstWhere((p) => p.id == id)
-                                                    .name!;
-                                              },
-                                            );
-                                          },
-                                          
-                                        ),
-                                      ),
-            const SizedBox(height: 10),
-            Text(
-              "ចំនួនលុយ",
-              style: TextStyles.siemreap(
-                context,
-                fontSize: 12,
-                fontweight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 5),
-            CustomTextField(
-              controller: loanAmountController,
-              hintText: "ឧ. 200",
-              prefixIcon: Icons.wallet
             ),
           ],
         ),

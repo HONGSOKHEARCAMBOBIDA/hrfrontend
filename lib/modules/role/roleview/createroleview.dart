@@ -39,57 +39,66 @@ Widget build(BuildContext context) {
       onTap: () => FocusScope.of(context).unfocus(),
       // ❌ No need for Obx here — form doesn’t depend on Rx variable
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Form(
-            key: formkey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "ឈ្មោះ",
-                  style: TextStyles.siemreap(
-                    context,
-                    fontSize: 12,
-                    color: TheColors.gray,
+          child: Container(
+              margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: TheColors.orange, width: 0.4),
+
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+            child: Form(
+              key: formkey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "ឈ្មោះ",
+                    style: TextStyles.siemreap(
+                      context,
+                      fontSize: 12,
+                      color: TheColors.gray,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                CustomTextField(
-                  controller: namecontroller,
-                  hintText: 'ឈ្មោះតួនាទី (ឧទាហរណ៍: Teller)',
-                  prefixIcon: Icons.business,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'សូមបំពេញឈ្មោះតួនាទី';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "ឈ្មោះបង្ហាញ",
-                  style: TextStyles.siemreap(
-                    context,
-                    fontSize: 12,
-                    color: TheColors.gray,
+                  const SizedBox(height: 10),
+                  CustomTextField(
+                    controller: namecontroller,
+                    hintText: 'ឈ្មោះតួនាទី (ឧទាហរណ៍: Teller)',
+                    prefixIcon: Icons.business,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'សូមបំពេញឈ្មោះតួនាទី';
+                      }
+                      return null;
+                    },
                   ),
-                ),
-                const SizedBox(height: 10),
-                CustomTextField(
-                  controller: displaynamecontroller,
-                  hintText: 'ពិពណ៌នាឈ្មោះតួនាទី (ឧទាហរណ៍: បេឡា)',
-                  prefixIcon: Icons.description,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'សូមបំពេញការពិពណ៌នា';
-                    }
-                    return null;
-                  },
-                ),
-               
-              ],
+                  const SizedBox(height: 10),
+                  Text(
+                    "ឈ្មោះបង្ហាញ",
+                    style: TextStyles.siemreap(
+                      context,
+                      fontSize: 12,
+                      color: TheColors.gray,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  CustomTextField(
+                    controller: displaynamecontroller,
+                    hintText: 'ពិពណ៌នាឈ្មោះតួនាទី (ឧទាហរណ៍: បេឡា)',
+                    prefixIcon: Icons.description,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'សូមបំពេញការពិពណ៌នា';
+                      }
+                      return null;
+                    },
+                  ),
+                 
+                ],
+              ),
             ),
           ),
         ),

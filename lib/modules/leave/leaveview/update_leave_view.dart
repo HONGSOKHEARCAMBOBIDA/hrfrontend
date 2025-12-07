@@ -55,8 +55,18 @@ class UpdateLeaveView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle("ជ្រើសរើសម៉ោងធ្វេិការ"),
-                    const SizedBox(height: 5),
+                    Container(
+                             decoration: BoxDecoration(
+                  border: Border.all(color: TheColors.orange, width: 0.5),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                      child: Padding(
+                          padding: const EdgeInsets.only(left: 4,right: 4,top: 10,bottom: 4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionTitle("ជ្រើសរើសម៉ោងធ្វេិការ"),
+                                  const SizedBox(height: 5),
                     SizedBox(
                       height: 75,
                       child: ListView.builder(
@@ -77,11 +87,26 @@ class UpdateLeaveView extends StatelessWidget {
                         },
                       ),
                     ),
+                          ],
+                        ),
+                      ),
+                    ),
+              
 
                     LeaveTypeCard(),
                     const SizedBox(height: 10),
-                    _buildSectionTitle("អ្នកអនុម័ត"),
-                    const SizedBox(height: 5),
+                    Container(
+                            decoration: BoxDecoration(
+                  border: Border.all(color: TheColors.orange, width: 0.5),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4,right: 4,top: 10,bottom: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionTitle("អ្នកអនុម័ត"),
+                                const SizedBox(height: 5),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: CustomDropdown(
@@ -119,30 +144,51 @@ class UpdateLeaveView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
-
-                    _buildSectionTitle("ចំនួនថ្ងៃឈប់សម្រាក"),
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: CustomTextField(
-                        controller: leavedaycontroller,
-                        hintText: "ឧ 2",
-                        prefixIcon: Icons.lock_clock_outlined,
+                          ],
+                        ),
                       ),
                     ),
+                
                     const SizedBox(height: 10),
 
-                    _buildSectionTitle("ពិពណ៍នា"),
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: CustomTextField(
-                        controller: descriptioncontroller,
-                        hintText: "ឧ មានការរល់",
-                        prefixIcon: Icons.description,
+
+                    Container(
+                            decoration: BoxDecoration(
+                  border: Border.all(color: TheColors.orange, width: 0.5),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                      child: Padding(
+                         padding: const EdgeInsets.only(left: 4,right: 4,top: 10,bottom: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionTitle("ចំនួនថ្ងៃឈប់សម្រាក"),
+                              const SizedBox(height: 8),
+                                            Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: CustomTextField(
+                          controller: leavedaycontroller,
+                          hintText: "ឧ 2",
+                          prefixIcon: Icons.lock_clock_outlined,
+                        ),
+                                            ),
+                                            const SizedBox(height: 10),
+                        
+                                            _buildSectionTitle("ពិពណ៍នា"),
+                                            const SizedBox(height: 8),
+                                            Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: CustomTextField(
+                          controller: descriptioncontroller,
+                          hintText: "ឧ មានការរល់",
+                          prefixIcon: Icons.description,
+                        ),
+                                            ),
+                          ],
+                        ),
                       ),
                     ),
+                  
                   ],
                 ),
               ),

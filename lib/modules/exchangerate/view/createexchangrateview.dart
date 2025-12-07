@@ -64,47 +64,61 @@ class _CreateexchangrateviewState extends State<Createexchangrateview> {
       body: Form(
         key: _formkey,
         child: Padding(
-          padding: const EdgeInsets.all(18.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              Obx(
-                () => CustomOutlinedButton(
-                  alignment: MainAxisAlignment.center,
-                  text: selectpairName.value,
-                  onPressed: () {
-                    showcurrencypair(
-                      context: context,
-                      currencypair: currencypaircontroler.currencypair,
-                      selectedCurrencypair: selectpairID.value,
-                      onSelected: (id) {
-                        selectpairID.value = id;
-
-                        final pair = currencypaircontroler.currencypair
-                            .firstWhere((p) => p.id == id);
-
-                        // 🔥 FIXED HERE
-                        selectpairName.value =
-                            "${pair.baseCurrencyName} -> ${pair.targetCurrencyName}";
-                      },
-                    );
-                  },
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: TheColors.orange, width: 0.5),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Obx(
+                        () => CustomOutlinedButton(
+                          alignment: MainAxisAlignment.center,
+                          text: selectpairName.value,
+                          onPressed: () {
+                            showcurrencypair(
+                              context: context,
+                              currencypair: currencypaircontroler.currencypair,
+                              selectedCurrencypair: selectpairID.value,
+                              onSelected: (id) {
+                                selectpairID.value = id;
+                  
+                                final pair = currencypaircontroler.currencypair
+                                    .firstWhere((p) => p.id == id);
+                  
+                                // 🔥 FIXED HERE
+                                selectpairName.value =
+                                    "${pair.baseCurrencyName} -> ${pair.targetCurrencyName}";
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                  
+                      const SizedBox(height: 16),
+                  
+                      CustomTextField(
+                        controller: ratecontroller,
+                        hintText: "ឧ. 4000",
+                        prefixIcon: Icons.currency_exchange,
+                      ),
+                  
+                      
+                    ],
+                  ),
                 ),
               ),
-
-              const SizedBox(height: 16),
-
-              CustomTextField(
-                controller: ratecontroller,
-                hintText: "ឧ. 4000",
-                prefixIcon: Icons.currency_exchange,
-              ),
-
               const SizedBox(height: 20),
-
-              CustomElevatedButton(
-                text: "បង្កេីតថ្មី",
-                onPressed: createexchangrate,
-              ),
+                
+                    CustomElevatedButton(
+                      text: "បង្កេីតថ្មី",
+                      onPressed: createexchangrate,
+                    ),
             ],
           ),
         ),

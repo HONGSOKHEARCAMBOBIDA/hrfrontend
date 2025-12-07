@@ -79,24 +79,32 @@ shiftcontroller.fetchshift(selectbranchid.value);
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 20,right: 20,top: 6),
           child: Column(
             children: [
-              const SizedBox(height: 12),
               Container(
-                width: 50,
-                height: 4,
+                  margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(left: 14,right: 14,top: 8,bottom: 14),
                 decoration: BoxDecoration(
-                  color: Colors.grey[400],
-                  borderRadius: BorderRadius.circular(2),
+                  border: Border.all(color: TheColors.orange, width: 0.4),
+                    
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
-                  controller: controller,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                   
+                    Center(
+                      child: Container(
+                        width: 50,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     Text(
                       "សាខា",
                       style: TextStyles.siemreap(context, fontSize: 12),
@@ -163,46 +171,46 @@ shiftcontroller.fetchshift(selectbranchid.value);
                       hintText: "30",
                       prefixIcon: Icons.lock_clock_rounded,
                     ),
-                    const SizedBox(height: 20),
-                    CustomElevatedButton(
-                      text: "បញ្ចូន",
-                      onPressed: () async {
-                        final int? baseSalary = int.tryParse(
-                          baseSalaryController.text.trim(),
-                        );
-                        final int? workDays = int.tryParse(
-                          workDayController.text.trim(),
-                        );
-
-                        if (baseSalary == null || workDays == null) {
-                          Get.snackbar("មានបញ្ហា", "សូមបញ្ចូលលេខត្រឹមត្រូវ");
-                          return;
-                        }
-                        if (selectbranchid.value == null ||
-                            selectshiftid.value == null) {
-                          Get.snackbar("សូមជ្រើសរើស", "សាខា និង វេនការងារ");
-                          return;
-                        }
-                        if (widget.salaryID == null ||
-                            widget.employeeShiftId == null) {
-                          Get.snackbar("មានបញ្ហា", "ទិន្នន័យមិនពេញលេញ");
-                          return;
-                        }
-
-                        await employeecontroller.createemployeeshift(
-                          currencyID: selectcurrencyid.value!,
-                          employeeid: widget.employeeId,
-                          shiftid: selectshiftid.value!,
-                          baseSalary: baseSalary,
-                          workday: workDays,
-                          salaryid: widget.salaryID!,
-                          employeeshiftid: widget.employeeShiftId!,
-                        );
-                      },
-                    ),
+                  
                   ],
                 ),
               ),
+                                    CustomElevatedButton(
+                            text: "បញ្ចូន",
+                            onPressed: () async {
+                              final int? baseSalary = int.tryParse(
+                                baseSalaryController.text.trim(),
+                              );
+                              final int? workDays = int.tryParse(
+                                workDayController.text.trim(),
+                              );
+                
+                              if (baseSalary == null || workDays == null) {
+                                Get.snackbar("មានបញ្ហា", "សូមបញ្ចូលលេខត្រឹមត្រូវ");
+                                return;
+                              }
+                              if (selectbranchid.value == null ||
+                                  selectshiftid.value == null) {
+                                Get.snackbar("សូមជ្រើសរើស", "សាខា និង វេនការងារ");
+                                return;
+                              }
+                              if (widget.salaryID == null ||
+                                  widget.employeeShiftId == null) {
+                                Get.snackbar("មានបញ្ហា", "ទិន្នន័យមិនពេញលេញ");
+                                return;
+                              }
+                
+                              await employeecontroller.createemployeeshift(
+                                currencyID: selectcurrencyid.value!,
+                                employeeid: widget.employeeId,
+                                shiftid: selectshiftid.value!,
+                                baseSalary: baseSalary,
+                                workday: workDays,
+                                salaryid: widget.salaryID!,
+                                employeeshiftid: widget.employeeShiftId!,
+                              );
+                            },
+                          ),
             ],
           ),
         ),

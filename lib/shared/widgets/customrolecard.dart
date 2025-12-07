@@ -248,6 +248,7 @@ class CustomRoleCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        backgroundColor: TheColors.bgColor,
         title: Text('បញ្ជាក់', style: GoogleFonts.siemreap()),
         content: Text(confirmMessage, style: GoogleFonts.siemreap()),
         actions: [

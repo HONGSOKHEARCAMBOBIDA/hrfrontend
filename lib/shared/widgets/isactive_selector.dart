@@ -57,10 +57,10 @@ class IsActiveSelector extends StatelessWidget {
     return ChoiceChip(
       label: Text(
         label,
-        style: TextStyles.siemreap(context, fontSize: 12),
+        style: TextStyles.siemreap(context, fontSize: 12,color: isSelected ? TheColors.bgColor : TheColors.black),
       ),
       selected: isSelected,
-      backgroundColor: TheColors.lightGreyColor,
+      backgroundColor: TheColors.warningColor,
       selectedColor: TheColors.orange,
        side: BorderSide(color: TheColors.warningColor,width: 0.3),
       onSelected: (_) {

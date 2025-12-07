@@ -42,9 +42,9 @@ class ShiftSelector extends StatelessWidget {
                 children: shift.map((shifts) {
                   final isSelected = shifts.id == selectedshiftId;
                   return ChoiceChip(
-                    label: Text("${shifts.name}: ${shifts.startTime}-${shifts.endTime}",style: TextStyles.siemreap(context,fontSize: 12),),
+                    label: Text("${shifts.name}: ${shifts.startTime}-${shifts.endTime}",style: TextStyles.siemreap(context,fontSize: 12,color: isSelected ? TheColors.bgColor : TheColors.black),),
                     selected: isSelected,
-                    backgroundColor: TheColors.lightGreyColor,
+                    backgroundColor: TheColors.warningColor,
                     selectedColor: TheColors.orange,
                     side: BorderSide(color: TheColors.warningColor,width: 0.3),
                     onSelected: (_) {

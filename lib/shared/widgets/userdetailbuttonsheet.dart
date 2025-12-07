@@ -12,7 +12,7 @@ class UserDetailBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = TheColors.bgColor;
-  
+
     // String formatDate(String? isoDate) {
     //   if (isoDate == null || isoDate.isEmpty) return 'N/A';
     //   try {
@@ -45,7 +45,7 @@ class UserDetailBottomSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             _buildHeader(context),
             const SizedBox(height: 5),
             Expanded(
@@ -54,30 +54,76 @@ class UserDetailBottomSheet extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
                   SizedBox(height: 4),
-                  _buildSectionTitle('ព័ត៌មានផ្ទាល់ខ្លួន'),
-                  _buildDetailItem('ឈ្មោះ', user.name ?? 'N/A'),
-                  _buildDetailItem('ឈ្មោះអង់គ្លេស', user.nameEn ?? 'N/A'),
-                  _buildDetailItem('ភេទ', _getGender(user.gender)),
-                  _buildDetailItem(
-                    'លេខអត្តសញ្ញាណ',
-                    user.nationalIdNumber ?? 'N/A',
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 14),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: TheColors.orange, width: 0.4),
+
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle(Icons.person,'ព័ត៌មានផ្ទាល់ខ្លួន'),
+                        Divider(height: 8, color: TheColors.orange),
+                        _buildDetailItem('ឈ្មោះ', user.name ?? 'N/A'),
+                        _buildDetailItem('ឈ្មោះអង់គ្លេស', user.nameEn ?? 'N/A'),
+                        _buildDetailItem('ភេទ', _getGender(user.gender)),
+                        _buildDetailItem(
+                          'លេខអត្តសញ្ញាណ',
+                          user.nationalIdNumber ?? 'N/A',
+                        ),
+                      ],
+                    ),
                   ),
-                  Divider(),
-                  const SizedBox(height: 16),
-                  _buildSectionTitle('ព័ត៌មានការងារ'),
-                  _buildDetailItem('តួនាទី', user.roleName ?? 'N/A'),
-                  _buildDetailItem('សាខា', user.branchName ?? 'N/A'),
-                  _buildDetailItem(
-                    'ស្ថានភាព',
-                    user.isActive == true ? 'សកម្ម' : 'អសកម្ម',
+
+                  const SizedBox(height: 4),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 14),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: TheColors.orange, width: 0.4),
+
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle(Icons.work_outline,'ព័ត៌មានការងារ'),
+                        Divider(height: 8, color: TheColors.orange),
+                        _buildDetailItem('តួនាទី', user.roleName ?? 'N/A'),
+                        _buildDetailItem('សាខា', user.branchName ?? 'N/A'),
+                        _buildDetailItem(
+                          'ស្ថានភាព',
+                          user.isActive == true ? 'សកម្ម' : 'អសកម្ម',
+                        ),
+                      ],
+                    ),
                   ),
-                  Divider(),
-                  const SizedBox(height: 16),
-                  _buildSectionTitle('ទំនាក់ទំនង'),
-                  _buildDetailItem('អ៊ីម៉ែល', user.email ?? 'N/A'),
-                  _buildDetailItem('ទូរស័ព្ទ', user.contact ?? 'N/A'),
-                  Divider(),
-                  const SizedBox(height: 15),
+
+                  const SizedBox(height: 4),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 14),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: TheColors.orange, width: 0.4),
+
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionTitle(Icons.note_outlined,'ទំនាក់ទំនង'),
+                        Divider(height: 8, color: TheColors.orange),
+                        _buildDetailItem('អ៊ីម៉ែល', user.email ?? 'N/A'),
+                        _buildDetailItem('ទូរស័ព្ទ', user.contact ?? 'N/A'),
+                      ],
+                    ),
+                  ),
+
+                 
+                  
                 ],
               ),
             ),
@@ -90,10 +136,22 @@ class UserDetailBottomSheet extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundImage: NetworkImage(
-            'https://cdn-icons-png.flaticon.com/512/1870/1870038.png',
+        Container(
+                           decoration: BoxDecoration(
+      border: Border.all(
+        color: TheColors.warningColor,// Border color
+        width: 0.9,
+      ),
+      borderRadius: BorderRadius.circular(50),
+    ),
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: CircleAvatar(
+              radius: 50,
+              backgroundImage: NetworkImage(
+                'https://cdn-icons-png.flaticon.com/128/428/428933.png',
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 12),
@@ -116,16 +174,22 @@ class UserDetailBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(  IconData icon,String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        title,
-        style: GoogleFonts.siemreap(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: TheColors.secondaryColor,
-        ),
+      child: Row(
+        children: [
+          Icon(icon, color: TheColors.orange, size: 18),
+             const SizedBox(width: 6),
+          Text(
+            title,
+            style: GoogleFonts.siemreap(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: TheColors.secondaryColor,
+            ),
+          ),
+        ],
       ),
     );
   }
