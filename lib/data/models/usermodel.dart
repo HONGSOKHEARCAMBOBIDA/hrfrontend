@@ -35,6 +35,7 @@ class Data {
   int? roleId;
   String? roleName;
   bool? isActive;
+  List<Parts>? parts;
 
   Data(
       {this.id,
@@ -49,7 +50,8 @@ class Data {
       this.nationalIdNumber,
       this.roleId,
       this.roleName,
-      this.isActive});
+      this.isActive,
+      this.parts});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -65,6 +67,12 @@ class Data {
     roleId = json['role_id'];
     roleName = json['role_name'];
     isActive = json['is_active'];
+    if (json['parts'] != null) {
+      parts = <Parts>[];
+      json['parts'].forEach((v) {
+        parts!.add(new Parts.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -82,6 +90,31 @@ class Data {
     data['role_id'] = this.roleId;
     data['role_name'] = this.roleName;
     data['is_active'] = this.isActive;
+    if (this.parts != null) {
+      data['parts'] = this.parts!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Parts {
+  int? id;
+  int? partId;
+  String? partName;
+
+  Parts({this.id, this.partId, this.partName});
+
+  Parts.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    partId = json['part_id'];
+    partName = json['part_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['part_id'] = this.partId;
+    data['part_name'] = this.partName;
     return data;
   }
 }

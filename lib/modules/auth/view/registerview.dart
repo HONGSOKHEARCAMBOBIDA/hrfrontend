@@ -16,16 +16,19 @@ import 'package:flutter_application_10/modules/branch/branchcontroller/branchcon
 import 'package:flutter_application_10/modules/communce/communcecontroller/communcecontroller.dart';
 import 'package:flutter_application_10/modules/currency/controller/currencycontroller.dart';
 import 'package:flutter_application_10/modules/district/districtcontroller/districtcontroller.dart';
+import 'package:flutter_application_10/modules/part/controller/partcontroller.dart';
 
 import 'package:flutter_application_10/modules/province/provincecontroller/provincecontroller.dart';
 import 'package:flutter_application_10/modules/role/rolecontroller/rolecontroller.dart';
 import 'package:flutter_application_10/modules/shift/shiftcontroller/shiftcontroller.dart';
 import 'package:flutter_application_10/modules/village/villagecontroller/villagecontroller.dart';
+import 'package:flutter_application_10/shared/partcard.dart';
 import 'package:flutter_application_10/shared/widgets/app_bar.dart';
 import 'package:flutter_application_10/shared/widgets/custombuttonnav.dart';
 import 'package:flutter_application_10/shared/widgets/customdatepicker.dart';
 import 'package:flutter_application_10/shared/widgets/customoutlinebutton.dart';
 import 'package:flutter_application_10/shared/widgets/dropdown.dart';
+import 'package:flutter_application_10/shared/widgets/loading.dart';
 import 'package:flutter_application_10/shared/widgets/snackbar.dart';
 import 'package:flutter_application_10/shared/widgets/textfield.dart';
 import 'package:get/get.dart';
@@ -50,6 +53,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
   final rolecontroller = Get.find<Rolecontroller>();
   final branchcontroller = Get.find<Branchcontroller>();
   final shiftcontroller = Get.find<Shiftcontroller>();
+  final partcontroller = Get.find<Partcontroller>();
 
   final _formkey = GlobalKey<FormState>();
   final selectcorrencyID = Rxn<int>();
@@ -147,6 +151,8 @@ class _RegisterUserViewState extends State<RegisterUserView> {
   }
 
   Future<void> registerUser() async {
+    final selectpartids = authcontroller.selectedPartIds.toList();
+    print(selectpartids);
     if (_formkey.currentState!.validate()) {
       // Validate required fields for registration
       if (selectbranchid.value == null ||
@@ -214,6 +220,7 @@ class _RegisterUserViewState extends State<RegisterUserView> {
           bankAccountNumber: bankaccountcontroller.text,
           notes: notecontroller.text,
           currencyID: selectcorrencyID.value!,
+          partIDs: selectpartids,
           positionLevel: selectpositionlevel.value ?? 1,
           // profileImage: newProfileImage.value,
           // qrcodeimage: newQrImage.value,
@@ -739,6 +746,48 @@ class _RegisterUserViewState extends State<RegisterUserView> {
                                       },
                                     ),
                                   ),
+                               SizedBox(
+  height: 8,
+),
+Obx(() {
+  if (partcontroller.isLoading.value) {
+    return CustomLoading();
+  }
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _buildLabel("ផ្នែកដែលអាចមេីលបាន"),
+  SingleChildScrollView(
+    child: SizedBox(
+    height: 200,
+    child: GetBuilder<Authcontroller>(
+      builder: (authController) {
+        return GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 1,
+            crossAxisSpacing: 1,
+            childAspectRatio: 3 / 2,
+          ),
+          itemCount: partcontroller.parts.length,
+          itemBuilder: (context, index) {
+            final part = partcontroller.parts[index];
+            final isSelected = authController.selectedPartIds.contains(part.id);
+            return Partcard(
+              part: part,
+              isSelected: isSelected,
+              onTap: () => authController.selectPart(part.id!),
+            );
+          },
+        );
+      },
+    ),
+    ),
+  ),
+    ],
+  );
+}),
+                     
                                   SizedBox(height: 8),
                                   _buildLabel("សាខា"),
 

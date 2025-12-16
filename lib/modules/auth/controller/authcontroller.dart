@@ -22,6 +22,7 @@ class Authcontroller extends GetxController {
   var isLoading = false.obs;
   final GetStorage box = GetStorage();
   final RxString searchQuery = ''.obs;
+ var selectedPartIds = <int>[].obs;
   @override
   void onInit() {
     // Fetch all users first
@@ -36,6 +37,17 @@ class Authcontroller extends GetxController {
 
     super.onInit();
   }
+
+
+  void selectPart(int partId) {
+  if (selectedPartIds.contains(partId)) {
+    selectedPartIds.remove(partId);
+  } else {
+    selectedPartIds.add(partId);
+  }
+    update();
+}
+
 
   Future<File?> pickProfile() async {
     final XFile? pickedFile = await imagepicker.pickImage(
@@ -165,6 +177,7 @@ class Authcontroller extends GetxController {
     required String bankAccountNumber,
     required String notes,
     required int currencyID,
+    required List<int> partIDs,
     required int positionLevel,
     // File? profileImage,
     // File? qrcodeimage,
@@ -200,6 +213,7 @@ class Authcontroller extends GetxController {
         bankAccountNumber: bankAccountNumber,
         notes: notes,
         currencyID: currencyID,
+        partIDs: partIDs,
         positionLevel: positionLevel,
         profileImage: profileImage,
         qrcodeimage: qrcodeimage
@@ -208,7 +222,7 @@ class Authcontroller extends GetxController {
         Get.back();
       }
     } catch (e) {
-      CustomSnackbar.error(title: "ខុសប្រក្រី".tr, message: "កែប្រែបរាជ័យ".tr);
+      CustomSnackbar.error(title: "ខុសប្រក្រី".tr, message: e.toString());
     } finally {
       isLoading.value = false;
     }

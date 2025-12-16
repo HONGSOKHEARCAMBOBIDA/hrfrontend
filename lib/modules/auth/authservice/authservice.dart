@@ -117,6 +117,7 @@ class Authservice {
     required String notes,
     required int positionLevel,
     required int currencyID,
+    required List<int> partIDs,
     File? profileImage,
     File? qrcodeimage,
   }) async {
@@ -151,6 +152,7 @@ class Authservice {
         'bank_account_number': bankAccountNumber,
         'note': notes,
         'currency_id':currencyID,
+        'part_ids':partIDs,
         'position_level': positionLevel,
         if (profileImage != null)
           'profileimage': await MultipartFile.fromFile(
@@ -167,13 +169,15 @@ class Authservice {
       if (response.statusCode == 201) {
         return true;
       } else {
-        debugPrint(
-          'Update failed. Status: ${response.statusCode}, Data: ${response.data}',
-        );
+
+       CustomSnackbar.error(
+  title: "បញ្ហា",
+  message: response.data.toString(),
+);
         return false;
       }
     } catch (e) {
-      debugPrint('Unexpected error: ${e.toString()}');
+      CustomSnackbar.error(title: "បញ្ហា", message: e.toString());
       return false;
     }
   }

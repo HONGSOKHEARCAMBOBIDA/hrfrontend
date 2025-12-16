@@ -29,6 +29,7 @@ import 'package:flutter_application_10/modules/main/mainmiddleware/mainmiddlewar
 import 'package:flutter_application_10/modules/main/mainview/mainview.dart';
 import 'package:flutter_application_10/modules/main/mainview/splacescreen.dart';
 import 'package:flutter_application_10/modules/main/mainview/test.dart';
+import 'package:flutter_application_10/modules/part/binding/partbinding.dart';
 import 'package:flutter_application_10/modules/payroll/payrollbinding/payrollbinding.dart';
 import 'package:flutter_application_10/modules/payroll/payrollview/payrollview.dart';
 import 'package:flutter_application_10/modules/payroll/payrollview/summarypayrollview.dart';
@@ -83,7 +84,8 @@ class MyApp extends StatelessWidget {
             Rolebinding(),
             Branchbinding(),
             Shiftbinding(),
-            Currencybinding()
+            Currencybinding(),
+            Partbinding()
           ],
         ),
 
