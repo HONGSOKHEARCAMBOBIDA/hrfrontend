@@ -16,114 +16,165 @@ class a extends GetView<MainController> {
       backgroundColor: TheColors.bgColor,
       appBar: CustomAppBar(title: "អ្នកប្រេីប្រាស់"),
       drawer: Drawer(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero
-        ),
+        width: 250,
+        backgroundColor: TheColors.bgColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-               SizedBox(
-                height: 82,
-                 child: const DrawerHeader(
-                               
-                               decoration: BoxDecoration(
-                  
+            SizedBox(
+              height: 82,
+              child: const DrawerHeader(
+                decoration: BoxDecoration(
                   color: TheColors.errorColor, // same as your app theme
-                               ),
-                               child: Center(
-                                 child: Text(
-                                   '',
-                                   style: TextStyle(color: Colors.white, fontSize: 24),
-                                 ),
-                               ),
-                             ),
-               ),
-               ListTile(
-              leading: const Icon(Icons.person,color: TheColors.errorColor,),
-              title:  Text('អ្នកប្រេីប្រាស់',style: TextStyles.siemreap(context,fontSize: 12),),
+                ),
+                child: Center(
+                  child: Text(
+                    '',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.person, color: TheColors.warningColor),
+              title: Text(
+                'អ្នកប្រេីប្រាស់',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
               onTap: () {
                 Get.toNamed('/listuser'); // Navigate to Register page
               },
             ),
-            Divider(),
-            
+          
+
             ListTile(
-              leading: const Icon(Icons.person_add,color: TheColors.errorColor,),
-              title:  Text('បង្កេីតអ្នកប្រេីប្រាស់',style: TextStyles.siemreap(context,fontSize: 12),),
+              leading: const Icon(
+                Icons.person_add,
+                color: TheColors.warningColor,
+              ),
+              title: Text(
+                'បង្កេីតអ្នកប្រេីប្រាស់',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
               onTap: () {
                 Get.toNamed('/register'); // Navigate to Register page
               },
             ),
-                        Divider(),
-            
+        
             ListTile(
-              leading: const Icon(Icons.admin_panel_settings,color: TheColors.errorColor,),
-              title:  Text('តួនាទី',style: TextStyles.siemreap(context,fontSize: 12),),
+              leading: const Icon(
+                Icons.admin_panel_settings,
+                color: TheColors.warningColor,
+              ),
+              title: Text(
+                'តួនាទី',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
               onTap: () {
-               Get.to(()=>Roleview(),binding: Rolebinding(),transition: Transition.rightToLeft);
+                Get.to(
+                  () => Roleview(),
+                  binding: Rolebinding(),
+                  transition: Transition.rightToLeft,
+                );
               },
             ),
-               Divider(),         
+        
             ListTile(
-              leading: const Icon(Icons.person_2_sharp,color: TheColors.errorColor,),
-              title:  Text('បុគ្គលិក',style: TextStyles.siemreap(context,fontSize: 12),),
+              leading: const Icon(
+                Icons.person_2_sharp,
+                color: TheColors.warningColor,
+              ),
+              title: Text(
+                'បុគ្គលិក',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
               onTap: () {
-               Get.toNamed('/listemployee'); 
+                Get.toNamed('/listemployee');
               },
             ),
-             Divider(),   
-                        ListTile(
-              leading: const Icon(Icons.home_work,color: TheColors.errorColor,),
-              title:  Text('សាខា',style: TextStyles.siemreap(context,fontSize: 12),),
+       
+            ListTile(
+              leading: const Icon(Icons.home_work, color: TheColors.warningColor),
+              title: Text(
+                'សាខា',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
               onTap: () {
-               Get.toNamed('/branch'); 
+                Get.toNamed('/branch');
               },
             ),
-               Divider(),   
+         
             ListTile(
-              leading: const Icon(Icons.lock_clock,color: TheColors.errorColor,),
-              title:  Text('វេនធ្វេីការ',style: TextStyles.siemreap(context,fontSize: 12),),
+              leading: const Icon(
+                Icons.lock_clock,
+                color: TheColors.warningColor,
+              ),
+              title: Text(
+                'វេនធ្វេីការ',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
               onTap: () {
-               Get.toNamed('/shift'); 
+                Get.toNamed('/shift');
               },
             ),
-            Divider(),   
+
             ListTile(
-              leading: const Icon(Icons.monetization_on,color: TheColors.errorColor,),
-              title:  Text('រូបិយប័ណ្ណ',style: TextStyles.siemreap(context,fontSize: 12),),
+              leading: const Icon(
+                Icons.monetization_on,
+                color: TheColors.warningColor,
+              ),
+              title: Text(
+                'រូបិយប័ណ្ណ',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
               onTap: () {
-               Get.toNamed('/currency'); 
+                Get.toNamed('/currency');
               },
             ),
-            Divider(),   
+          
             ListTile(
-              leading: const Icon(Icons.monetization_on,color: TheColors.errorColor,),
-              title:  Text('ប្ដូរូបិយប័ណ្ណ',style: TextStyles.siemreap(context,fontSize: 12),),
+              leading: const Icon(
+                Icons.monetization_on,
+                color: TheColors.warningColor,
+              ),
+              title: Text(
+                'ប្ដូរូបិយប័ណ្ណ',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
               onTap: () {
-               Get.toNamed('/currencypair'); 
+                Get.toNamed('/currencypair');
               },
             ),
-                        Divider(),   
+          
             ListTile(
-              leading: const Icon(Icons.monetization_on,color: TheColors.errorColor,),
-              title:  Text('ការប្ដូរប្រាក់',style: TextStyles.siemreap(context,fontSize: 12),),
+              leading: const Icon(
+                Icons.monetization_on,
+                color: TheColors.warningColor,
+              ),
+              title: Text(
+                'ការប្ដូរប្រាក់',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
               onTap: () {
-               Get.toNamed('/exchangrate'); 
+                Get.toNamed('/exchangrate');
               },
             ),
-            Divider(),
+        
             ListTile(
-              leading: const Icon(Icons.logout,color: TheColors.errorColor,),
-              title:  Text('ចាកចេញ',style: TextStyles.siemreap(context,fontSize: 12),),
+              leading: const Icon(Icons.logout, color: TheColors.warningColor),
+              title: Text(
+                'ចាកចេញ',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
               onTap: () {
                 controller.logout();
               },
             ),
-            Divider()
+           
           ],
         ),
       ),
-
     );
   }
 }

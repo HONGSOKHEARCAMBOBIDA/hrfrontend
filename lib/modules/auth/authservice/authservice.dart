@@ -182,10 +182,12 @@ class Authservice {
     }
   }
 
-  Future<bool> updateuser(Userupdatemodel user) async {
+  Future<bool> updateuser(int userId,Userupdatemodel user) async {
     try {
+      
+      
       final response = await apiProvider.put(
-        'updateuser/${user.ID}',
+        'updateuser/$userId',
         user.toJson(),
       );
       if (response.statusCode == 200) {
@@ -195,11 +197,7 @@ class Authservice {
         return false;
       }
     } catch (e) {
-      CustomSnackbar.error(
-        title: "កំហុស",
-        message: "មានបញ្ហា: ${e.toString()}",
-      );
-      return false;
+       throw Exception(e.toString());
     }
   }
 

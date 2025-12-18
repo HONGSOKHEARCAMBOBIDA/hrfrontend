@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_10/core/theme/app_theme.dart';
 import 'package:flutter_application_10/modules/attendance/binding/attendancebinding.dart';
 import 'package:flutter_application_10/modules/attendance/view/attendanceview.dart';
 import 'package:flutter_application_10/modules/attendance/view/createattendanceview.dart';
@@ -20,15 +19,12 @@ import 'package:flutter_application_10/modules/employee/employeeview/employeevie
 import 'package:flutter_application_10/modules/exchangerate/binding/exchangeratebinding.dart';
 import 'package:flutter_application_10/modules/exchangerate/view/exchangerateview.dart';
 import 'package:flutter_application_10/modules/leave/leavebinding/leavebinding.dart';
-import 'package:flutter_application_10/modules/leave/leaveview/createleaveview.dart';
 import 'package:flutter_application_10/modules/leave/leaveview/leaveview.dart';
 import 'package:flutter_application_10/modules/loan/loanbinding/loanbinding.dart';
 import 'package:flutter_application_10/modules/loan/view/loanview.dart';
 import 'package:flutter_application_10/modules/main/binding/mainbinding.dart';
 import 'package:flutter_application_10/modules/main/mainmiddleware/mainmiddleware.dart';
 import 'package:flutter_application_10/modules/main/mainview/mainview.dart';
-import 'package:flutter_application_10/modules/main/mainview/splacescreen.dart';
-import 'package:flutter_application_10/modules/main/mainview/test.dart';
 import 'package:flutter_application_10/modules/part/binding/partbinding.dart';
 import 'package:flutter_application_10/modules/payroll/payrollbinding/payrollbinding.dart';
 import 'package:flutter_application_10/modules/payroll/payrollview/payrollview.dart';

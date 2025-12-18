@@ -1,12 +1,8 @@
 import 'dart:io';
-
-
 import 'package:flutter_application_10/data/models/usermodel.dart' as myModel;
-import 'package:flutter_application_10/data/models/userregistermodel.dart';
 import 'package:flutter_application_10/data/models/userupdatemodel.dart';
 import 'package:flutter_application_10/modules/auth/authservice/authservice.dart';
 import 'package:flutter_application_10/modules/main/binding/mainbinding.dart';
-import 'package:flutter_application_10/modules/main/mainview/a.dart';
 import 'package:flutter_application_10/modules/main/mainview/mainview.dart';
 import 'package:flutter_application_10/shared/widgets/snackbar.dart';
 import 'package:get/get.dart';
@@ -114,7 +110,13 @@ class Authcontroller extends GetxController {
       );
 
       if (response.token != null && response.token!.isNotEmpty) {
+              final List<String> partNames =
+          response.user?.parts
+              ?.where((p) => p.partName != null)
+              .map((p) => p.partName!)
+              .toList() ?? <String>[];
         await box.write('token', response.token); // <-- await is important
+        await box.write('part', partNames);
         CustomSnackbar.success(title: "ជោគជ័យ", message: "ចូលបានសម្រេច");
         Get.offAll(() => MainView(), binding: MainBinding());
       } else {
@@ -228,10 +230,10 @@ class Authcontroller extends GetxController {
     }
   }
 
-  Future<void> updateuser(Userupdatemodel user) async {
+  Future<void> updateuser(int userId,Userupdatemodel user) async {
     try {
       isLoading.value = true;
-      bool isupdated = await authservice.updateuser(user);
+      bool isupdated = await authservice.updateuser(userId,user);
       if (isupdated) {
         await fetchUser();
         Get.back(result: true);

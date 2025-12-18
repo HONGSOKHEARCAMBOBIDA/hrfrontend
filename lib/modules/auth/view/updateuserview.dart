@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_10/core/helper/show_communce_buttonsheet.dart';
-import 'package:flutter_application_10/core/helper/show_district_buttonsheet.dart';
-import 'package:flutter_application_10/core/helper/show_province_buttonsheet.dart';
-import 'package:flutter_application_10/core/helper/show_village_buttonsheet.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
 import 'package:flutter_application_10/data/models/userupdatemodel.dart';
 import 'package:flutter_application_10/modules/auth/controller/authcontroller.dart';
 import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
-import 'package:flutter_application_10/modules/communce/communcecontroller/communcecontroller.dart';
-import 'package:flutter_application_10/modules/district/districtcontroller/districtcontroller.dart';
-import 'package:flutter_application_10/modules/province/provincecontroller/provincecontroller.dart';
+import 'package:flutter_application_10/modules/part/controller/partcontroller.dart';
 import 'package:flutter_application_10/modules/role/rolecontroller/rolecontroller.dart';
-import 'package:flutter_application_10/modules/village/villagecontroller/villagecontroller.dart';
+import 'package:flutter_application_10/shared/partcard.dart';
 import 'package:flutter_application_10/shared/widgets/app_bar.dart';
 import 'package:flutter_application_10/shared/widgets/custombuttonnav.dart';
-import 'package:flutter_application_10/shared/widgets/customdatepicker.dart';
-import 'package:flutter_application_10/shared/widgets/customoutlinebutton.dart';
 import 'package:flutter_application_10/shared/widgets/dropdown.dart';
+import 'package:flutter_application_10/shared/widgets/loading.dart';
 import 'package:flutter_application_10/shared/widgets/snackbar.dart';
 import 'package:flutter_application_10/shared/widgets/textfield.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
+
 
 class Updateuserview extends StatefulWidget {
   final dynamic userModel; // Use your actual user model type
+
 
   const Updateuserview({super.key, required this.userModel});
 
@@ -38,6 +32,7 @@ class _UpdateuserviewState extends State<Updateuserview> {
 
   final rolecontroller = Get.find<Rolecontroller>();
   final branchcontroller = Get.find<Branchcontroller>();
+  final partcontroller = Get.find<Partcontroller>();
 
   final _formkey = GlobalKey<FormState>();
   final selectbranchid = Rxn<int>();
@@ -66,11 +61,24 @@ class _UpdateuserviewState extends State<Updateuserview> {
     selectbranchid.value = widget.userModel.branchId;
 
     selectroleid.value = widget.userModel.roleId;
+    authcontroller.selectedPartIds.clear();
+  
+  // Check if parts exist and add them
+
+    if (widget.userModel.parts != null) {
+    for (var part in widget.userModel.parts!) {
+      if (part.partId != null) {
+        authcontroller.selectedPartIds.add(part.partId!);
+      }
+    }
+  }
+
   }
 
   void _loadInitialData() {
     branchcontroller.fetchbranch();
     rolecontroller.fetchrole();
+    partcontroller.fetchpart();
   }
 
   Future<void> _updateUser() async {
@@ -93,10 +101,12 @@ class _UpdateuserviewState extends State<Updateuserview> {
         contact: contactcontroller.text.trim(),
 
         roleId: selectroleid.value!,
+        partIds: authcontroller.selectedPartIds.toList(), 
       );
 
       try {
-        await authcontroller.updateuser(user);
+        print(user.toJson());
+        await authcontroller.updateuser(user.ID,user);
         Get.back(); // Navigate back after successful update
       } catch (e) {
         CustomSnackbar.error(
@@ -211,6 +221,45 @@ class _UpdateuserviewState extends State<Updateuserview> {
                                 selectroleid.value = Value;
                               },
                             ),
+                            SizedBox(height: 8,),
+                            Obx(() {
+  if (partcontroller.isLoading.value) {
+    return CustomLoading();
+  }
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _buildLabel("ផ្នែកដែលអាចមេីលបាន"),
+  SingleChildScrollView(
+    child: SizedBox(
+    height: 200,
+    child: GetBuilder<Authcontroller>(
+      builder: (authController) {
+        return GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 1,
+            crossAxisSpacing: 1,
+            childAspectRatio: 3 / 2,
+          ),
+          itemCount: partcontroller.parts.length,
+          itemBuilder: (context, index) {
+            final part = partcontroller.parts[index];
+            final isSelected = authController.selectedPartIds.contains(part.id);
+            return Partcard(
+              part: part,
+              isSelected: isSelected,
+              onTap: () => authController.selectPart(part.id!),
+            );
+          },
+        );
+      },
+    ),
+    ),
+  ),
+    ],
+  );
+}),
                           ],
                         ),
                         SizedBox(height: 5),

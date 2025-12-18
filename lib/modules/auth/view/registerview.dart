@@ -790,19 +790,6 @@ Obx(() {
                      
                                   SizedBox(height: 8),
                                   _buildLabel("សាខា"),
-
-                                  // CustomDropdown(
-                                  //   selectedValue: selectbranchid,
-                                  //   items: branchcontroller.branch,
-                                  //   hintText: "រេីសសាខា",
-                                  //   onChanged: (value) async {
-                                  //     selectbranchid.value = value;
-                                  //     shiftcontroller.shift.clear();
-                                  //     shiftcontroller.fetchshift(
-                                  //       selectbranchid.value,
-                                  //     );
-                                  //   },
-                                  // ),
                                   Obx(
                                     () => CustomOutlinedButton(
                                       text: selectedbranchname.value.isEmpty

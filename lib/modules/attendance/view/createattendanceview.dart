@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
 import 'package:flutter_application_10/modules/attendance/controller/attendancecontroller.dart';
+import 'package:flutter_application_10/modules/auth/controller/authcontroller.dart';
+import 'package:flutter_application_10/modules/main/maincontroller/maincontroller.dart';
 import 'package:flutter_application_10/shared/widgets/app_bar.dart';
 import 'package:flutter_application_10/shared/widgets/elevated_button.dart';
 import 'package:flutter_application_10/shared/widgets/employeeshiftcard.dart';
@@ -18,7 +20,7 @@ class Createattendanceview extends StatefulWidget {
 
 class _CreateattendanceviewState extends State<Createattendanceview> {
   final Attendancecontroller attendancecontroller =Get.find<Attendancecontroller>();
-
+  final authcontroller = Get.find<MainController>();
   Future<void> handleCheckIn() async {
     final selectedId = attendancecontroller.selectedShiftId.value;
     if (selectedId == null) {
@@ -83,7 +85,7 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.person, color: TheColors.errorColor),
+              leading: const Icon(Icons.person, color: TheColors.warningColor),
               title: Text(
                 'របាយការណ៍វត្តមាន',
                 style: TextStyles.siemreap(context, fontSize: 12),
@@ -92,11 +94,11 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
                 Get.toNamed('/viewattendance'); // Navigate to Register page
               },
             ),
-            Divider(),
+            
             ListTile(
               leading: const Icon(
                 Icons.monetization_on,
-                color: TheColors.errorColor,
+                color: TheColors.warningColor,
               ),
               title: Text(
                 'បុគ្គលិកខ្ចីលុយ',
@@ -106,11 +108,11 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
                 Get.toNamed('/loan'); // Navigate to Register page
               },
             ),
-            Divider(),
+            
             ListTile(
               leading: const Icon(
                 Icons.leave_bags_at_home,
-                color: TheColors.errorColor,
+                color: TheColors.warningColor,
               ),
               title: Text(
                 'សុំច្បាប់',
@@ -120,11 +122,11 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
                 Get.toNamed('/leave'); // Navigate to Register page
               },
             ),
-            Divider(),
+            
             ListTile(
               leading: const Icon(
                 Icons.monetization_on_sharp,
-                color: TheColors.errorColor,
+                color: TheColors.warningColor,
               ),
               title: Text(
                 'បេីកប្រាក់ខែ',
@@ -134,11 +136,11 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
                 Get.toNamed('/payroll'); // Navigate to Register page
               },
             ),
-          Divider(),
+          
             ListTile(
               leading: const Icon(
                 Icons.monetization_on_sharp,
-                color: TheColors.errorColor,
+                color: TheColors.warningColor,
               ),
               title: Text(
                 'របាយការណ៍បេីកប្រាក់ខែ',
@@ -148,7 +150,17 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
                 Get.toNamed('/payrollview'); // Navigate to Register page
               },
             ),
-            Divider(),
+              ListTile(
+              leading: const Icon(Icons.logout, color: TheColors.warningColor),
+              title: Text(
+                'ចាកចេញ',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
+              onTap: () {
+                authcontroller.logout();
+              },
+            )
+            
           ],
         ),
       ),
