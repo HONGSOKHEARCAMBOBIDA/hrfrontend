@@ -11,7 +11,7 @@ class UserDetailBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = TheColors.bgColor;
+   
 
     // String formatDate(String? isoDate) {
     //   if (isoDate == null || isoDate.isEmpty) return 'N/A';
@@ -146,12 +146,12 @@ class UserDetailBottomSheet extends StatelessWidget {
     ),
           child: Padding(
             padding: const EdgeInsets.all(2.0),
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(
-                'https://cdn-icons-png.flaticon.com/128/428/428933.png',
-              ),
-            ),
+            child:CircleAvatar(
+              
+  radius: 50,
+  backgroundImage: AssetImage('assets/user/information.png'),
+),
+
           ),
         ),
         const SizedBox(height: 12),

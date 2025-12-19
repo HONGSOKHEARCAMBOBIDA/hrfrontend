@@ -94,7 +94,19 @@ class _cState extends State<c> {
                 Get.toNamed('/viewattendance'); // Navigate to Register page
               },
             ),
-
+  ListTile(
+              leading: const Icon(
+                Icons.monetization_on,
+                color: TheColors.warningColor,
+              ),
+              title: Text(
+                'បុគ្គលិកខ្ចីលុយ',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
+              onTap: () {
+                Get.toNamed('/loan'); // Navigate to Register page
+              },
+            ),
             
             ListTile(
               leading: const Icon(
@@ -125,8 +137,13 @@ class _cState extends State<c> {
               },
             ),
 
-                ListTile(
-              leading: const Icon(Icons.logout, color: TheColors.warningColor),
+                       Padding(
+              padding: const EdgeInsets.only(left: 5,right: 5),
+              child: Divider(color: TheColors.gray,height: 0.5,),
+            ),
+        
+            ListTile(
+              leading: const Icon(Icons.logout, color: TheColors.red),
               title: Text(
                 'ចាកចេញ',
                 style: TextStyles.siemreap(context, fontSize: 12),

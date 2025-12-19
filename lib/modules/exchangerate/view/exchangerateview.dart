@@ -58,7 +58,7 @@ class _ExchangerateviewState extends State<Exchangerateview> {
                             child: Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 8, right: 8),
+                                  padding: const EdgeInsets.only(left: 14, right: 8),
                                   child: 
                                   ExchangeRateCard(
                                     isActive: excharate.isActive,

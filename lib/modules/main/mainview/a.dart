@@ -40,7 +40,7 @@ class a extends GetView<MainController> {
               leading: const Icon(Icons.person, color: TheColors.warningColor),
               title: Text(
                 'អ្នកប្រេីប្រាស់',
-                style: TextStyles.siemreap(context, fontSize: 12),
+                style: TextStyles.siemreap(context, fontSize: 12,),
               ),
               onTap: () {
                 Get.toNamed('/listuser'); // Navigate to Register page
@@ -160,9 +160,13 @@ class a extends GetView<MainController> {
                 Get.toNamed('/exchangrate');
               },
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 5,right: 5),
+              child: Divider(color: TheColors.gray,height: 0.5,),
+            ),
         
             ListTile(
-              leading: const Icon(Icons.logout, color: TheColors.warningColor),
+              leading: const Icon(Icons.logout, color: TheColors.red),
               title: Text(
                 'ចាកចេញ',
                 style: TextStyles.siemreap(context, fontSize: 12),

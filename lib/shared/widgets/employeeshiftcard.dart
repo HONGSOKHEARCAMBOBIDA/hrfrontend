@@ -21,11 +21,15 @@ class Employeeshiftcard extends StatelessWidget {
 
     return Card(
       color: isSelected
-          ? TheColors.secondaryColor.withOpacity(0.2)
+          ? TheColors.warningColor
           : Colors.white,
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12),
+    
+      
+      ),
+      
       shadowColor: theme.colorScheme.shadow.withOpacity(0.1),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
@@ -42,12 +46,12 @@ class Employeeshiftcard extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: isSelected
-                        ? TheColors.primaryColor
+                        ? TheColors.errorColor
                         : theme.dividerColor,
-                    width: 2,
+                    width: 1,
                   ),
                   color: isSelected
-                      ? TheColors.primaryColor
+                      ? TheColors.errorColor
                       : Colors.transparent,
                 ),
                 child: Icon(
@@ -64,8 +68,9 @@ class Employeeshiftcard extends StatelessWidget {
                       employeeshiftmodel.shiftName ?? 'No Name',
                       style: TextStyles.siemreap(
                         context,
-                        fontSize: 12,
+                        fontSize: 13,
                         fontweight: FontWeight.bold,
+                        color: isSelected ? TheColors.errorColor : TheColors.black
                       ),
                     ),
                     Row(

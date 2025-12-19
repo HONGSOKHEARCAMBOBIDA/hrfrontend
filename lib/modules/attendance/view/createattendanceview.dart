@@ -94,6 +94,33 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
                 Get.toNamed('/viewattendance'); // Navigate to Register page
               },
             ),
+                        ListTile(
+              leading: const Icon(
+                Icons.person_2_sharp,
+                color: TheColors.warningColor,
+              ),
+              title: Text(
+                'បុគ្គលិក',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
+              onTap: () {
+                Get.toNamed('/listemployee');
+              },
+            ),
+                     
+            ListTile(
+              leading: const Icon(
+                Icons.lock_clock,
+                color: TheColors.warningColor,
+              ),
+              title: Text(
+                'វេនធ្វេីការ',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
+              onTap: () {
+                Get.toNamed('/shift');
+              },
+            ),
             
             ListTile(
               leading: const Icon(
@@ -150,8 +177,13 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
                 Get.toNamed('/payrollview'); // Navigate to Register page
               },
             ),
-              ListTile(
-              leading: const Icon(Icons.logout, color: TheColors.warningColor),
+                     Padding(
+              padding: const EdgeInsets.only(left: 5,right: 5),
+              child: Divider(color: TheColors.gray,height: 0.5,),
+            ),
+        
+            ListTile(
+              leading: const Icon(Icons.logout, color: TheColors.red),
               title: Text(
                 'ចាកចេញ',
                 style: TextStyles.siemreap(context, fontSize: 12),
@@ -159,7 +191,7 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
               onTap: () {
                 authcontroller.logout();
               },
-            )
+            ),
             
           ],
         ),

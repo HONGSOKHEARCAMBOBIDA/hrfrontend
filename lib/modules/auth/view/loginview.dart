@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
-import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
 import 'package:flutter_application_10/modules/auth/controller/authcontroller.dart';
 import 'package:flutter_application_10/shared/widgets/elevated_button.dart';
 import 'package:flutter_application_10/shared/widgets/textfield.dart';
@@ -82,6 +81,7 @@ class _LoginViewState extends State<LoginView> {
                                     hintText: "លេខកូដ",
                                     
                                     prefixIcon: Icons.lock,
+                                   
                                     obscureText: true,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
@@ -30,12 +29,12 @@ class CustomUserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-   
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.0),
       child: Padding(
-        padding: const EdgeInsets.only(left: 13,top: 5,right: 2,bottom: 2),
+        padding: const EdgeInsets.only(left: 13, top: 5, right: 2, bottom: 2),
         child: Row(
           children: [
             // Profile avatar with status indicator
@@ -44,27 +43,23 @@ class CustomUserCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(50),
                   child: Container(
-                        decoration: BoxDecoration(
-      border: Border.all(
-        color: TheColors.warningColor,// Border color
-        width: 0.9,
-      ),
-      borderRadius: BorderRadius.circular(50),
-    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            "https://cdn-icons-png.flaticon.com/128/428/428933.png",
-                        width: 45,
-                        height: 45,
-                        fit: BoxFit.cover,
-                        memCacheWidth: 100,
-                        memCacheHeight: 100,
-                        maxWidthDiskCache: 200,
-                        maxHeightDiskCache: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: TheColors.errorColor, // Border color
+                        width: 0.9,
                       ),
+                      borderRadius: BorderRadius.circular(50),
                     ),
+                    child: Padding(
+  padding: const EdgeInsets.all(2.0),
+  child: Image.asset(
+    'assets/user/information.png',
+    width: 45,
+    height: 45,
+    fit: BoxFit.cover,
+  ),
+),
+
                   ),
                 ),
                 Positioned(
@@ -102,26 +97,26 @@ class CustomUserCard extends StatelessWidget {
                           fontSize: 12,
                           fontweight: FontWeight.bold,
                         ),
-                      
+
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(width: 10),
                       Text("("),
-                      SizedBox(width: 2,),
-                                            Text(
+                      SizedBox(width: 2),
+                      Text(
                         branch,
                         style: TextStyles.siemreap(
                           context,
                           fontSize: 10,
-                          color: TheColors.secondaryColor
+                          color: TheColors.secondaryColor,
                         ),
-                      
+
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                        SizedBox(width: 2,),
-                         Text(")"),
+                      SizedBox(width: 2),
+                      Text(")"),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -132,7 +127,8 @@ class CustomUserCard extends StatelessWidget {
                           role,
                           style: GoogleFonts.siemreap(
                             // 👈 Replace with your font
-                          color: TheColors.orange,fontSize: 10
+                            color: TheColors.orange,
+                            fontSize: 10,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -151,63 +147,59 @@ class CustomUserCard extends StatelessWidget {
     );
   }
 
-Widget _buildActionMenu(BuildContext context) {
-  final theme = Theme.of(context);
+  Widget _buildActionMenu(BuildContext context) {
+    final theme = Theme.of(context);
 
-  return PopupMenuButton<String>(
-    icon: Icon(
-      Icons.more_vert,
-      color: theme.iconTheme.color?.withOpacity(0.7),
-    ),
-    padding: EdgeInsets.zero,
-    color: TheColors.bgColor,
-    elevation: 0,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
-      side: BorderSide(
-        color: TheColors.orange,
-        width: 1,
+    return PopupMenuButton<String>(
+      icon: Icon(
+        Icons.more_vert,
+        color: theme.iconTheme.color?.withOpacity(0.7),
       ),
-    ),
-    onSelected: (value) {
-      if (value == 'edit') {
-        onEdit();
-      } else if (value == 'delete') {
-        onDelete();
-      }
-    },
-    itemBuilder: (context) => [
-      PopupMenuItem(
-        value: 'edit',
-        child: Row(
-          children: [
-            Icon(Icons.edit, color: TheColors.orange, size: 20),
-            const SizedBox(width: 12),
-            Text('កែប្រែ', style: TextStyles.siemreap(context, fontSize: 12)),
-          ],
+      padding: EdgeInsets.zero,
+      color: TheColors.bgColor,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: TheColors.orange, width: 1),
+      ),
+      onSelected: (value) {
+        if (value == 'edit') {
+          onEdit();
+        } else if (value == 'delete') {
+          onDelete();
+        }
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 'edit',
+          child: Row(
+            children: [
+              Icon(Icons.edit, color: TheColors.orange, size: 20),
+              const SizedBox(width: 12),
+              Text('កែប្រែ', style: TextStyles.siemreap(context, fontSize: 12)),
+            ],
+          ),
         ),
-      ),
-      PopupMenuItem(
-        value: 'delete',
-        child: Row(
-          children: [
-            Icon(
-              isActive == true ? Icons.block : Icons.check_circle,
-              color: isActive == true
-                  ? TheColors.errorColor
-                  : TheColors.successColor,
-              size: 20,
-            ),
-            const SizedBox(width: 12),
-            Text(
-              isActive == true ? 'បិទ' : 'បើក',
-              style: TextStyles.siemreap(context, fontSize: 12),
-            ),
-          ],
+        PopupMenuItem(
+          value: 'delete',
+          child: Row(
+            children: [
+              Icon(
+                isActive == true ? Icons.block : Icons.check_circle,
+                color: isActive == true
+                    ? TheColors.errorColor
+                    : TheColors.successColor,
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                isActive == true ? 'បិទ' : 'បើក',
+                style: TextStyles.siemreap(context, fontSize: 12),
+              ),
+            ],
+          ),
         ),
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 }

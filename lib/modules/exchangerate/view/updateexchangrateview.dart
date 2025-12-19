@@ -4,14 +4,12 @@ import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/data/models/exchangeratemodel.dart';
 import 'package:flutter_application_10/modules/currencypair/controller/currencypaircontroller.dart';
 import 'package:flutter_application_10/modules/exchangerate/controller/exchangratecontroller.dart';
-import 'package:flutter_application_10/modules/main/mainview/a.dart';
 import 'package:flutter_application_10/shared/widgets/app_bar.dart';
 import 'package:flutter_application_10/shared/widgets/customoutlinebutton.dart';
 import 'package:flutter_application_10/shared/widgets/elevated_button.dart';
 import 'package:flutter_application_10/shared/widgets/snackbar.dart';
 import 'package:flutter_application_10/shared/widgets/textfield.dart';
 import 'package:get/get.dart';
-import 'package:collection/collection.dart';
 
 class Updateexchangrateview extends StatefulWidget {
   final Data exchangerate;
@@ -137,7 +135,7 @@ class _UpdateexchangrateviewState extends State<Updateexchangrateview> {
                   ),
                 ),
               ),
-              SizedBox(height: 8,),
+              SizedBox(height: 15,),
               CustomElevatedButton(
                 text: "កែប្រែ",
                 onPressed: updateExchangerate,
