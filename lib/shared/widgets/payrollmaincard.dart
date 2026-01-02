@@ -3,7 +3,6 @@ import 'package:flutter_application_10/core/helper/format.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/data/models/payrollmodel.dart';
 import 'package:flutter_application_10/modules/payroll/payrollcontroller/payrollcontroller.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 

@@ -18,7 +18,9 @@ class c extends StatefulWidget {
 }
 
 class _cState extends State<c> {
-  final Attendancecontroller attendancecontroller = Get.put(Attendancecontroller());
+  final Attendancecontroller attendancecontroller = Get.put(
+    Attendancecontroller(),
+  );
   final maincontrolle = Get.put(MainController());
 
   Future<void> handleCheckIn() async {
@@ -66,6 +68,7 @@ class _cState extends State<c> {
     return Scaffold(
       backgroundColor: TheColors.bgColor,
       drawer: Drawer(
+        backgroundColor: TheColors.bgColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         child: ListView(
           padding: EdgeInsets.zero,
@@ -94,7 +97,7 @@ class _cState extends State<c> {
                 Get.toNamed('/viewattendance'); // Navigate to Register page
               },
             ),
-  ListTile(
+            ListTile(
               leading: const Icon(
                 Icons.monetization_on,
                 color: TheColors.warningColor,
@@ -107,7 +110,7 @@ class _cState extends State<c> {
                 Get.toNamed('/loan'); // Navigate to Register page
               },
             ),
-            
+
             ListTile(
               leading: const Icon(
                 Icons.leave_bags_at_home,
@@ -122,7 +125,6 @@ class _cState extends State<c> {
               },
             ),
 
-            
             ListTile(
               leading: const Icon(
                 Icons.monetization_on_sharp,
@@ -137,11 +139,15 @@ class _cState extends State<c> {
               },
             ),
 
-                       Padding(
-              padding: const EdgeInsets.only(left: 5,right: 5),
-              child: Divider(color: TheColors.gray,height: 0.5,),
+            Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: Divider(
+                color: TheColors.orange.withOpacity(0.3),
+                thickness: 0.5,
+                height: 1,
+              ),
             ),
-        
+
             ListTile(
               leading: const Icon(Icons.logout, color: TheColors.red),
               title: Text(
@@ -152,7 +158,6 @@ class _cState extends State<c> {
                 maincontrolle.logout();
               },
             ),
-            
           ],
         ),
       ),

@@ -1,11 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/theme/constants/constants.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
-import 'package:flutter_application_10/shared/widgets/employeeshifteditview.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:get/get.dart';
 class CustomEmployeeCard extends StatelessWidget {
   final String namekh;
   final String nameenglish;
@@ -144,7 +141,7 @@ class CustomEmployeeCard extends StatelessWidget {
                             "(${nameenglish})",
                             style: GoogleFonts.siemreap(
                               fontSize: 11,
-                              color: TheColors.black.withOpacity(0.8),
+                              color: TheColors.orange,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -202,11 +199,11 @@ class CustomEmployeeCard extends StatelessWidget {
                               "$basesalary",
                               style: GoogleFonts.siemreap(
                                 fontSize: 12,
-                                color: TheColors.errorColor,
+                                color: TheColors.red,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text("$currencysymbol",style: GoogleFonts.siemreap(fontSize: 13,color: TheColors.errorColor),)
+                            Text("$currencysymbol",style: GoogleFonts.siemreap(fontSize: 13,color: TheColors.red),)
                           ],
                         ),
                         SizedBox(width: 1,),

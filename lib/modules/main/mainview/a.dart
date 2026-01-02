@@ -160,9 +160,13 @@ class a extends GetView<MainController> {
                 Get.toNamed('/exchangrate');
               },
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 5,right: 5),
-              child: Divider(color: TheColors.gray,height: 0.5,),
+             Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: Divider(
+                color: TheColors.orange.withOpacity(0.3),
+                thickness: 0.5,
+                height: 1,
+              ),
             ),
         
             ListTile(

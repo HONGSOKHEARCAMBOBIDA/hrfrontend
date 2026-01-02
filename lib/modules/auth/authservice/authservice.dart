@@ -56,7 +56,8 @@ class Authservice {
         throw Exception('Login failed: ${response.data}');
       }
     } catch (e) {
-      throw Exception('Login error: $e');
+      
+      throw Exception(e.toString());
     }
   }
 

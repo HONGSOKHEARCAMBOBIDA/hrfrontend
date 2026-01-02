@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_10/core/helper/show_branch_buttonsheet.dart';
-import 'package:flutter_application_10/core/helper/showcurrencyselector.dart';
 import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
 import 'package:flutter_application_10/core/theme/custom_theme/text_styles.dart';
-import 'package:flutter_application_10/data/models/payrollrequestmodel.dart';
 import 'package:flutter_application_10/modules/branch/branchcontroller/branchcontroller.dart';
 import 'package:flutter_application_10/modules/currency/controller/currencycontroller.dart';
 import 'package:flutter_application_10/modules/payroll/payrollcontroller/payrollcontroller.dart';
 import 'package:flutter_application_10/shared/widgets/app_bar.dart';
-import 'package:flutter_application_10/shared/widgets/custombuttonnav.dart';
-import 'package:flutter_application_10/shared/widgets/elevated_button.dart';
 import 'package:flutter_application_10/shared/widgets/loading.dart';
-import 'package:flutter_application_10/shared/widgets/payrolldraffcard.dart';
 import 'package:flutter_application_10/shared/widgets/payrollmaincard.dart';
 import 'package:get/get.dart';
 
@@ -106,7 +101,7 @@ class _PayrollviewState extends State<Payrollview> {
                         decoration: BoxDecoration(
                           color: isSelected
                               ? TheColors.secondaryColor
-                              : Colors.grey[100],
+                              : TheColors.bgColor,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
                             color: TheColors.orange,
@@ -133,7 +128,7 @@ class _PayrollviewState extends State<Payrollview> {
                               style: TextStyles.siemreap(
                                 context,
                                 fontSize: 10,
-                                color: TheColors.errorColor,
+                                color: isSelected ? TheColors.bgColor : TheColors.black,
                               ),
                             ),
                           ],

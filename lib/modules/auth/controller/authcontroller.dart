@@ -126,7 +126,10 @@ class Authcontroller extends GetxController {
         );
       }
     } catch (e) {
-      print("Login Error: $e");
+       CustomSnackbar.error(
+    title: "បរាជ័យ",
+    message:e.toString(),
+  );
     } finally {
       isLoading.value = false;
     }

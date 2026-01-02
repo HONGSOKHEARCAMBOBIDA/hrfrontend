@@ -1,167 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_10/modules/attendance/binding/attendancebinding.dart';
-import 'package:flutter_application_10/modules/attendance/view/attendanceview.dart';
-import 'package:flutter_application_10/modules/attendance/view/createattendanceview.dart';
-import 'package:flutter_application_10/modules/auth/binding/authbinding.dart';
-import 'package:flutter_application_10/modules/auth/view/loginview.dart';
-import 'package:flutter_application_10/modules/auth/view/registerview.dart';
-import 'package:flutter_application_10/modules/auth/view/userview.dart';
-import 'package:flutter_application_10/modules/branch/brandbinding/branchbinding.dart';
-import 'package:flutter_application_10/modules/branch/view/branchview.dart';
-import 'package:flutter_application_10/modules/communce/communcebinding/communcebinding.dart';
-import 'package:flutter_application_10/modules/currency/binding/currencybinding.dart';
-import 'package:flutter_application_10/modules/currency/view/currencyview.dart';
-import 'package:flutter_application_10/modules/currencypair/binding/currencypairbinding.dart';
-import 'package:flutter_application_10/modules/currencypair/view/currencypairview.dart';
-import 'package:flutter_application_10/modules/district/districtbinding/districtbinding.dart';
-import 'package:flutter_application_10/modules/employee/employeebinding/employeebinding.dart';
-import 'package:flutter_application_10/modules/employee/employeeview/employeeview.dart';
-import 'package:flutter_application_10/modules/exchangerate/binding/exchangeratebinding.dart';
-import 'package:flutter_application_10/modules/exchangerate/view/exchangerateview.dart';
-import 'package:flutter_application_10/modules/leave/leavebinding/leavebinding.dart';
-import 'package:flutter_application_10/modules/leave/leaveview/leaveview.dart';
-import 'package:flutter_application_10/modules/loan/loanbinding/loanbinding.dart';
-import 'package:flutter_application_10/modules/loan/view/loanview.dart';
-import 'package:flutter_application_10/modules/main/binding/mainbinding.dart';
-import 'package:flutter_application_10/modules/main/mainmiddleware/mainmiddleware.dart';
-import 'package:flutter_application_10/modules/main/mainview/mainview.dart';
-import 'package:flutter_application_10/modules/part/binding/partbinding.dart';
-import 'package:flutter_application_10/modules/payroll/payrollbinding/payrollbinding.dart';
-import 'package:flutter_application_10/modules/payroll/payrollview/payrollview.dart';
-import 'package:flutter_application_10/modules/payroll/payrollview/summarypayrollview.dart';
-import 'package:flutter_application_10/modules/province/provincebinding/provincebinding.dart';
-import 'package:flutter_application_10/modules/role/rolebinding/rolebinding.dart';
-import 'package:flutter_application_10/modules/shift/shiftbinding/shiftbinding.dart';
-import 'package:flutter_application_10/modules/shift/view/shiftview.dart';
-import 'package:flutter_application_10/modules/village/villagebinding/villagebinding.dart';
-import 'package:get/get.dart';
+import 'package:flutter_application_10/core/theme/constants/the_colors.dart';
+import 'package:flutter_application_10/modules/app_pages.dart';
+import 'package:get/get.dart' hide Condition;
 import 'package:get_storage/get_storage.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+
 
 void main() async {
   await GetStorage.init();
-
-  //print token
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // theme: AppTheme.lightTheme,
-      // darkTheme: AppTheme.darkTheme,
-      initialRoute: '/main',
-      getPages: [
-        GetPage(
-          name: '/main',
-          middlewares: [MainMiddleware()],
-          page: () => MainView(),
-
-          bindings: [MainBinding(), Attendancebinding()],
+      initialRoute: AppPages.INITIAL,
+      getPages: AppPages.routes, // Using the list from the other file
+      
+      // Global Responsive Configuration
+builder: (context, child) => ResponsiveBreakpoints.builder(
+  child: Builder( // Use a Builder to provide a fresh context
+    builder: (context) {
+      return Container(
+        color: TheColors.orange,
+        child: MaxWidthBox(
+          maxWidth: 1200,
+          child: ResponsiveScaledBox(
+            // Now context will correctly find the breakpoints
+            width: ResponsiveValue<double>(context, conditionalValues: [
+              const Condition.equals(name: MOBILE, value: 450),
+              const Condition.equals(name: TABLET, value: 800),
+              const Condition.equals(name: DESKTOP, value: 1200),
+            ]).value ?? 450,
+            child: child!,
+          ),
         ),
-        GetPage(
-          name: '/login',
-          page: () => LoginView(),
-          binding: Authbinding(),
-        ),
-        GetPage(
-          name: '/register',
-          page: () => RegisterUserView(),
-          bindings: [
-            Authbinding(),
-            Provincebinding(),
-            Districtbinding(),
-            Communcebinding(),
-            Villagebinding(),
-            Rolebinding(),
-            Branchbinding(),
-            Shiftbinding(),
-            Currencybinding(),
-            Partbinding()
-          ],
-        ),
-
-        GetPage(
-          name: '/listuser',
-          page: () => Userview(),
-          bindings: [Authbinding(), Rolebinding(), Branchbinding()],
-        ),
-        GetPage(
-          name: '/listemployee',
-          page: () => Employeeview(),
-          bindings: [
-            Employeebinding(),
-            Rolebinding(),
-            Branchbinding(),
-            Shiftbinding(),
-            Currencybinding(),
-          ],
-        ),
-        GetPage(
-          name: '/branch',
-          page: () => Branchview(),
-          binding: Branchbinding(),
-        ),
-        GetPage(
-          name: '/shift',
-          page: () => Shiftview(),
-          bindings: [Branchbinding(), Shiftbinding()],
-        ),
-        GetPage(
-          name: '/attendance',
-          page: () => Createattendanceview(),
-          binding: Attendancebinding(),
-        ),
-        GetPage(
-          name: '/viewattendance',
-          page: () => Attendanceview(),
-          bindings: [Branchbinding(), Attendancebinding()],
-        ),
-        GetPage(
-          name: '/loan',
-          page: () => LoanView(),
-          bindings: [Loanbinding(), Branchbinding(), Employeebinding(),Currencybinding()],
-        ),
-        GetPage(
-          name: '/leave',
-          page: () => Leaveview(),
-          bindings: [
-            Leavebinding(),
-            Authbinding(),
-            Branchbinding(),
-            Employeebinding(),
-          ],
-        ),
-        GetPage(
-          name: '/payroll',
-          page: () => Summarypayrollview(),
-          bindings: [Payrollbinding(), Branchbinding(),Currencybinding()],
-        ),
-          GetPage(
-          name: '/payrollview',
-          page: () => Payrollview(),
-          bindings: [Payrollbinding(), Branchbinding(),Currencybinding()],
-        ),
-        GetPage(
-          name: '/currency',
-          page: () => CurrencyView(),
-          bindings: [Currencybinding()],
-        ),
-        GetPage(
-          name: '/currencypair',
-          page: () => Currencypairview(),
-          bindings: [Currencypairbinding()],
-        ),
-        GetPage(
-          name: '/exchangrate',
-          page: () => Exchangerateview(),
-          bindings: [Exchangeratebinding(),Currencypairbinding()],
-        ),
-      ],
+      );
+    },
+  ),
+  breakpoints: [
+    const Breakpoint(start: 0, end: 450, name: MOBILE),
+    const Breakpoint(start: 451, end: 800, name: TABLET),
+    const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+  ],
+),
     );
   }
 }

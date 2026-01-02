@@ -80,7 +80,7 @@ class CustomRoleCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: isActive == true
                               ? TheColors.successColor
-                              : TheColors.errorColor,
+                              : TheColors.red,
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: isDarkMode

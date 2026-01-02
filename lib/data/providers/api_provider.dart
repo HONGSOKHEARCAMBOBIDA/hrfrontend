@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_application_10/core/theme/constants/constants.dart';
 import 'package:get_storage/get_storage.dart';
-
+import 'package:get/get.dart' as Getv;
 class ApiProvider {
   final Dio _dio = Dio(
     //instance with base URL
@@ -13,7 +13,27 @@ class ApiProvider {
   );
 
   final GetStorage _box = GetStorage();
+   bool _isLoggingOut = false;
+     ApiProvider() {
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (error, handler) async {
+          if (!_isLoggingOut &&
+              (
+               error.response?.statusCode == 403)) {
 
+            _isLoggingOut = true;
+
+            _box.remove('token');
+            _box.remove('part');
+
+            Getv.Get.offAllNamed('/login');
+          }
+          handler.next(error);
+        },
+      ),
+    );
+  }
   String getToken() {
     return _box.read('token') ?? '';
   }
@@ -27,7 +47,7 @@ class ApiProvider {
         ...?extraHeaders,
       },
       followRedirects: false,
-      validateStatus: (status) => status != null && status < 500,
+      validateStatus: (status) => status != null && status >= 200 && status < 300,
     );
   }
 

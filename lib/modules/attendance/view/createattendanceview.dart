@@ -66,6 +66,7 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
     return Scaffold(
       backgroundColor: TheColors.bgColor,
       drawer: Drawer(
+        backgroundColor: TheColors.bgColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         child: ListView(
           padding: EdgeInsets.zero,
@@ -177,9 +178,13 @@ class _CreateattendanceviewState extends State<Createattendanceview> {
                 Get.toNamed('/payrollview'); // Navigate to Register page
               },
             ),
-                     Padding(
-              padding: const EdgeInsets.only(left: 5,right: 5),
-              child: Divider(color: TheColors.gray,height: 0.5,),
+                 Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: Divider(
+                color: TheColors.orange.withOpacity(0.3),
+                thickness: 0.5,
+                height: 1,
+              ),
             ),
         
             ListTile(
